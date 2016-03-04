@@ -36,6 +36,7 @@
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>opensaml.wso2</groupId>
