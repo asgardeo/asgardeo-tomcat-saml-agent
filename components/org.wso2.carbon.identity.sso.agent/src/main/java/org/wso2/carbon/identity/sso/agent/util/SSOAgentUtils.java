@@ -42,6 +42,7 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
 import org.xml.sax.SAXException;
@@ -273,12 +274,9 @@ public class SSOAgentUtils {
     public static XMLObject unmarshall(String saml2SSOString) throws SSOAgentException {
 
         doBootstrap();
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setExpandEntityReferences(false);
-        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilderFactory documentBuilderFactory = IdentityUtil.getSecuredDocumentBuilderFactory();
         try {
             DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
-            docBuilder.setEntityResolver(new CarbonEntityResolver());
             ByteArrayInputStream is = new ByteArrayInputStream(saml2SSOString.getBytes(Charset.forName("UTF-8")));
             Document document = docBuilder.parse(is);
             Element element = document.getDocumentElement();
