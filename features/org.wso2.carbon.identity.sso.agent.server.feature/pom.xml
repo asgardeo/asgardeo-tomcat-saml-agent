@@ -43,6 +43,10 @@
             <artifactId>opensaml</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.orbit.org.openid4java</groupId>
             <artifactId>openid4java</artifactId>
         </dependency>
@@ -83,6 +87,7 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sso.agent</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.opensaml:opensaml</bundleDef>
+                                <bundleDef>org.wso2.orbit.joda-time:joda-time</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.openid4java:openid4java</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.oltu.oauth2:oltu</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.httpcomponents:httpclient</bundleDef>
