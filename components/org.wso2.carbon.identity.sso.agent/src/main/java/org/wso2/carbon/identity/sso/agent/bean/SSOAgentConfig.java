@@ -324,7 +324,7 @@ public class SSOAgentConfig {
             saml2.isResponseSigned = false;
         }
 
-        if (saml2.isResponseSigned()) {
+        if (saml2.isResponseSigned() || saml2.isAssertionSigned()) {
             String signatureValidatorImplClass = properties.getProperty(
                     SSOAgentConstants.SSOAgentConfig.SAML2.SIGNATURE_VALIDATOR);
             if (signatureValidatorImplClass != null) {
