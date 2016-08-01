@@ -445,7 +445,9 @@ public class SAML2SSOManager {
         // Cannot marshall SAML assertion here, before signature validation due to a weird issue in OpenSAML
 
         // validate the assertion validity period
-        validateAssertionValidityPeriod(assertion);
+        if(ssoAgentConfig.isVerifyAssertionValidityPeriod()) {
+            validateAssertionValidityPeriod(assertion);
+        }
 
         // validate audience restriction
         validateAudienceRestriction(assertion);
@@ -803,14 +805,16 @@ public class SAML2SSOManager {
      */
     private void validateAssertionValidityPeriod(Assertion assertion) throws SSOAgentException {
 
+        int timeStampSkewInSeconds = ssoAgentConfig.getTimeStampSkewInSeconds();
+
         DateTime validFrom = assertion.getConditions().getNotBefore();
         DateTime validTill = assertion.getConditions().getNotOnOrAfter();
 
-        if (validFrom != null && validFrom.isAfterNow()) {
+        if (validFrom != null && validFrom.minusSeconds(timeStampSkewInSeconds).isAfterNow()) {
             throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not Before'");
         }
 
-        if (validTill != null && validTill.isBeforeNow()) {
+        if (validTill != null && validTill.plusSeconds(timeStampSkewInSeconds).isBeforeNow()) {
             throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not On Or After'");
         }
 

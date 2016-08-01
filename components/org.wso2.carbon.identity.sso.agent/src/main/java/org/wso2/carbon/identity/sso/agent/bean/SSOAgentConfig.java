@@ -75,6 +75,19 @@ public class SSOAgentConfig {
     private InputStream keyStoreStream;
     private String keyStorePassword;
     private KeyStore keyStore;
+    private static final String VERIFY_ASSERTION_VALIDITY_PERIOD = "VerifyAssertionValidityPeriod";
+    private static final String TIME_STAMP_SKEW = "TimestampSkew";
+
+    private int timeStampSkewInSeconds = 300;
+    private boolean isVerifyAssertionValidity = true;
+
+    public boolean isVerifyAssertionValidityPeriod() {
+            return isVerifyAssertionValidity;
+    }
+
+    public int getTimeStampSkewInSeconds() {
+            return timeStampSkewInSeconds;
+    }
 
     public Boolean getEnableHostNameVerification() {
         return enableHostNameVerification;
@@ -405,6 +418,21 @@ public class SSOAgentConfig {
             }
         }
         keyStorePassword = properties.getProperty("KeyStorePassword");
+
+        // Check if the assertion validity check is enabled and timeStampSkew is set in config file
+        // If that is enabled and the validity period is set, use that as the timeskewperiod
+        String verifyAssertionValidityPeriod = properties.getProperty(VERIFY_ASSERTION_VALIDITY_PERIOD);
+        String timeStampSkew = properties.getProperty(TIME_STAMP_SKEW);
+        if (verifyAssertionValidityPeriod != null && Boolean.valueOf(verifyAssertionValidityPeriod) == true) {
+            isVerifyAssertionValidity = true;
+            if (timeStampSkew != null) {
+                timeStampSkewInSeconds = Integer.parseInt(timeStampSkew);
+            } else {
+                LOGGER.log(Level.FINE, TIME_STAMP_SKEW + " not configured. Defaulting to \'300\'");
+            }
+        } else {
+            LOGGER.log(Level.FINE, VERIFY_ASSERTION_VALIDITY_PERIOD + " not enabled. Defaulting to \'false\'");
+        }
 
         SSLContext sc;
         try {
