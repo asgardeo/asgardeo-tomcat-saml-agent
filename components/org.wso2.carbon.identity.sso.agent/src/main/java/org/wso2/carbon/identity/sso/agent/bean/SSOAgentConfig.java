@@ -413,7 +413,7 @@ public class SSOAgentConfig {
             saml2.timeStampSkewInSeconds = Integer.parseInt(timeStampSkew);
         } else {
             LOGGER.log(Level.FINE, SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW +
-                                   " not configured. Defaulting to \'300\'");
+                                   " not configured. Defaulting to 300s");
         }
 
 

@@ -22,14 +22,10 @@ package org.wso2.carbon.identity.sso.agent.saml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xml.security.exceptions.XMLSecurityException;
-import org.apache.xml.security.signature.Reference;
 import org.apache.xml.security.signature.XMLSignature;
-import org.apache.xml.security.utils.IdResolver;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.common.SAMLVersion;
-import org.opensaml.common.SignableSAMLObject;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.common.Extensions;
 import org.opensaml.saml2.core.Assertion;
@@ -75,10 +71,8 @@ import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.signature.impl.SignatureImpl;
 import org.opensaml.xml.util.Base64;
-import org.opensaml.xml.util.DatatypeHelper;
 import org.opensaml.xml.util.XMLHelper;
 import org.opensaml.xml.validation.ValidationException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -817,10 +811,8 @@ public class SAML2SSOManager {
         }
 
         if (validFrom != null && validTill != null && validFrom.isAfter(validTill)) {
-            throw new SSOAgentException("SAML Assertion Condition 'Not Before' must be less than the value of 'Not On" +
-                    " " +
-
-                    "Or After'");
+            throw new SSOAgentException(
+                    "SAML Assertion Condition 'Not Before' must be less than the value of 'Not On Or After'");
         }
     }
 
@@ -837,30 +829,6 @@ public class SAML2SSOManager {
         try {
             SAMLSignatureProfileValidator signatureProfileValidator = new SAMLSignatureProfileValidator();
             signatureProfileValidator.validate(signImpl);
-
-            // Following code segment is taken from org.opensaml.security.SAMLSignatureProfileValidator
-            // of OpenSAML 2.6.4. This is done to get the latest XSW related fixes.
-            XMLSignature apacheSig = signImpl.getXMLSignature();
-            SignableSAMLObject signableObject = (SignableSAMLObject) signature.getParent();
-
-            Reference ref = null;
-            try {
-                ref = apacheSig.getSignedInfo().item(0);
-            } catch (XMLSecurityException e) {
-                // This exception should never occur, because it's already checked
-                // from the previous call to signatureProfileValidator#validate
-                log.error("Apache XML Security exception obtaining Reference", e);
-                throw new ValidationException("Could not obtain Reference from Signature/SignedInfo", e);
-            }
-
-            String uri = ref.getURI();
-
-            validateReferenceURI(uri, signableObject);
-            validateObjectChildren(apacheSig);
-
-            // End of OpenSAML 2.6.4 logic
-            // -----------------------------------------------------------------------------
-
         } catch (ValidationException ex) {
             String logMsg = "Signature do not confirm to SAML signature profile. Possible XML Signature " +
                     "Wrapping  Attack!";
@@ -880,57 +848,6 @@ public class SAML2SSOManager {
                 log.debug("Validation exception : ", e);
             }
             throw new SSOAgentException("Signature validation failed for SAML2 Element");
-        }
-    }
-
-
-    /**
-     * Validate the Signature's Reference URI.
-     * <p/>
-     * First validate the Reference URI against the parent's ID itself.  Then validate that the
-     * URI (if non-empty) resolves to the same Element node as is cached by the SignableSAMLObject.
-     *
-     * @param uri            the Signature Reference URI attribute value
-     * @param signableObject the SignableSAMLObject whose signature is being validated
-     * @throws ValidationException if the URI is invalid or doesn't resolve to the expected DOM node
-     */
-    private void validateReferenceURI(String uri, SignableSAMLObject signableObject) throws ValidationException {
-        if (DatatypeHelper.isEmpty(uri)) {
-            return;
-        }
-
-        String uriID = uri.substring(1);
-
-        Element expected = signableObject.getDOM();
-        if (expected == null) {
-            log.error("SignableSAMLObject does not have a cached DOM Element.");
-            throw new ValidationException("SignableSAMLObject does not have a cached DOM Element.");
-        }
-        Document doc = expected.getOwnerDocument();
-
-        Element resolved = IdResolver.getElementById(doc, uriID);
-        if (resolved == null) {
-            log.error("Apache xmlsec IdResolver could not resolve the Element for id reference: " + uriID);
-            throw new ValidationException("Apache xmlsec IdResolver could not resolve the Element for id reference: "
-                    + uriID);
-        }
-
-        if (!expected.isSameNode(resolved)) {
-            log.error("Signature Reference URI " + uri + " did not resolve to the expected parent Element");
-            throw new ValidationException("Signature Reference URI did not resolve to the expected parent Element");
-        }
-    }
-
-    /**
-     * Validate that the Signature instance does not contain any ds:Object children.
-     *
-     * @param apacheSig the Apache XML Signature instance
-     * @throws ValidationException if the signature contains ds:Object children
-     */
-    private void validateObjectChildren(XMLSignature apacheSig) throws ValidationException {
-        if (apacheSig.getObjectLength() > 0) {
-            log.error("Signature contained " + apacheSig.getObjectLength() + " ds:Object child element(s)");
-            throw new ValidationException("Signature contained illegal ds:Object children");
         }
     }
 }
