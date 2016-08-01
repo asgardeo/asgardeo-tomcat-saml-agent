@@ -445,9 +445,7 @@ public class SAML2SSOManager {
         // Cannot marshall SAML assertion here, before signature validation due to a weird issue in OpenSAML
 
         // validate the assertion validity period
-        if(ssoAgentConfig.isVerifyAssertionValidityPeriod()) {
-            validateAssertionValidityPeriod(assertion);
-        }
+        validateAssertionValidityPeriod(assertion);
 
         // validate audience restriction
         validateAudienceRestriction(assertion);
@@ -805,7 +803,7 @@ public class SAML2SSOManager {
      */
     private void validateAssertionValidityPeriod(Assertion assertion) throws SSOAgentException {
 
-        int timeStampSkewInSeconds = ssoAgentConfig.getTimeStampSkewInSeconds();
+        int timeStampSkewInSeconds = ssoAgentConfig.getSAML2().getTimeStampSkewInSeconds();
 
         DateTime validFrom = assertion.getConditions().getNotBefore();
         DateTime validTill = assertion.getConditions().getNotOnOrAfter();
