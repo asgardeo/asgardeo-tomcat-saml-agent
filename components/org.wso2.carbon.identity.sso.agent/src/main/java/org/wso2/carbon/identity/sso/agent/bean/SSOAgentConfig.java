@@ -324,7 +324,7 @@ public class SSOAgentConfig {
             saml2.isResponseSigned = false;
         }
 
-        if (saml2.isResponseSigned()) {
+        if (saml2.isResponseSigned() || saml2.isAssertionSigned()) {
             String signatureValidatorImplClass = properties.getProperty(
                     SSOAgentConstants.SSOAgentConfig.SAML2.SIGNATURE_VALIDATOR);
             if (signatureValidatorImplClass != null) {
@@ -405,6 +405,17 @@ public class SSOAgentConfig {
             }
         }
         keyStorePassword = properties.getProperty("KeyStorePassword");
+
+        // Check if the assertion validity timeStampSkew is set in config file
+        // If that is set, use that as the timeskewperiod
+        String timeStampSkew = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW);
+        if (timeStampSkew != null) {
+            saml2.timeStampSkewInSeconds = Integer.parseInt(timeStampSkew);
+        } else {
+            LOGGER.log(Level.FINE, SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW +
+                                   " not configured. Defaulting to 300s");
+        }
+
 
         SSLContext sc;
         try {
@@ -614,6 +625,7 @@ public class SSOAgentConfig {
         private Boolean isForceAuthn = false;
         private String relayState = null;
         private String signatureValidatorImplClass = null;
+        private int timeStampSkewInSeconds = 300;
         /**
          * The html page that will auto-submit the SAML2 to the IdP.
          * This should be in valid HTML syntax, with following section within the
@@ -764,6 +776,10 @@ public class SSOAgentConfig {
 
         public String getSignatureValidatorImplClass() {
             return signatureValidatorImplClass;
+        }
+
+        public int getTimeStampSkewInSeconds() {
+            return timeStampSkewInSeconds;
         }
     }
 

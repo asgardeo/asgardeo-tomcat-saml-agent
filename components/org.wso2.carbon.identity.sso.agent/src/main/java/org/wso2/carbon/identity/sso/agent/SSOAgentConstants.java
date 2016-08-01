@@ -100,6 +100,7 @@ public class SSOAgentConstants {
             public static final String POST_BINDING_REQUEST_HTML_FILE_PATH =
                     "SAML2.PostBindingRequestHTMLFilePath";
             public static final String SIGNATURE_VALIDATOR = "SAML2.SignatureValidatorImplClass";
+            public static final String TIME_STAMP_SKEW = "SAML2.TimestampSkew";
 
             private SAML2() {
             }
