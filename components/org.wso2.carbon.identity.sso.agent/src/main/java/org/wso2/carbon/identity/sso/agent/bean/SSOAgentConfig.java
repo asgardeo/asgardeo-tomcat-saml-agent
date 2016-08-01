@@ -75,8 +75,6 @@ public class SSOAgentConfig {
     private InputStream keyStoreStream;
     private String keyStorePassword;
     private KeyStore keyStore;
-    private static final String VERIFY_ASSERTION_VALIDITY_PERIOD = "VerifyAssertionValidityPeriod";
-    private static final String TIME_STAMP_SKEW = "TimestampSkew";
 
     public Boolean getEnableHostNameVerification() {
         return enableHostNameVerification;
@@ -410,11 +408,12 @@ public class SSOAgentConfig {
 
         // Check if the assertion validity timeStampSkew is set in config file
         // If that is set, use that as the timeskewperiod
-        String timeStampSkew = properties.getProperty(TIME_STAMP_SKEW);
+        String timeStampSkew = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW);
         if (timeStampSkew != null) {
             saml2.timeStampSkewInSeconds = Integer.parseInt(timeStampSkew);
         } else {
-            LOGGER.log(Level.FINE, TIME_STAMP_SKEW + " not configured. Defaulting to \'300\'");
+            LOGGER.log(Level.FINE, SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW +
+                                   " not configured. Defaulting to \'300\'");
         }
 
 
