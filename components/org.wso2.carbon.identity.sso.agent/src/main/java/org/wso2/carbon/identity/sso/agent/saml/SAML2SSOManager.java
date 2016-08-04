@@ -797,22 +797,24 @@ public class SAML2SSOManager {
      */
     private void validateAssertionValidityPeriod(Assertion assertion) throws SSOAgentException {
 
-        int timeStampSkewInSeconds = ssoAgentConfig.getSAML2().getTimeStampSkewInSeconds();
+        if (assertion.getConditions() != null) {
+            int timeStampSkewInSeconds = ssoAgentConfig.getSAML2().getTimeStampSkewInSeconds();
 
-        DateTime validFrom = assertion.getConditions().getNotBefore();
-        DateTime validTill = assertion.getConditions().getNotOnOrAfter();
+            DateTime validFrom = assertion.getConditions().getNotBefore();
+            DateTime validTill = assertion.getConditions().getNotOnOrAfter();
 
-        if (validFrom != null && validFrom.minusSeconds(timeStampSkewInSeconds).isAfterNow()) {
-            throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not Before'");
-        }
+            if (validFrom != null && validFrom.minusSeconds(timeStampSkewInSeconds).isAfterNow()) {
+                throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not Before'");
+            }
 
-        if (validTill != null && validTill.plusSeconds(timeStampSkewInSeconds).isBeforeNow()) {
-            throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not On Or After'");
-        }
+            if (validTill != null && validTill.plusSeconds(timeStampSkewInSeconds).isBeforeNow()) {
+                throw new SSOAgentException("Failed to meet SAML Assertion Condition 'Not On Or After'");
+            }
 
-        if (validFrom != null && validTill != null && validFrom.isAfter(validTill)) {
-            throw new SSOAgentException(
-                    "SAML Assertion Condition 'Not Before' must be less than the value of 'Not On Or After'");
+            if (validFrom != null && validTill != null && validFrom.isAfter(validTill)) {
+                throw new SSOAgentException(
+                        "SAML Assertion Condition 'Not Before' must be less than the value of 'Not On Or After'");
+            }
         }
     }
 
