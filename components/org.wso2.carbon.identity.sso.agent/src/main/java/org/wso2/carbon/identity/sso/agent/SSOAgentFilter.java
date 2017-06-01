@@ -60,10 +60,10 @@ public class SSOAgentFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain chain) throws IOException, ServletException {
 
-        try {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
+        try {
 
             SSOAgentConfig ssoAgentConfig = (SSOAgentConfig) request.
                     getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
@@ -113,14 +113,19 @@ public class SSOAgentFilter implements Filter {
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
 
+                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
 
                 } else {
                     //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
+                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, true));
+                    String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                    response.sendRedirect(redirectUrl);
                 }
                 return;
 
@@ -144,9 +149,12 @@ public class SSOAgentFilter implements Filter {
 
             } else if (resolver.isPassiveAuthnRequest()) {
 
+                boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 ssoAgentConfig.getSAML2().setPassiveAuthn(true);
-                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+                String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
+                ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                response.sendRedirect(redirectUrl);
                 return;
 
             } else if (resolver.isSAML2OAuth2GrantRequest()) {
@@ -158,6 +166,8 @@ public class SSOAgentFilter implements Filter {
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
+        } catch (InvalidSessionException e) {
+            response.sendRedirect(request.getRequestURI().replace("logout",""));
         } catch (SSOAgentException e) {
             LOGGER.log(Level.SEVERE, "An error has occurred", e);
             throw e;

@@ -79,6 +79,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.wso2.carbon.identity.sso.agent.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentDataHolder;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
@@ -153,8 +154,13 @@ public class SAML2SSOManager {
         if (!isLogout) {
             requestMessage = buildAuthnRequest(request);
         } else {
-            LoggedInSessionBean sessionBean = (LoggedInSessionBean) request.getSession(false).
-                    getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
+            HttpSession httpSession = request.getSession(false);
+            if (httpSession == null) {
+                throw new InvalidSessionException("Session is expired or user already logged out.");
+            }
+
+            LoggedInSessionBean sessionBean = (LoggedInSessionBean) httpSession.getAttribute(SSOAgentConstants
+                    .SESSION_BEAN_NAME);
             if (sessionBean != null) {
                 requestMessage = buildLogoutRequest(sessionBean.getSAML2SSO().getSubjectId(),
                         sessionBean.getSAML2SSO().getSessionIndex());
@@ -229,8 +235,13 @@ public class SAML2SSOManager {
             }
 
         } else {
-            LoggedInSessionBean sessionBean = (LoggedInSessionBean) request.getSession(false).
-                    getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
+            HttpSession httpSession = request.getSession(false);
+            if (httpSession == null) {
+                throw new InvalidSessionException("Session is expired or user already logged out.");
+            }
+
+            LoggedInSessionBean sessionBean = (LoggedInSessionBean) httpSession.getAttribute(SSOAgentConstants
+                    .SESSION_BEAN_NAME);
             if (sessionBean != null) {
                 requestMessage = buildLogoutRequest(sessionBean.getSAML2SSO()
                         .getSubjectId(), sessionBean.getSAML2SSO().getSessionIndex());
