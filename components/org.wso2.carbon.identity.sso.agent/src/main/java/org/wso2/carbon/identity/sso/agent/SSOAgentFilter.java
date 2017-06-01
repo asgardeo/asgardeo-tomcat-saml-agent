@@ -128,12 +128,10 @@ public class SSOAgentFilter implements Filter {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     return;
                 } else {
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 }
                 return;
