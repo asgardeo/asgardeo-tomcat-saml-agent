@@ -40,7 +40,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,9 +51,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SSOAgentConfig implements Serializable {
+public class SSOAgentConfig {
 
-    private static final long serialVersionUID = 776283585987444567L;
     private static final Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
 
     private Boolean isSAML2SSOLoginEnabled = false;
@@ -608,9 +606,7 @@ public class SSOAgentConfig implements Serializable {
         return trustManagers;
     }
 
-    public class SAML2 implements Serializable {
-
-        private static final long serialVersionUID = 776283585987444588L;
+    public class SAML2 {
 
         private String httpBinding = null;
         private String spEntityId = null;
@@ -787,9 +783,7 @@ public class SSOAgentConfig implements Serializable {
         }
     }
 
-    public class OpenID implements Serializable {
-
-        private static final long serialVersionUID = 776283585987444667L;
+    public class OpenID {
 
         private String mode = null;
         private String providerURL = null;
@@ -856,9 +850,7 @@ public class SSOAgentConfig implements Serializable {
         }
     }
 
-    public class OAuth2 implements Serializable {
-
-        private static final long serialVersionUID = 776283585367444567L;
+    public class OAuth2 {
 
         private String tokenURL = null;
         private String clientId = null;

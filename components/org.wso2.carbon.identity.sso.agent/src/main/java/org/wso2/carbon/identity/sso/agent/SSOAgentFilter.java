@@ -167,7 +167,8 @@ public class SSOAgentFilter implements Filter {
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
-            response.sendRedirect(request.getRequestURI().replace("logout",""));
+            // Redirect to the index page when session is expired or user already logged out.
+            response.sendRedirect(request.getRequestURI().replace("logout", ""));
         } catch (SSOAgentException e) {
             LOGGER.log(Level.SEVERE, "An error has occurred", e);
             throw e;
