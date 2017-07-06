@@ -39,18 +39,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Servlet Filter implementation class SSOAgentFilter
+ * Servlet Filter implementation class SSOAgentFilter.
  */
 public class SSOAgentFilter implements Filter {
 
     private static final Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
+    protected FilterConfig filterConfig = null;
 
     /**
      * @see Filter#init(FilterConfig)
      */
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
-        return;
+        this.filterConfig = fConfig;
     }
 
     /**
@@ -64,13 +65,16 @@ public class SSOAgentFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         try {
-
-            SSOAgentConfig ssoAgentConfig = (SSOAgentConfig) request.
-                    getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
-            if (ssoAgentConfig == null) {
+            // Make sure SSOAgentConstants.CONFIG_BEAN_NAME attribute is added on servlet context initialization.
+            // It should be in the type of SSOAgentConfig.
+            Object configBeingAttribute = filterConfig.getServletContext()
+                    .getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
+            if (!(configBeingAttribute instanceof SSOAgentConfig)) {
                 throw new SSOAgentException("Cannot find " + SSOAgentConstants.CONFIG_BEAN_NAME +
-                        " set a request attribute. Unable to proceed further");
+                        " attribute of SSOAgentConfig type in the servletContext. Cannot proceed further.");
             }
+
+            SSOAgentConfig ssoAgentConfig = (SSOAgentConfig) configBeingAttribute;
 
             SSOAgentRequestResolver resolver =
                     new SSOAgentRequestResolver(request, response, ssoAgentConfig);
@@ -84,12 +88,11 @@ public class SSOAgentFilter implements Filter {
             OpenIDManager openIdManager = null;
             SAML2GrantManager saml2GrantManager = null;
 
-
             if (resolver.isSLORequest()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 samlSSOManager.doSLO(request);
-
+                // TODO redirect to welcome page
             } else if (resolver.isSAML2SSOResponse()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
