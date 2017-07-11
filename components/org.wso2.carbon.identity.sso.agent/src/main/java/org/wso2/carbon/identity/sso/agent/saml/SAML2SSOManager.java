@@ -89,7 +89,6 @@ import org.wso2.carbon.identity.sso.agent.util.SAMLSignatureValidator;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 import org.apache.commons.collections.CollectionUtils;
 import javax.crypto.SecretKey;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -317,6 +316,7 @@ public class SAML2SSOManager {
                 //This is a SAML response for a single logout request from the SP
                 doSLO(request);
                 // TODO direct to welcome page
+                request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
             } else {
                 processSSOResponse(request);
             }
@@ -439,6 +439,7 @@ public class SAML2SSOManager {
             if (isNoPassive(saml2Response)) {
                 LOGGER.log(Level.FINE, "Cannot authenticate in passive mode");
                 // TODO redirect to welcome page
+                servletRequest.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
                 return;
             }
             throw new SSOAgentException("SAML2 Assertion not found in the Response");

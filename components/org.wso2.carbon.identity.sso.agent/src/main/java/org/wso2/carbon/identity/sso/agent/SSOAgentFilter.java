@@ -26,6 +26,9 @@ import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -34,9 +37,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Servlet Filter implementation class SSOAgentFilter.
@@ -92,7 +92,8 @@ public class SSOAgentFilter implements Filter {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 samlSSOManager.doSLO(request);
-                // TODO redirect to welcome page
+                //TODO redirect to welcome page
+                request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
             } else if (resolver.isSAML2SSOResponse()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
@@ -139,9 +140,8 @@ public class SSOAgentFilter implements Filter {
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     return;
-                } else {
-                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 }
+                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 return;
 
             } else if (resolver.isOpenIdURL()) {
@@ -166,12 +166,19 @@ public class SSOAgentFilter implements Filter {
                 saml2GrantManager.getAccessToken(request, response);
 
             }
+
+            //check should go to welcome page, if so go to welcome page
+            Object shouldGoToWelcomePage = request.getAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE);
+            if (shouldGoToWelcomePage instanceof String && Boolean.parseBoolean((String) shouldGoToWelcomePage)) {
+                response.sendRedirect(request.getContextPath());
+                return;
+            }
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
             // Redirect to the index page when session is expired or user already logged out.
-            response.sendRedirect(request.getRequestURI().replace("logout", ""));
+            response.sendRedirect(request.getContextPath());
         } catch (SSOAgentException e) {
             LOGGER.log(Level.SEVERE, "An error has occurred", e);
             throw e;

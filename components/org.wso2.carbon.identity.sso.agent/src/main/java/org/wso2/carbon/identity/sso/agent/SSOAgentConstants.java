@@ -24,13 +24,10 @@ public class SSOAgentConstants {
 
     public static final String LOGGER_NAME = "org.wso2.carbon.identity.sso.agent";
 
-
-
-    public static final String SESSION_BEAN_NAME =
-
-            "org.wso2.carbon.identity.sso.agent.LoggedInSessionBean";
+    public static final String SESSION_BEAN_NAME = "org.wso2.carbon.identity.sso.agent.LoggedInSessionBean";
     public static final String CONFIG_BEAN_NAME = "org.wso2.carbon.identity.sso.agent.SSOAgentConfig";
 
+    public static final String SHOULD_GO_TO_WELCOME_PAGE = "shouldGoToWelcomePage";
 
     public static class SAML2SSO {
 
