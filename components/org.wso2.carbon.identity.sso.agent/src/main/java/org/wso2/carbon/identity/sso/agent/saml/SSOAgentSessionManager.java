@@ -49,7 +49,9 @@ public class SSOAgentSessionManager {
             String sessionIndex = sessionBean.getSAML2SSO().getSessionIndex();
             if (sessionIndex != null) {
                 Set<HttpSession> sessions = ssoSessionsMap.get(sessionIndex);
-                sessions.remove(session);
+                if (sessions != null) {
+                    sessions.remove(session);
+                }
             }
         }
     }

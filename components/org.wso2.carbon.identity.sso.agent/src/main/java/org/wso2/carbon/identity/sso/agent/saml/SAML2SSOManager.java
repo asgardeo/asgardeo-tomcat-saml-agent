@@ -468,14 +468,15 @@ public class SAML2SSOManager {
             throw new SSOAgentException("SAML2 Response does not contain the name of the subject");
         }
 
-
+        // This should be the only time where a new session can be created.
+        // Thus in latter places request.getSession(false) should be used.
         sessionBean.getSAML2SSO().setSubjectId(subject); // set the subject
         request.getSession().setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
 
         // Marshalling SAML2 assertion after signature validation due to a weird issue in OpenSAML
         sessionBean.getSAML2SSO().setAssertionString(marshall(assertion));
 
-        ((LoggedInSessionBean) request.getSession().getAttribute(
+        ((LoggedInSessionBean) request.getSession(false).getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().
                 setSubjectAttributes(getAssertionStatements(assertion));
 
@@ -485,12 +486,12 @@ public class SAML2SSOManager {
             if (sessionId == null) {
                 throw new SSOAgentException("Single Logout is enabled but IdP Session ID not found in SAML2 Assertion");
             }
-            ((LoggedInSessionBean) request.getSession().getAttribute(
+            ((LoggedInSessionBean) request.getSession(false).getAttribute(
                     SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().setSessionIndex(sessionId);
             SSOAgentSessionManager.addAuthenticatedSession(request.getSession(false));
         }
 
-        request.getSession().setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
+        request.getSession(false).setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
 
     }
 
