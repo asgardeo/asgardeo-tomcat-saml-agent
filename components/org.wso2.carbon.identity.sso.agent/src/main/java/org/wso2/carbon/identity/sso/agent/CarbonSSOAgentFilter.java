@@ -70,7 +70,8 @@ public class CarbonSSOAgentFilter extends SSOAgentFilter {
             Scanner scanner = null;
             if (requestPageFile.exists() && requestPageFile.isFile()) {
                 try {
-                    htmlPayload = new Scanner(htmlPayload).useDelimiter("\\Z").next();
+                    scanner = new Scanner(htmlPayload).useDelimiter("\\Z");
+                    htmlPayload = scanner.next();
                 } finally {
                     if (scanner != null && scanner.ioException() != null) {
                         IOException ioException = scanner.ioException();
