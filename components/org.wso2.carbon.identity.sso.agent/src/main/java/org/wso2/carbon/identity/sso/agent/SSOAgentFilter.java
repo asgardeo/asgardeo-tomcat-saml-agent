@@ -92,7 +92,6 @@ public class SSOAgentFilter implements Filter {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 samlSSOManager.doSLO(request);
-                //TODO redirect to welcome page
                 request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
             } else if (resolver.isSAML2SSOResponse()) {
 
@@ -167,18 +166,15 @@ public class SSOAgentFilter implements Filter {
 
             }
 
-            //check should go to welcome page, if so go to welcome page
-            Object shouldGoToWelcomePage = request.getAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE);
-            if (shouldGoToWelcomePage instanceof String && Boolean.parseBoolean((String) shouldGoToWelcomePage)) {
-                response.sendRedirect(request.getContextPath());
-                return;
-            }
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
             // Redirect to the index page when session is expired or user already logged out.
-            response.sendRedirect(request.getContextPath());
+            request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
+
+            // pass the request along the filter chain
+            chain.doFilter(request, response);
         } catch (SSOAgentException e) {
             LOGGER.log(Level.SEVERE, "An error has occurred", e);
             throw e;
