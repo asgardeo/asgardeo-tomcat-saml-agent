@@ -22,7 +22,7 @@ package org.wso2.carbon.identity.sso.agent.saml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 
 import java.io.IOException;
 import java.io.InputStream;

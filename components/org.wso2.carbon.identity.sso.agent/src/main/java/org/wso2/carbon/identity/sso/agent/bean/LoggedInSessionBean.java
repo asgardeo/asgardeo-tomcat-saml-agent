@@ -25,7 +25,7 @@ import com.google.gson.annotations.SerializedName;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Response;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;

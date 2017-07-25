@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.sso.agent.bean;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;

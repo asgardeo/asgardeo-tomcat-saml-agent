@@ -20,7 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;

@@ -82,7 +82,7 @@ import org.w3c.dom.ls.LSSerializer;
 import org.wso2.carbon.identity.sso.agent.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentDataHolder;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.util.SAMLSignatureValidator;

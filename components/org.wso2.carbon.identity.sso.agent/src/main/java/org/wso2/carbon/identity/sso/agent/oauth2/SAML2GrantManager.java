@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.sso.agent.oauth2;
 import com.google.gson.Gson;
 import org.opensaml.xml.util.Base64;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 

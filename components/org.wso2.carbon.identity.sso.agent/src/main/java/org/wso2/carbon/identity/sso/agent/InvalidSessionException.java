@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
+
 /**
  * Invalid session exception.
  */

@@ -22,7 +22,7 @@ package org.wso2.carbon.identity.sso.agent.saml;
 
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.core.util.KeyStoreManager;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 
 import java.security.KeyStore;
 import java.security.KeyStoreException;

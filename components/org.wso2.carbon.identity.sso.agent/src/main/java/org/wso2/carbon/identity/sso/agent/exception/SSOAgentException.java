@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.sso.agent.exception;
 import javax.servlet.ServletException;
 
 /**
- * This class is used for denote the exceptions thrown from the SSO agent module
+ * This class is used to denote the exceptions thrown from the SSO agent module
  */
 public class SSOAgentException extends ServletException {
 
