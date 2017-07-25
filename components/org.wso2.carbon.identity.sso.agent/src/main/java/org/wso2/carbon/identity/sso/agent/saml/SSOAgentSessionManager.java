@@ -20,7 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 
 import javax.servlet.http.HttpSession;

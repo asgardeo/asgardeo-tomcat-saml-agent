@@ -21,9 +21,9 @@
 package org.wso2.carbon.identity.sso.agent;
 
 import org.opensaml.common.xml.SAMLConstants;
-import org.opensaml.saml2.core.AuthnRequest;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
