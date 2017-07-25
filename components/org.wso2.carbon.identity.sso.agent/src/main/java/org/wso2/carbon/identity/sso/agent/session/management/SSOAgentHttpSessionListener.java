@@ -18,7 +18,7 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent.saml;
+package org.wso2.carbon.identity.sso.agent.session.management;
 
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 

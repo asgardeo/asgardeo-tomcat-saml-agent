@@ -18,7 +18,7 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent;
+package org.wso2.carbon.identity.sso.agent.util;
 
 import org.opensaml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;

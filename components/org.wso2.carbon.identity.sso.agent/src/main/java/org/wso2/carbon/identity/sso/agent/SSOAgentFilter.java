@@ -27,6 +27,7 @@ import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantManager;
 import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentRequestResolver;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 
 import java.io.IOException;
