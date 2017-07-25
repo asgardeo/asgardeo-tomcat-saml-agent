@@ -79,7 +79,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-import org.wso2.carbon.identity.sso.agent.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentDataHolder;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;

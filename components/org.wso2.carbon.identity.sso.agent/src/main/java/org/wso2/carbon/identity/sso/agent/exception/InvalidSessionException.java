@@ -16,9 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.sso.agent;
-
-import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
+package org.wso2.carbon.identity.sso.agent.exception;
 
 /**
  * Invalid session exception.

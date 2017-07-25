@@ -21,6 +21,7 @@
 package org.wso2.carbon.identity.sso.agent;
 
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantManager;
 import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
