@@ -20,10 +20,12 @@
 
 package org.wso2.carbon.identity.sso.agent.bean;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.AESDecryptor;
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
@@ -36,12 +38,16 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,6 +81,9 @@ public class SSOAgentConfig {
     private InputStream keyStoreStream;
     private String keyStorePassword;
     private KeyStore keyStore;
+    private String PrivateKeyPassword;
+    private String PrivateKeyAlias;
+    private String IdPPublicCertAlias;
 
     public Boolean getEnableHostNameVerification() {
         return enableHostNameVerification;
@@ -174,7 +183,22 @@ public class SSOAgentConfig {
         }
     }
 
-    private String getKeyStorePassword() {
+    public String getPrivateKeyPassword() {
+
+        return PrivateKeyPassword;
+    }
+
+    public String getPrivateKeyAlias() {
+
+        return PrivateKeyAlias;
+    }
+
+    public String getIdPPublicCertAlias() {
+
+        return IdPPublicCertAlias;
+    }
+
+    public String getKeyStorePassword() {
         return keyStorePassword;
     }
 
@@ -190,9 +214,58 @@ public class SSOAgentConfig {
     }
 
     public void setKeyStore(KeyStore keyStore) {
+
         this.keyStore = keyStore;
     }
+
     public void initConfig(Properties properties) throws SSOAgentException {
+
+        char[] key = new char[]{};
+        String decodedPassword;
+        boolean isReadFile = false;
+        String pathToFile = SSOAgentConstants.SSOAgentConfig.Secretkey_FilePath;
+
+
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            if (String.valueOf(entry.getValue()).startsWith("Enc:")) {
+                if (System.getProperty("key") == null) {
+                    if (!isReadFile) {
+                        File file = new File(pathToFile);
+                        if (file.exists()) {
+                            try (BufferedReader brTest = new BufferedReader(new FileReader(file))) {
+                                key = brTest.readLine().toCharArray();
+                                isReadFile = true;
+                                file.delete();
+                            } catch (IOException e) {
+                                LOGGER.log(Level.SEVERE, "Error while reading the file");
+                            }
+                        } else {
+                            LOGGER.log(Level.SEVERE, "Can't find the file for retrieving the key");
+                        }
+                    }
+                } else {
+                    key = System.getProperty("key").toCharArray();
+                }
+                if (ArrayUtils.isEmpty(key)) {
+                    LOGGER.log(Level.SEVERE, "Can't find the key for decryption");
+                    return;
+                }
+
+                try {
+                    decodedPassword = AESDecryptor.decode(String.valueOf(entry.getValue()).split
+                            (":")[1], String.valueOf(key));
+                    Arrays.fill(key, (char) 0);
+                    properties.replace(entry.getKey(), entry.getValue(), decodedPassword);
+                } catch (Exception ex) {
+                    LOGGER.log(Level.SEVERE, "Error while decoding");
+                }
+
+            }
+        }
+
+        PrivateKeyPassword = properties.getProperty("PrivateKeyPassword");
+        PrivateKeyAlias = properties.getProperty("PrivateKeyAlias");
+        IdPPublicCertAlias = properties.getProperty("IdPPublicCertAlias");
 
         requestQueryParameters = properties.getProperty("SAML.Request.Query.Param");
         if (properties.getProperty("SSL.EnableSSLVerification") != null) {
