@@ -17,7 +17,7 @@
  *
  *
  */
-package org.wso2.carbon.identity.sso.agent.util;
+package org.wso2.carbon.identity.sso.agent.saml;
 
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Response;

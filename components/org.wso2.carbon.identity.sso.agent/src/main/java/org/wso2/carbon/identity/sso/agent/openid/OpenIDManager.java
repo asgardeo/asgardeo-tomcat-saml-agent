@@ -41,7 +41,7 @@ import org.openid4java.message.ax.FetchResponse;
 import org.openid4java.server.RealmVerifierFactory;
 import org.openid4java.util.HttpFetcherFactory;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentDataHolder;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentDataHolder;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
