@@ -20,6 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.signature.XMLSignature;
@@ -100,6 +101,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -642,9 +644,12 @@ public class SAML2SSOManager {
             for (AttributeStatement statement : attributeStatementList) {
                 List<Attribute> attributesList = statement.getAttributes();
                 for (Attribute attribute : attributesList) {
-                    Element value = attribute.getAttributeValues().get(0).getDOM();
-                    String attributeValue = value.getTextContent();
-                    results.put(attribute.getName(), attributeValue);
+                    List<String> valueList = new ArrayList<>();
+                    for (XMLObject xmlObject : attribute.getAttributeValues()) {
+                        valueList.add(xmlObject.getDOM().getTextContent());
+                    }
+                    String value = StringUtils.join(valueList, ",");
+                    results.put(attribute.getName(), value);
                 }
             }
 
