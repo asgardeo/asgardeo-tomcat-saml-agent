@@ -20,28 +20,28 @@
 
 package org.wso2.carbon.identity.sso.agent.bean;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.common.xml.SAMLConstants;
+import org.wso2.carbon.identity.sso.agent.AESDecryptor;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -50,10 +50,19 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 public class SSOAgentConfig {
 
     private static final Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
+    private static final String ARGUMENT = "sun.java.command";
 
     private Boolean isSAML2SSOLoginEnabled = false;
     private Boolean isOpenIdLoginEnabled = false;
@@ -75,6 +84,9 @@ public class SSOAgentConfig {
     private InputStream keyStoreStream;
     private String keyStorePassword;
     private KeyStore keyStore;
+    private String privateKeyPassword;
+    private String privateKeyAlias;
+    private String idpPublicCertAlias;
 
     public Boolean getEnableHostNameVerification() {
         return enableHostNameVerification;
@@ -174,7 +186,19 @@ public class SSOAgentConfig {
         }
     }
 
-    private String getKeyStorePassword() {
+    public String getPrivateKeyPassword() {
+        return privateKeyPassword;
+    }
+
+    public String getPrivateKeyAlias() {
+        return privateKeyAlias;
+    }
+
+    public String getIdPPublicCertAlias() {
+        return idpPublicCertAlias;
+    }
+
+    public String getKeyStorePassword() {
         return keyStorePassword;
     }
 
@@ -192,8 +216,84 @@ public class SSOAgentConfig {
     public void setKeyStore(KeyStore keyStore) {
         this.keyStore = keyStore;
     }
+
     public void initConfig(Properties properties) throws SSOAgentException {
 
+        String decodedPassword;
+        boolean isReadpassword = false;
+        char[] password = null;
+
+        // Get copy of properties for looping in order to avoid ConcurrentModificationException.
+        Properties copyOfProperties = new Properties();
+        copyOfProperties.putAll(properties);
+
+        // Path of the password file.
+        String filePath = System.getProperty("catalina.home") + SSOAgentConstants.SSOAgentConfig.PASSWORD_FILEPATH;
+
+        // Looping through properties to check the encrypted property value by checking the prefix Enc:.
+        for (Map.Entry<Object, Object> entry : copyOfProperties.entrySet()) {
+            if (String.valueOf(entry.getValue()).startsWith("Enc:")) {
+                if (!System.getProperty(ARGUMENT).contains("password")) {
+
+                    // Check whether the password has been already read.
+                    if (!isReadpassword) {
+                        Path path = Paths.get(filePath);
+                        try (BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"))) {
+                            StringBuilder currentLine = new StringBuilder();
+
+                            // Read the password from the password file.
+                            currentLine.append(reader.readLine());
+                            if (currentLine.length() > 0) {
+                                password = new char[currentLine.length()];
+                                currentLine.getChars(0, currentLine.length(), password, 0);
+                                currentLine = null;
+                            }
+                            isReadpassword = true;
+                            if (Files.deleteIfExists(path)) {
+                                LOGGER.info("Deleted the temporary password file at " + path);
+                            }
+                        } catch (IOException ex) {
+                            throw new SSOAgentException("Error while reading the file ", ex);
+                        }
+                    }
+                } else if (!isReadpassword) {
+
+                    // Read password from the console.
+                    System.out.print("Enter password for decryption:");
+                    password = System.console().readPassword();
+                    isReadpassword = true;
+                }
+                if (ArrayUtils.isEmpty(password)) {
+                    LOGGER.log(Level.SEVERE, "Can't find the password to decrypt the encrypted values.");
+                    return;
+                }
+
+                // Get the encrypted property value.
+                String encryptedValue = String.valueOf(entry.getValue());
+
+                // Remove the Enc: prefix and get the actual encrypted value.
+                if (encryptedValue.split(":").length > 1) {
+                    decodedPassword = AESDecryptor.decrypt(String.valueOf(entry.getValue()).split
+                            (":")[1].trim(), password);
+
+                    // Remove the encrypted property value and replace with decrypted property value (plain text)
+                    properties.remove(String.valueOf(entry.getKey()));
+                    properties.setProperty(String.valueOf(entry.getKey()), decodedPassword);
+                } else {
+                    LOGGER.log(Level.SEVERE, "Encrypted value is not in the correct format. Encrypted value " +
+                            "must contain the encrypted value with Enc: as prefix.");
+                    return;
+                }
+            }
+        }
+
+        // Delete the stored password from memory by filling with zeros.
+        if (password != null) {
+            Arrays.fill(password, (char) 0);
+        }
+        privateKeyPassword = properties.getProperty("PrivateKeyPassword");
+        privateKeyAlias = properties.getProperty("PrivateKeyAlias");
+        idpPublicCertAlias = properties.getProperty("IdPPublicCertAlias");
         requestQueryParameters = properties.getProperty("SAML.Request.Query.Param");
         if (properties.getProperty("SSL.EnableSSLVerification") != null) {
             enableSSLVerification = Boolean.parseBoolean(properties.getProperty("SSL.EnableSSLVerification"));

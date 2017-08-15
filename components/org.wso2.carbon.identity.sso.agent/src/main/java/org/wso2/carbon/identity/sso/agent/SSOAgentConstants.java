@@ -70,6 +70,7 @@ public class SSOAgentConstants {
         public static final String OAUTH2_SAML2_GRANT_URL = "OAuth2SAML2GrantURL";
         public static final String SKIP_URIS = "SkipURIs";
         public static final String QUERY_PARAMS = "QueryParams";
+        public static final String PASSWORD_FILEPATH = "/conf/password_temp.txt";
 
         private SSOAgentConfig() {
         }
