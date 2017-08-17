@@ -119,6 +119,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.52</version>
+            </dependency>
+            <dependency>
                 <groupId>org.openid4java</groupId>
                 <artifactId>openid4java</artifactId>
                 <version>${openid4java.version}</version>
@@ -278,6 +283,7 @@
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
         <commons-collections.version>3.2.0.wso2v1</commons-collections.version>
         <httpcomponents-httpclient.wso2.version>4.3.1.wso2v2</httpcomponents-httpclient.wso2.version>
+        <commons-codec.version>1.9</commons-codec.version>
 
         <identity.framework.import.version.range>[5.0.0, 6.0.0)</identity.framework.import.version.range>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
@@ -296,6 +302,7 @@
     <modules>
         <module>components/org.wso2.carbon.identity.sso.agent</module>
         <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
+        <module>components/org.wso2.carbon.identity.sso.encryptor</module>
     </modules>
 
 </project>

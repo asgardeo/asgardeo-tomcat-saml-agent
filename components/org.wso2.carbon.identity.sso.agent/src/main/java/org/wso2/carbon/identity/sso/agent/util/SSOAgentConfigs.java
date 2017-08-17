@@ -20,6 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.util;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
@@ -87,31 +88,34 @@ public class SSOAgentConfigs {
     public static void initConfig(FilterConfig fConfigs) throws SSOAgentException {
 
         Properties properties = new Properties();
-        try {
-            if (fConfigs.getInitParameter("SSOAgentPropertiesFilePath") != null &&
-                    !"".equals(fConfigs.getInitParameter("SSOAgentPropertiesFilePath"))) {
-                properties.load(new FileInputStream(fConfigs.getInitParameter("SSOAgentPropertiesFilePath")));
+
+        if (fConfigs.getInitParameter("SSOAgentPropertiesFilePath") != null &&
+                !"".equals(fConfigs.getInitParameter("SSOAgentPropertiesFilePath"))) {
+            try (FileInputStream fileInputStream = new FileInputStream(fConfigs.getInitParameter
+                    ("SSOAgentPropertiesFilePath"))) {
+                properties.load(fileInputStream);
                 initConfig(properties);
-            } else {
-                LOGGER.warning("\'SSOAgentPropertiesFilePath\' not configured");
-            }
-        } catch (FileNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("File not found  ", e);
-            }
-            throw new SSOAgentException("Agent properties file not found");
+            } catch (FileNotFoundException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("File not found  ", e);
+                }
+                throw new SSOAgentException("Agent properties file not found");
 
-        } catch (IOException e) {
+            } catch (IOException e) {
 
-            throw new SSOAgentException("Error occurred while reading Agent properties file", e);
+                throw new SSOAgentException("Error occurred while reading Agent properties file", e);
+            }
+
+        } else {
+            LOGGER.warning("\'SSOAgentPropertiesFilePath\' not configured");
         }
-
     }
 
     public static void initConfig(String propertiesFilePath) throws SSOAgentException {
+
         Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(propertiesFilePath));
+        try (FileInputStream fileInputStream = new FileInputStream(propertiesFilePath)){
+            properties.load(fileInputStream);
             initConfig(properties);
         } catch (FileNotFoundException e) {
 
