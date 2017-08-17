@@ -55,7 +55,7 @@ public class Encryption {
     /**
      * Encrypt and encrypt the plain text.
      *
-     * @param secret    Password to be encrypted.
+     * @param secret Password to be encrypted.
      * @param cipherKey Password use for encryption.
      * @return Encrypted value.
      * @throws Exception If an error occurred while encrypting.

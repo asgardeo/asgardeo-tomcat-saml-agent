@@ -45,7 +45,7 @@ public class AESDecryptor {
      * Decrypt and decrypt the encrypted values.
      *
      * @param encryptedSecret encrypted value.
-     * @param cipherKey       password used for encryption.
+     * @param cipherKey password used for encryption.
      * @return
      * @throws SSOAgentException If an error occurred.
      */
