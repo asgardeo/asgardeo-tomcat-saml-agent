@@ -35,6 +35,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-collections.wso2</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
@@ -47,6 +51,12 @@
         <dependency>
             <groupId>org.wso2.orbit.org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-ext-jdk15</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.joda-time</groupId>
@@ -113,6 +123,7 @@
                             org.wso2.carbon.identity.core.util;
                             version="${identity.framework.import.version.range}",
                             org.apache.commons.collections; version="${commons-collections.wso2.osgi.version.range}",
+                            org.bouncycastle.*; version="[1.52, 1.60.0)",
                         </Import-Package>
                         <Export-Package>
                             org.wso2.carbon.identity.sso.agent.*; version="${identity.sso.agent.package.export.version}",

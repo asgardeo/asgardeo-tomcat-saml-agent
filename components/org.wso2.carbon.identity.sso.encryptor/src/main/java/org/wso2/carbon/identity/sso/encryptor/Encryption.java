@@ -19,26 +19,27 @@
 package org.wso2.carbon.identity.sso.encryptor;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.Console;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -48,11 +49,12 @@ public class Encryption {
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
     private static final String SALT = "84B03D034B409D4E";
-    private static final int KEY_DERIVATION_ITERATION_COUNT = 65536;
+    private static final int KEY_DERIVATION_ITERATION_COUNT = 4096;
     private static final int KEY_SIZE = 128;
 
     /**
      * Encrypt and encrypt the plain text.
+     *
      * @param secret Password to be encrypted.
      * @param cipherKey Password use for encryption.
      * @return Encrypted value.
@@ -62,13 +64,17 @@ public class Encryption {
     private static String encrypt(String secret, char[] cipherKey) throws EncryptingException {
 
         try {
-            // Generate the secret key with 128 bits.
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(cipherKey, SALT.getBytes(StandardCharsets.UTF_8), KEY_DERIVATION_ITERATION_COUNT,
-                    KEY_SIZE);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKey secretKeySpec = new SecretKeySpec(tmp.getEncoded(), "AES");
 
+            // Change char array to byte array.
+            ByteBuffer buf = StandardCharsets.UTF_8.encode(CharBuffer.wrap(cipherKey));
+            byte[] secretKey = new byte[buf.limit()];
+            buf.get(secretKey);
+
+            PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
+            gen.init(secretKey, SALT.getBytes(), KEY_DERIVATION_ITERATION_COUNT);
+            byte[] key = ((KeyParameter) gen.generateDerivedParameters(KEY_SIZE)).getKey();
+
+            SecretKey secretKeySpec = new SecretKeySpec(key, "AES");
             Cipher cipher = Cipher.getInstance(ALGORITHM);
 
             // Create an initialization vector with Cipher's block size.
@@ -83,15 +89,16 @@ public class Encryption {
             byte[] encodedVal = new Base64().encode(encryptedVal);
             return new String(encodedVal, StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException |
-                NoSuchPaddingException | BadPaddingException | InvalidKeySpecException | IllegalBlockSizeException ex) {
+                NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException ex) {
             throw new EncryptingException("Error while encrypting", ex);
         }
     }
 
     /**
-     * Main entry point
+     * Main entry point.
+     *
      * @param args The password you wanted to encrypt.
-     * @throws Exception If an error occurred
+     * @throws Exception If an error occurred.
      */
     public static void main(String[] args) {
 
@@ -113,6 +120,6 @@ public class Encryption {
             return;
         }
         Arrays.fill(passwordArray, (char) 0);
-        System.out.println("Successfully generate the file with encrypted value");
+        System.out.println("File with encrypted value created successfully in your current location");
     }
 }

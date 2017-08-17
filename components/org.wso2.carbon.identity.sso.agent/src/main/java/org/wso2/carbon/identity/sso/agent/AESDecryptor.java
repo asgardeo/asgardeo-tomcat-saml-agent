@@ -19,14 +19,16 @@
 package org.wso2.carbon.identity.sso.agent;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.spec.KeySpec;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -36,11 +38,12 @@ public class AESDecryptor {
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
     private static final String SALT = "84B03D034B409D4E";
-    private static final int KEY_DERIVATION_ITERATION_COUNT = 65536;
+    private static final int KEY_DERIVATION_ITERATION_COUNT = 4096;
     private static final int KEY_SIZE = 128;
 
     /**
-     *Decrypt and decrypt the encrypted values.
+     * Decrypt and decrypt the encrypted values.
+     *
      * @param encryptedSecret encrypted value.
      * @param cipherKey password used for encryption.
      * @return
@@ -50,15 +53,18 @@ public class AESDecryptor {
 
         try {
 
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            // Change char array to byte array.
+            ByteBuffer buf = StandardCharsets.UTF_8.encode(CharBuffer.wrap(cipherKey));
+            byte[] secretKey = new byte[buf.limit()];
+            buf.get(secretKey);
 
-            // Generate the secret key with 128 bits.
-            KeySpec spec = new PBEKeySpec(cipherKey, SALT.getBytes(StandardCharsets.UTF_8),
-                    KEY_DERIVATION_ITERATION_COUNT, KEY_SIZE);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKey key = new SecretKeySpec(tmp.getEncoded(), "AES");
+            PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
+            gen.init(secretKey, SALT.getBytes(StandardCharsets.UTF_8), KEY_DERIVATION_ITERATION_COUNT);
+            byte[] dk = ((KeyParameter) gen.generateDerivedParameters(KEY_SIZE)).getKey();
 
+            SecretKey key = new SecretKeySpec(dk, "AES");
             Cipher cipher = Cipher.getInstance(ALGORITHM);
+
             // Create an initialization vector with Cipher's block size.
             byte[] iv = new byte[cipher.getBlockSize()];
             IvParameterSpec ivParams = new IvParameterSpec(iv);
@@ -66,6 +72,7 @@ public class AESDecryptor {
 
             // Decode the encrypted value.
             byte[] decodedValue = new Base64().decode(encryptedSecret.getBytes(StandardCharsets.UTF_8));
+
             // Decrypt the encrypted value and get the plain text password.
             byte[] decryptedValue = cipher.doFinal(decodedValue);
             return new String(decryptedValue, StandardCharsets.UTF_8);

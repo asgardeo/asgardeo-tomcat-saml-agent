@@ -119,6 +119,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.52</version>
+            </dependency>
+            <dependency>
                 <groupId>org.openid4java</groupId>
                 <artifactId>openid4java</artifactId>
                 <version>${openid4java.version}</version>
