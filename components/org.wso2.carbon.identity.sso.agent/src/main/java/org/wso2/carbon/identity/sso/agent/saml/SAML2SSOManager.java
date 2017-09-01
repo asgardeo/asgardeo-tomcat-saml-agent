@@ -20,6 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.signature.XMLSignature;
@@ -176,7 +177,10 @@ public class SAML2SSOManager {
                 SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_AUTH_REQ +
                         "=" + encodedRequestMessage);
 
-        String relayState = ssoAgentConfig.getSAML2().getRelayState();
+        String relayState = request.getParameter(RelayState.DEFAULT_ELEMENT_LOCAL_NAME);
+        if (StringUtils.isNotEmpty(relayState)) {
+            relayState = ssoAgentConfig.getSAML2().getRelayState();
+        }
         if (relayState != null) {
             try {
                 httpQueryString.append("&" + RelayState.DEFAULT_ELEMENT_LOCAL_NAME + "=" +
@@ -259,7 +263,10 @@ public class SAML2SSOManager {
         Map<String, String[]> paramsMap = new HashMap<String, String[]>();
         paramsMap.put(SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_AUTH_REQ,
                 new String[]{encodedRequestMessage});
-        if (ssoAgentConfig.getSAML2().getRelayState() != null) {
+        String relayState = request.getParameter(RelayState.DEFAULT_ELEMENT_LOCAL_NAME);
+        if (StringUtils.isNotEmpty(relayState)) {
+            paramsMap.put(RelayState.DEFAULT_ELEMENT_LOCAL_NAME, new String[]{relayState});
+        } else if (ssoAgentConfig.getSAML2().getRelayState() != null) {
             paramsMap.put(RelayState.DEFAULT_ELEMENT_LOCAL_NAME,
                     new String[]{ssoAgentConfig.getSAML2().getRelayState()});
         }
