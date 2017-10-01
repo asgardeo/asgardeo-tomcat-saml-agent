@@ -33,8 +33,7 @@ public class SSOAgentConstants {
 
     public static class SAML2SSO {
 
-        private SAML2SSO() {
-        }
+        private SAML2SSO() {}
 
         public static final String HTTP_POST_PARAM_SAML2_AUTH_REQ = "SAMLRequest";
         public static final String HTTP_POST_PARAM_SAML2_RESP = "SAMLResponse";
@@ -43,8 +42,7 @@ public class SSOAgentConstants {
     public static class OpenID {
 
         public static final String OPENID_MODE = "openid.mode";
-        private OpenID() {
-        }
+        private OpenID() {}
 
     }
 
@@ -52,12 +50,10 @@ public class SSOAgentConstants {
         public static final String SAML2_BEARER_GRANT_TYPE =
                 "urn:ietf:params:oauth:grant-type:saml2-bearer";
 
-        private OAuth2() {
-        }
+        private OAuth2() {}
     }
 
-    private SSOAgentConstants() {
-    }
+    private SSOAgentConstants() {}
 
     public static class SSOAgentConfig {
 
@@ -71,8 +67,7 @@ public class SSOAgentConstants {
         public static final String QUERY_PARAMS = "QueryParams";
         public static final String PASSWORD_FILEPATH = "/conf/password_temp.txt";
 
-        private SSOAgentConfig() {
-        }
+        private SSOAgentConfig() {}
 
         public static class SAML2 {
 
@@ -102,8 +97,7 @@ public class SSOAgentConstants {
             public static final String SIGNATURE_VALIDATOR = "SAML2.SignatureValidatorImplClass";
             public static final String TIME_STAMP_SKEW = "SAML2.TimestampSkew";
 
-            private SAML2() {
-            }
+            private SAML2() {}
         }
 
         public static class OpenID {
@@ -114,8 +108,22 @@ public class SSOAgentConstants {
             public static final String ENABLE_ATTRIBUTE_EXCHANGE = "OpenId.EnableAttributeExchange";
             public static final String ENABLE_DUMB_MODE = "OpenId.EnableDumbMode";
 
-            private OpenID() {
-            }
+            private OpenID() {}
+        }
+
+        public static class OIDC {
+
+            public static final String CONSUMER_KEY = "consumerKey";
+            public static final String CONSUMER_SECRET = "consumerSecret";
+            public static final String CALL_BACK_URL = "callBackUrl";
+            public static final String OAUTH2_GRANT_TYPE = "grantType";
+            public static final String OAUTH2_AUTHZ_ENDPOINT = "authorizeEndpoint";
+            public static final String OIDC_LOGOUT_ENDPOINT = "logoutEndpoint";
+            public static final String OIDC_SESSION_IFRAME_ENDPOINT = "sessionIFrameEndpoint";
+            public static final String SCOPE = "scope";
+            public static final String POST_LOGOUT_REDIRECT_RUI = "postLogoutRedirectUri";
+
+            private OIDC() {}
         }
 
         public static class OAuth2 {
@@ -124,8 +132,7 @@ public class SSOAgentConstants {
             public static final String CLIENT_SECRET = "OAuth2.ClientSecret";
             public static final String TOKEN_URL = "OAuth2.TokenURL";
 
-            private OAuth2() {
-            }
+            private OAuth2() {}
         }
 
     }

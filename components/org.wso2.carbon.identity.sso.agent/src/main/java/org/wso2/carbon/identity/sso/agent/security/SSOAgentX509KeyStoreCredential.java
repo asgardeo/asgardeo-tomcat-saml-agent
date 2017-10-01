@@ -18,7 +18,7 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent.saml;
+package org.wso2.carbon.identity.sso.agent.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

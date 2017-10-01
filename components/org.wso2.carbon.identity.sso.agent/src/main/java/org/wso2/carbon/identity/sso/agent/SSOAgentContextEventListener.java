@@ -23,8 +23,8 @@ package org.wso2.carbon.identity.sso.agent;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509KeyStoreCredential;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509Credential;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509KeyStoreCredential;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 
 import java.io.IOException;
@@ -39,9 +39,9 @@ import javax.servlet.ServletContextListener;
 /**
  * Context EventListner Class for SAML2 SSO.
  */
-public class SAML2SSOAgentContextEventListener implements ServletContextListener {
+public class SSOAgentContextEventListener implements ServletContextListener {
 
-    private static Logger logger = Logger.getLogger(SAML2SSOAgentContextEventListener.class.getName());
+    private static Logger logger = Logger.getLogger(SSOAgentContextEventListener.class.getName());
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

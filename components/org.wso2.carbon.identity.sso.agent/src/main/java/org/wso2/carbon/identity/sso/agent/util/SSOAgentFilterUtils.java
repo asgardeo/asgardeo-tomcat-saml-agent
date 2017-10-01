@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -32,10 +33,15 @@ import javax.servlet.http.HttpServletRequest;
 public class SSOAgentFilterUtils {
 
     public static SSOAgentConfig getSSOAgentConfig(FilterConfig filterConfig) throws SSOAgentException{
+
+        return getSSOAgentConfig(filterConfig.getServletContext());
+    }
+
+    public static SSOAgentConfig getSSOAgentConfig(ServletContext application) throws SSOAgentException {
+
         // Make sure SSOAgentConstants.CONFIG_BEAN_NAME attribute is added on servlet context initialization.
         // It should be in the type of SSOAgentConfig.
-        Object configBeingAttribute = filterConfig.getServletContext()
-                .getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
+        Object configBeingAttribute = application.getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
         if (!(configBeingAttribute instanceof SSOAgentConfig)) {
             throw new SSOAgentException("Cannot find " + SSOAgentConstants.CONFIG_BEAN_NAME +
                     " attribute of SSOAgentConfig type in the servletContext. Cannot proceed further.");
