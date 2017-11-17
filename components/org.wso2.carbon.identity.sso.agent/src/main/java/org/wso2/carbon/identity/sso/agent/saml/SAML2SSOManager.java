@@ -924,12 +924,12 @@ public class SAML2SSOManager {
 
         Status stat = new StatusBuilder().buildObject();
 
-        //Set the status code
+        // Set the status code.
         StatusCode statCode = new StatusCodeBuilder().buildObject();
         statCode.setValue(status);
         stat.setStatusCode(statCode);
 
-        //Set the status Message
+        // Set the status Message.
         if (statMsg != null) {
             StatusMessage statMesssage = new StatusMessageBuilder().buildObject();
             statMesssage.setMessage(statMsg);
