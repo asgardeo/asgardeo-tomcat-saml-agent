@@ -34,6 +34,8 @@ public class SSOAgentConstants {
 
     public static class SAML2SSO {
 
+        public static final String SUCCESS_CODE = "urn:oasis:names:tc:SAML:2.0:status:Success";
+
         private SAML2SSO() {
         }
 

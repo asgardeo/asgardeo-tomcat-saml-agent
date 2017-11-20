@@ -20,6 +20,8 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
+import org.opensaml.common.xml.SAMLConstants;
+import org.opensaml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantManager;
 import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
@@ -88,8 +90,10 @@ public class SSOAgentFilter implements Filter {
             if (resolver.isSLORequest()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                samlSSOManager.doSLO(request);
-
+                LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
+                String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
+                SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
+                return;
             } else if (resolver.isSAML2SSOResponse()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
