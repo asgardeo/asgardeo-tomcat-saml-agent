@@ -85,10 +85,8 @@ public class SSOAgentContextEventListener implements ServletContextListener {
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-            System.out.println("IOEXception: " + e.getMessage());
         } catch (SSOAgentException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-            System.out.println("SSOAgentException: " + e.getMessage());
         }
     }
 
