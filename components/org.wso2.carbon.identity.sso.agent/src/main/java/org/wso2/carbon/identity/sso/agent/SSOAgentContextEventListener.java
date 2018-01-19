@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -14,8 +14,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- *
  */
 
 package org.wso2.carbon.identity.sso.agent;
@@ -73,19 +71,17 @@ public class SSOAgentContextEventListener implements ServletContextListener {
             }
 
             SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
-                    properties.getProperty("KeyStorePassword").toCharArray(),
-                    properties.getProperty("IdPPublicCertAlias"),
-                    properties.getProperty("PrivateKeyAlias"),
-                    properties.getProperty("PrivateKeyPassword").toCharArray());
+                    properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
+                    properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT),
+                    properties.getProperty(SSOAgentConstants.PRIVATE_KEY_ALIAS),
+                    properties.getProperty(SSOAgentConstants.PRIVATE_KEY_PASSWORD).toCharArray());
 
             SSOAgentConfig config = new SSOAgentConfig();
             config.initConfig(properties);
             config.getSAML2().setSSOAgentX509Credential(credential);
             servletContext.setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME, config);
 
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        } catch (SSOAgentException e) {
+        } catch (IOException | SSOAgentException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -14,8 +14,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- *
  */
 
 package org.wso2.carbon.identity.sso.agent;
@@ -93,7 +91,6 @@ public class OIDCSSOAgentFilter implements Filter {
                 openIdManager = new OpenIDManager(ssoAgentConfig);
                 response.sendRedirect(openIdManager.doOpenIDLogin(request, response));
                 return;
-
             }
 
             // pass the request along the filter chain
@@ -106,11 +103,9 @@ public class OIDCSSOAgentFilter implements Filter {
             // pass the request along the filter chain
             chain.doFilter(request, response);
         } catch (SSOAgentException e) {
-            LOGGER.log(Level.SEVERE, "An error has occurred", e);
             throw e;
         }
     }
-
 
     /**
      * @see Filter#destroy()

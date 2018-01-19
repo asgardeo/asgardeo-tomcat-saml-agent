@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -14,13 +14,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- *
  */
 
 package org.wso2.carbon.identity.sso.agent.util;
 
 public class SSOAgentConstants {
+
+    public static final String KEY_STORE_PASSWORD = "KeyStorePassword";
+    public static final String IDP_PUBLIC_CERT = "IdPPublicCertAlias";
+    public static final String PRIVATE_KEY_ALIAS = "PrivateKeyAlias";
+    public static final String PRIVATE_KEY_PASSWORD = "PrivateKeyPassword";
 
     public static final String LOGGER_NAME = "org.wso2.carbon.identity.sso.agent";
 
