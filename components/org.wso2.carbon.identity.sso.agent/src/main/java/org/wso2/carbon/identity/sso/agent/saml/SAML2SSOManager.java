@@ -27,6 +27,7 @@ import org.apache.xml.security.signature.XMLSignature;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.common.SAMLVersion;
+import org.opensaml.common.SignableSAMLObject;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.common.Extensions;
 import org.opensaml.saml2.core.Assertion;
@@ -48,15 +49,21 @@ import org.opensaml.saml2.core.RequestAbstractType;
 import org.opensaml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.SessionIndex;
+import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
+import org.opensaml.saml2.core.StatusMessage;
 import org.opensaml.saml2.core.impl.AuthnContextClassRefBuilder;
 import org.opensaml.saml2.core.impl.AuthnRequestBuilder;
 import org.opensaml.saml2.core.impl.IssuerBuilder;
 import org.opensaml.saml2.core.impl.LogoutRequestBuilder;
+import org.opensaml.saml2.core.impl.LogoutResponseBuilder;
 import org.opensaml.saml2.core.impl.NameIDBuilder;
 import org.opensaml.saml2.core.impl.NameIDPolicyBuilder;
 import org.opensaml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.opensaml.saml2.core.impl.SessionIndexBuilder;
+import org.opensaml.saml2.core.impl.StatusBuilder;
+import org.opensaml.saml2.core.impl.StatusCodeBuilder;
+import org.opensaml.saml2.core.impl.StatusMessageBuilder;
 import org.opensaml.saml2.ecp.RelayState;
 import org.opensaml.saml2.encryption.Decrypter;
 import org.opensaml.security.SAMLSignatureProfileValidator;
@@ -69,7 +76,9 @@ import org.opensaml.xml.security.SecurityHelper;
 import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.keyinfo.KeyInfoCredentialResolver;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
+import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureValidator;
+import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureImpl;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
@@ -80,16 +89,21 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.security.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.agent.session.management.SSOAgentSessionManager;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentDataHolder;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -313,6 +327,11 @@ public class SAML2SSOManager {
 
     }
 
+    public String buildPostResponse(SignableSAMLObject requestMessage) throws SSOAgentException {
+
+        return encodeRequestMessage(requestMessage, SAMLConstants.SAML2_POST_BINDING_URI);
+    }
+
     public void processResponse(HttpServletRequest request, HttpServletResponse response)
             throws SSOAgentException {
 
@@ -324,7 +343,7 @@ public class SAML2SSOManager {
             if (samlObject instanceof LogoutResponse) {
                 //This is a SAML response for a single logout request from the SP
                 doSLO(request);
-                request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
+                request.setAttribute(org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
             } else {
                 processSSOResponse(request);
             }
@@ -348,7 +367,7 @@ public class SAML2SSOManager {
      * @throws javax.servlet.ServletException
      * @throws IOException
      */
-    public void doSLO(HttpServletRequest request) throws SSOAgentException {
+    public LogoutResponse doSLO(HttpServletRequest request) throws SSOAgentException {
 
         XMLObject saml2Object = null;
         if (request.getParameter(SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_AUTH_REQ) != null) {
@@ -366,6 +385,8 @@ public class SAML2SSOManager {
             for (HttpSession session : sessions) {
                 session.invalidate();
             }
+            return buildLogoutResponse(logoutRequest.getID(), SSOAgentConstants.SAML2SSO
+                    .SUCCESS_CODE, null);
         } else if (saml2Object instanceof LogoutResponse) {
             if (request.getSession(false) != null) {
                 /**
@@ -388,6 +409,7 @@ public class SAML2SSOManager {
                     }
                 }
             }
+            return (LogoutResponse) saml2Object;
         } else {
             throw new SSOAgentException("Invalid SAML2 Single Logout Request/Response");
         }
@@ -446,7 +468,7 @@ public class SAML2SSOManager {
         if (assertion == null) {
             if (isNoPassive(saml2Response)) {
                 LOGGER.log(Level.FINE, "Cannot authenticate in passive mode");
-                servletRequest.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
+                servletRequest.setAttribute(org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
                 return;
             }
             throw new SSOAgentException("SAML2 Assertion not found in the Response");
@@ -537,6 +559,28 @@ public class SAML2SSOManager {
         return logoutReq;
     }
 
+    public LogoutResponse buildLogoutResponse(String id, String status, String statMsg)
+            throws SSOAgentException {
+
+        LogoutResponse logoutResp = new LogoutResponseBuilder().buildObject();
+        logoutResp.setID(SSOAgentUtils.createID());
+        logoutResp.setInResponseTo(id);
+
+        IssuerBuilder issuerBuilder = new IssuerBuilder();
+        Issuer issuer = issuerBuilder.buildObject();
+        issuer.setValue(ssoAgentConfig.getSAML2().getSPEntityId());
+        logoutResp.setIssuer(issuer);
+
+        logoutResp.setStatus(buildStatus(status, statMsg));
+        logoutResp.setIssueInstant(new DateTime());
+        logoutResp.setDestination(ssoAgentConfig.getSAML2().getIdPURL());
+
+        SSOAgentUtils.setSignatureValue(logoutResp, XMLSignature.ALGO_ID_SIGNATURE_RSA,
+                new X509CredentialImpl(ssoAgentConfig.getSAML2().getSSOAgentX509Credential()));
+
+        return logoutResp;
+    }
+
     protected AuthnRequest buildAuthnRequest(HttpServletRequest request) throws SSOAgentException {
 
         IssuerBuilder issuerBuilder = new IssuerBuilder();
@@ -600,7 +644,7 @@ public class SAML2SSOManager {
         return authRequest;
     }
 
-    protected String encodeRequestMessage(RequestAbstractType requestMessage, String binding)
+    protected String encodeRequestMessage(SignableSAMLObject requestMessage, String binding)
             throws SSOAgentException {
 
         Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(requestMessage);
@@ -878,5 +922,24 @@ public class SAML2SSOManager {
             }
             throw new SSOAgentException("Signature validation failed for SAML2 Element");
         }
+    }
+
+    private Status buildStatus(String status, String statMsg) {
+
+        Status stat = new StatusBuilder().buildObject();
+
+        // Set the status code.
+        StatusCode statCode = new StatusCodeBuilder().buildObject();
+        statCode.setValue(status);
+        stat.setStatusCode(statCode);
+
+        // Set the status Message.
+        if (statMsg != null) {
+            StatusMessage statMesssage = new StatusMessageBuilder().buildObject();
+            statMesssage.setMessage(statMsg);
+            stat.setStatusMessage(statMesssage);
+        }
+
+        return stat;
     }
 }

@@ -20,10 +20,13 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
+import org.opensaml.common.xml.SAMLConstants;
+import org.opensaml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantManager;
+import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentFilterUtils;
@@ -85,9 +88,11 @@ public class SAML2SSOAgentFilter implements Filter {
             if (resolver.isSLORequest()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                samlSSOManager.doSLO(request);
+                LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
+                String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
+                SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
                 request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
-
+                return;
             } else if (resolver.isSAML2SSOResponse()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
@@ -97,17 +102,28 @@ public class SAML2SSOAgentFilter implements Filter {
                     handleException(request, e);
                 }
 
+            } else if (resolver.isOpenIdLoginResponse()) {
+
+                OpenIDManager openIdManager = new OpenIDManager(ssoAgentConfig);
+                try {
+                    openIdManager.processOpenIDLoginResponse(request, response);
+                } catch (SSOAgentException e) {
+                    handleException(request, e);
+                }
+
             } else if (resolver.isSLOURL()) {
 
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 if (resolver.isHttpPostBinding()) {
+
                     boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
                     ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+
                 } else {
-                    // If "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
+                    //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
                     boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                     ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                     String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);

@@ -38,6 +38,7 @@ import org.opensaml.xml.io.UnmarshallerFactory;
 import org.opensaml.xml.io.UnmarshallingException;
 import org.opensaml.xml.security.x509.X509Credential;
 import org.opensaml.xml.signature.KeyInfo;
+import org.opensaml.xml.signature.SignableXMLObject;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.X509Data;
@@ -126,26 +127,54 @@ public class SSOAgentUtils {
     public static AuthnRequest setSignature(AuthnRequest authnRequest, String signatureAlgorithm,
                                         X509Credential cred) throws SSOAgentException {
         doBootstrap();
+        return setSignatureValue(authnRequest, signatureAlgorithm, cred);
+    }
+
+    /**
+     * Sign the SAML AuthnRequest message
+     *
+     * @param logoutRequest
+     * @param signatureAlgorithm
+     * @param cred
+     * @return
+     * @throws SSOAgentException
+     */
+    public static LogoutRequest setSignature(LogoutRequest logoutRequest, String signatureAlgorithm,
+                                             X509Credential cred) throws SSOAgentException {
+
+        return setSignatureValue(logoutRequest, signatureAlgorithm, cred);
+    }
+
+    /**
+     * Add signature to any singable XML object.
+     * @param xmlObject Singable xml object.
+     * @param signatureAlgorithm Signature algorithm to be used.
+     * @param cred X509 Credentials.
+     * @param <T> Singable XML object with signature.
+     * @return Singable XML object with signature.
+     * @throws SSOAgentException If error occurred.
+     */
+    public static <T extends SignableXMLObject> T setSignatureValue(T xmlObject, String signatureAlgorithm,
+                                                                    X509Credential cred)
+            throws SSOAgentException {
+
         try {
-            Signature signature = setSignatureRaw(signatureAlgorithm,cred);
+            Signature signature = setSignatureRaw(signatureAlgorithm, cred);
+            xmlObject.setSignature(signature);
 
-
-            authnRequest.setSignature(signature);
-
-            List<Signature> signatureList = new ArrayList<Signature>();
+            List<Signature> signatureList = new ArrayList<>();
             signatureList.add(signature);
 
             // Marshall and Sign
             MarshallerFactory marshallerFactory =
                     org.opensaml.xml.Configuration.getMarshallerFactory();
-            Marshaller marshaller = marshallerFactory.getMarshaller(authnRequest);
+            Marshaller marshaller = marshallerFactory.getMarshaller(xmlObject);
 
-            marshaller.marshall(authnRequest);
+            marshaller.marshall(xmlObject);
 
             org.apache.xml.security.Init.init();
             Signer.signObjects(signatureList);
-            return authnRequest;
-
+            return xmlObject;
         } catch (Exception e) {
             throw new SSOAgentException("Error while signing the SAML Request message", e);
         }
@@ -172,41 +201,6 @@ public class SSOAgentUtils {
 
         } catch (CertificateEncodingException e) {
             throw new SSOAgentException("Error getting certificate", e);
-        }
-    }
-
-    /**
-     * Sign the SAML AuthnRequest message
-     *
-     * @param logoutRequest
-     * @param signatureAlgorithm
-     * @param cred
-     * @return
-     * @throws SSOAgentException
-     */
-    public static LogoutRequest setSignature(LogoutRequest logoutRequest, String signatureAlgorithm,
-                                             X509Credential cred) throws SSOAgentException {
-        try {
-            Signature signature = setSignatureRaw(signatureAlgorithm,cred);
-
-            logoutRequest.setSignature(signature);
-
-            List<Signature> signatureList = new ArrayList<Signature>();
-            signatureList.add(signature);
-
-            // Marshall and Sign
-            MarshallerFactory marshallerFactory =
-                    org.opensaml.xml.Configuration.getMarshallerFactory();
-            Marshaller marshaller = marshallerFactory.getMarshaller(logoutRequest);
-
-            marshaller.marshall(logoutRequest);
-
-            org.apache.xml.security.Init.init();
-            Signer.signObjects(signatureList);
-            return logoutRequest;
-
-        } catch (Exception e) {
-            throw new SSOAgentException("Error while signing the Logout Request message", e);
         }
     }
 
