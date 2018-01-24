@@ -282,8 +282,8 @@ public class SSOAgentConfigs {
                 (SSOAgentConfigs.isResponseSigned() || SSOAgentConfigs.isAssertionSigned() || SSOAgentConfigs.isAssertionEncripted() || SSOAgentConfigs.isRequestSigned()) &&
                 SSOAgentConfigs.getSSOAgentCredentialImplClass() == null) {
             LOGGER.info("SAML.SSOAgentCredentialImplClass not configured." +
-                    " Defaulting to \'org.wso2.carbon.identity.sso.agent.saml.SSOAgentKeyStoreCredential\'");
-            SSOAgentConfigs.setSSOAgentCredentialImplClass("org.wso2.carbon.identity.sso.agent.saml.SSOAgentKeyStoreCredential");
+                    " Defaulting to \'org.wso2.carbon.identity.sso.agent.security.SSOAgentKeyStoreCredential\'");
+            SSOAgentConfigs.setSSOAgentCredentialImplClass("org.wso2.carbon.identity.sso.agent.security.SSOAgentKeyStoreCredential");
         }
 
         if (SSOAgentConfigs.isSAMLSSOLoginEnabled() &&

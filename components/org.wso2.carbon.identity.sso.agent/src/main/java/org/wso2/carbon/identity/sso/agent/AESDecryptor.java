@@ -31,6 +31,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
+
 /**
  * Class for decrypt the encrypted values using AES algorithm.
  */

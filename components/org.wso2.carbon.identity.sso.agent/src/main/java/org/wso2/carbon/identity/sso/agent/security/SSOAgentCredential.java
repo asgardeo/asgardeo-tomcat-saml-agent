@@ -18,15 +18,17 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent.saml;
+package org.wso2.carbon.identity.sso.agent.security;
 
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
-public interface SSOAgentX509Credential {
+public interface SSOAgentCredential {
+
+    void init() throws SSOAgentException;
 
     PublicKey getPublicKey() throws SSOAgentException;
 

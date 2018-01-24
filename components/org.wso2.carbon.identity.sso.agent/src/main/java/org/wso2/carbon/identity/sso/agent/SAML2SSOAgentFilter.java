@@ -23,11 +23,19 @@ package org.wso2.carbon.identity.sso.agent;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.oauth2.SAML2GrantManager;
 import org.wso2.carbon.identity.sso.agent.openid.OpenIDManager;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentFilterUtils;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentRequestResolver;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -36,23 +44,21 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * Servlet Filter implementation class SSOAgentFilter
+ * Servlet Filter implementation class SAML2SSOAgentFilter.
  */
-public class SSOAgentFilter implements Filter {
+public class SAML2SSOAgentFilter implements Filter {
 
     private static final Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
+    protected FilterConfig filterConfig = null;
 
     /**
      * @see Filter#init(FilterConfig)
      */
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
-        return;
+        this.filterConfig = fConfig;
     }
 
     /**
@@ -66,13 +72,7 @@ public class SSOAgentFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         try {
-
-            SSOAgentConfig ssoAgentConfig = (SSOAgentConfig) request.
-                    getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
-            if (ssoAgentConfig == null) {
-                throw new SSOAgentException("Cannot find " + SSOAgentConstants.CONFIG_BEAN_NAME +
-                        " set a request attribute. Unable to proceed further");
-            }
+            SSOAgentConfig ssoAgentConfig = SSOAgentFilterUtils.getSSOAgentConfig(filterConfig);
 
             SSOAgentRequestResolver resolver =
                     new SSOAgentRequestResolver(request, response, ssoAgentConfig);
@@ -82,10 +82,8 @@ public class SSOAgentFilter implements Filter {
                 return;
             }
 
-            SAML2SSOManager samlSSOManager = null;
-            OpenIDManager openIdManager = null;
-            SAML2GrantManager saml2GrantManager = null;
-
+            SAML2SSOManager samlSSOManager;
+            SAML2GrantManager saml2GrantManager;
 
             if (resolver.isSLORequest()) {
 
@@ -93,6 +91,7 @@ public class SSOAgentFilter implements Filter {
                 LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
                 String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
                 SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
+                request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
                 return;
             } else if (resolver.isSAML2SSOResponse()) {
 
@@ -105,7 +104,7 @@ public class SSOAgentFilter implements Filter {
 
             } else if (resolver.isOpenIdLoginResponse()) {
 
-                openIdManager = new OpenIDManager(ssoAgentConfig);
+                OpenIDManager openIdManager = new OpenIDManager(ssoAgentConfig);
                 try {
                     openIdManager.processOpenIDLoginResponse(request, response);
                 } catch (SSOAgentException e) {
@@ -140,21 +139,14 @@ public class SSOAgentFilter implements Filter {
                     String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
                     SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
                     return;
-                } else {
-                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 }
-                return;
-
-            } else if (resolver.isOpenIdURL()) {
-
-                openIdManager = new OpenIDManager(ssoAgentConfig);
-                response.sendRedirect(openIdManager.doOpenIDLogin(request, response));
+                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 return;
 
             } else if (resolver.isPassiveAuthnRequest()) {
 
-                boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                 samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                 ssoAgentConfig.getSAML2().setPassiveAuthn(true);
                 String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
                 ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
@@ -167,15 +159,18 @@ public class SSOAgentFilter implements Filter {
                 saml2GrantManager.getAccessToken(request, response);
 
             }
+
+            if (SSOAgentFilterUtils.shouldGoToWelcomePage(request)) {
+                response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                return;
+            }
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
             // Redirect to the index page when session is expired or user already logged out.
-            response.sendRedirect(request.getRequestURI().replace("logout", ""));
-        } catch (SSOAgentException e) {
-            LOGGER.log(Level.SEVERE, "An error has occurred", e);
-            throw e;
+            LOGGER.log(Level.FINE, "Invalid Session!", e);
+            response.sendRedirect(filterConfig.getServletContext().getContextPath());
         }
     }
 

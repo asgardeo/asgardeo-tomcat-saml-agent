@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
+ *  Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,28 +14,24 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- *
  */
 
-package org.wso2.carbon.identity.sso.agent;
-
-import javax.servlet.ServletException;
+package org.wso2.carbon.identity.sso.agent.exception;
 
 /**
- * This class is used to denote the exceptions thrown from the SSO agent module
+ * Invalid session exception.
  */
-public class SSOAgentException extends ServletException {
+public class InvalidSessionException extends SSOAgentException {
 
-    public SSOAgentException(String message) {
+    public InvalidSessionException(String message) {
         super(message);
     }
 
-    public SSOAgentException(Throwable cause) {
+    public InvalidSessionException(Throwable cause) {
         super(cause);
     }
 
-    public SSOAgentException(String message, Throwable cause) {
+    public InvalidSessionException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -91,13 +91,14 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.sso.agent.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.security.X509CredentialImpl;
+import org.wso2.carbon.identity.sso.agent.session.management.SSOAgentSessionManager;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentDataHolder;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentDataHolder;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
-import org.wso2.carbon.identity.sso.agent.util.SAMLSignatureValidator;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -342,6 +343,7 @@ public class SAML2SSOManager {
             if (samlObject instanceof LogoutResponse) {
                 //This is a SAML response for a single logout request from the SP
                 doSLO(request);
+                request.setAttribute(org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
             } else {
                 processSSOResponse(request);
             }
@@ -413,13 +415,14 @@ public class SAML2SSOManager {
         }
     }
 
-    protected void processSSOResponse(HttpServletRequest request) throws SSOAgentException {
+    protected void processSSOResponse(HttpServletRequest servletRequest) throws
+            SSOAgentException {
 
         LoggedInSessionBean sessionBean = new LoggedInSessionBean();
         sessionBean.setSAML2SSO(sessionBean.new SAML2SSO());
 
         String saml2ResponseString =
-                new String(Base64.decode(request.getParameter(
+                new String(Base64.decode(servletRequest.getParameter(
                         SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_RESP)), Charset.forName("UTF-8"));
         XMLObject response = SSOAgentUtils.unmarshall(saml2ResponseString);
 
@@ -465,6 +468,7 @@ public class SAML2SSOManager {
         if (assertion == null) {
             if (isNoPassive(saml2Response)) {
                 LOGGER.log(Level.FINE, "Cannot authenticate in passive mode");
+                servletRequest.setAttribute(org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
                 return;
             }
             throw new SSOAgentException("SAML2 Assertion not found in the Response");
@@ -499,14 +503,14 @@ public class SAML2SSOManager {
         }
 
         // This should be the only time where a new session can be created.
-        // Thus in latter places request.getSession(false) should be used.
+        // Thus in latter places servletRequest.getSession(false) should be used.
         sessionBean.getSAML2SSO().setSubjectId(subject); // set the subject
-        request.getSession().setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
+        servletRequest.getSession().setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
 
         // Marshalling SAML2 assertion after signature validation due to a weird issue in OpenSAML
         sessionBean.getSAML2SSO().setAssertionString(marshall(assertion));
 
-        ((LoggedInSessionBean) request.getSession(false).getAttribute(
+        ((LoggedInSessionBean) servletRequest.getSession(false).getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().
                 setSubjectAttributes(getAssertionStatements(assertion));
 
@@ -516,12 +520,12 @@ public class SAML2SSOManager {
             if (sessionId == null) {
                 throw new SSOAgentException("Single Logout is enabled but IdP Session ID not found in SAML2 Assertion");
             }
-            ((LoggedInSessionBean) request.getSession(false).getAttribute(
+            ((LoggedInSessionBean) servletRequest.getSession(false).getAttribute(
                     SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().setSessionIndex(sessionId);
-            SSOAgentSessionManager.addAuthenticatedSession(request.getSession(false));
+            SSOAgentSessionManager.addAuthenticatedSession(servletRequest.getSession(false));
         }
 
-        request.getSession(false).setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
+        servletRequest.getSession(false).setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
 
     }
 

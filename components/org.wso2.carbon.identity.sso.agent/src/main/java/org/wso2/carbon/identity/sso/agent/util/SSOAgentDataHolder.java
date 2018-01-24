@@ -18,7 +18,7 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent;
+package org.wso2.carbon.identity.sso.agent.util;
 
 import org.openid4java.consumer.ConsumerManager;
 

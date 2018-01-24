@@ -18,7 +18,7 @@
  *
  */
 
-package org.wso2.carbon.identity.sso.agent.saml;
+package org.wso2.carbon.identity.sso.agent.security;
 
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs;

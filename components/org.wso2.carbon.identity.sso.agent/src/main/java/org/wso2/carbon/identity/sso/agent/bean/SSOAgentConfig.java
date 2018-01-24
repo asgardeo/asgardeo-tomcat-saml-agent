@@ -24,11 +24,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.AESDecryptor;
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentCarbonX509Credential;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentCarbonX509Credential;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509Credential;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -77,6 +77,7 @@ public class SSOAgentConfig {
 
     private SAML2 saml2 = new SAML2();
     private OpenID openId = new OpenID();
+    private OIDC oidc = new OIDC();
     private OAuth2 oauth2 = new OAuth2();
     private String requestQueryParameters;
     private Boolean enableHostNameVerification = false;
@@ -163,6 +164,8 @@ public class SSOAgentConfig {
     public OpenID getOpenId() {
         return openId;
     }
+
+    public OIDC getOidc() { return oidc; }
 
     public void setSAML2SSOLoginEnabled(Boolean isSAML2SSOLoginEnabled) {
         this.isSAML2SSOLoginEnabled = isSAML2SSOLoginEnabled;
@@ -497,6 +500,19 @@ public class SSOAgentConfig {
                     "\' not configured. Defaulting to \'false\'");
             openId.isDumbModeEnabled = false;
         }
+
+        oidc.setConsumerKey(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.CONSUMER_KEY));
+        oidc.setConsumerSecret(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.CONSUMER_SECRET));
+        oidc.setAuthzEndpoint(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.OAUTH2_AUTHZ_ENDPOINT));
+        oidc.setAuthzGrantType(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.OAUTH2_GRANT_TYPE));
+        oidc.setCallBackUrl(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.CALL_BACK_URL));
+        oidc.setOIDCLogoutEndpoint(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.OIDC_LOGOUT_ENDPOINT));
+        oidc.setSessionIFrameEndpoint(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC
+                .OIDC_SESSION_IFRAME_ENDPOINT));
+        oidc.setScope(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC.SCOPE));
+        oidc.setPostLogoutRedirectUri(properties.getProperty(SSOAgentConstants.SSOAgentConfig.OIDC
+                .POST_LOGOUT_REDIRECT_RUI));
+
         if (properties.getProperty("KeyStore") != null) {
             try {
                 keyStoreStream = new FileInputStream(properties.getProperty("KeyStore"));
@@ -947,6 +963,91 @@ public class SSOAgentConfig {
 
         public void setDumbModeEnabled(boolean isDumbModeEnabled) {
             this.isDumbModeEnabled = isDumbModeEnabled;
+        }
+    }
+
+    public class OIDC {
+
+        private String consumerKey = StringUtils.EMPTY;
+        private String consumerSecret = StringUtils.EMPTY;
+        private String authzEndpoint = StringUtils.EMPTY;
+        private String authzGrantType = StringUtils.EMPTY;
+        private String callBackUrl = StringUtils.EMPTY;
+        private String OIDCLogoutEndpoint = StringUtils.EMPTY;
+        private String sessionIFrameEndpoint = StringUtils.EMPTY;
+
+        public String getScope() {
+            return scope;
+        }
+
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
+
+        private String scope = StringUtils.EMPTY;
+        private String postLogoutRedirectUri = StringUtils.EMPTY;
+
+        public String getConsumerKey() {
+            return consumerKey;
+        }
+
+        public void setConsumerKey(String consumerKey) {
+            this.consumerKey = consumerKey;
+        }
+
+        public String getAuthzEndpoint() {
+            return authzEndpoint;
+        }
+
+        public void setAuthzEndpoint(String authzEndpoint) {
+            this.authzEndpoint = authzEndpoint;
+        }
+        public String getAuthzGrantType() {
+            return authzGrantType;
+        }
+
+        public void setAuthzGrantType(String authzGrantType) {
+            this.authzGrantType = authzGrantType;
+        }
+
+        public String getCallBackUrl() {
+            return callBackUrl;
+        }
+
+        public void setCallBackUrl(String callBackUrl) {
+            this.callBackUrl = callBackUrl;
+        }
+
+        public String getOIDCLogoutEndpoint() {
+            return OIDCLogoutEndpoint;
+        }
+
+        public void setOIDCLogoutEndpoint(String OIDCLogoutEndpoint) {
+            this.OIDCLogoutEndpoint = OIDCLogoutEndpoint;
+        }
+
+        public String getSessionIFrameEndpoint() {
+            return sessionIFrameEndpoint;
+        }
+
+        public void setSessionIFrameEndpoint(String sessionIFrameEndpoint) {
+            this.sessionIFrameEndpoint = sessionIFrameEndpoint;
+        }
+
+        public String getConsumerSecret() {
+            return consumerSecret;
+        }
+
+        public void setConsumerSecret(String consumerSecret) {
+            this.consumerSecret = consumerSecret;
+        }
+
+        public String getPostLogoutRedirectUri() {
+            return postLogoutRedirectUri;
+        }
+
+        public void setPostLogoutRedirectUri(String postLogoutRedirectUri) {
+            this.postLogoutRedirectUri = postLogoutRedirectUri;
         }
     }
 

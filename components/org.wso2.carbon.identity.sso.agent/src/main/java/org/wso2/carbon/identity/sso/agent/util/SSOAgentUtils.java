@@ -45,8 +45,7 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -123,7 +122,7 @@ public class SSOAgentUtils {
      * @param signatureAlgorithm
      * @param cred
      * @return
-     * @throws org.wso2.carbon.identity.sso.agent.SSOAgentException
+     * @throws SSOAgentException
      */
     public static AuthnRequest setSignature(AuthnRequest authnRequest, String signatureAlgorithm,
                                         X509Credential cred) throws SSOAgentException {
