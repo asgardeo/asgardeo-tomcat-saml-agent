@@ -106,7 +106,7 @@ public class Encryption {
         Console console = System.console();
         if (console == null) {
             System.err.println("Couldn't get Console instance");
-            System.exit(0);
+            System.exit(-1);
         }
 
         // Get the password used for encryption.
