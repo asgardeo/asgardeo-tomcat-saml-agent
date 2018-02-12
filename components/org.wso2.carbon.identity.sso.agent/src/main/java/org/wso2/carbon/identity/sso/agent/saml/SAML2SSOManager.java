@@ -92,6 +92,7 @@ import org.w3c.dom.ls.LSSerializer;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.internal.SSOAgentServiceComponent;
 import org.wso2.carbon.identity.sso.agent.security.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.agent.session.management.SSOAgentSessionManager;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
@@ -101,7 +102,9 @@ import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.crypto.SecretKey;
@@ -125,6 +128,7 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
 import static org.wso2.carbon.CarbonConstants.AUDIT_LOG;
+import static org.wso2.carbon.identity.core.util.IdentityCoreConstants.MULTI_ATTRIBUTE_SEPARATOR;
 
 /**
  * TODO: Need to have mechanism to map SP initiated SAML2 Request to SAML2 Responses and validate.
@@ -132,6 +136,7 @@ import static org.wso2.carbon.CarbonConstants.AUDIT_LOG;
  */
 public class SAML2SSOManager {
 
+    private static String DEFAULT_MULTI_ATTRIBUTE_SEPARATOR = ",";
     private static final Log log = LogFactory.getLog(SAML2SSOManager.class);
 
 
@@ -689,6 +694,19 @@ public class SAML2SSOManager {
     private Map<String, String> getAssertionStatements(Assertion assertion) {
 
         Map<String, String> results = new HashMap<String, String>();
+        String multiAttributeSeparator = DEFAULT_MULTI_ATTRIBUTE_SEPARATOR;
+
+        UserRealm realm;
+        try {
+            realm = SSOAgentServiceComponent.getRealmService().getTenantUserRealm
+                    (org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID);
+            UserStoreManager userStoreManager = (UserStoreManager) realm.getUserStoreManager();
+
+            multiAttributeSeparator = userStoreManager.
+                    getRealmConfiguration().getUserStoreProperty(MULTI_ATTRIBUTE_SEPARATOR);
+        } catch (UserStoreException e) {
+            log.warn("Error while reading MultiAttributeSeparator value from primary user store ", e);
+        }
 
         if (assertion != null && assertion.getAttributeStatements() != null) {
 
@@ -698,12 +716,16 @@ public class SAML2SSOManager {
             for (AttributeStatement statement : attributeStatementList) {
                 List<Attribute> attributesList = statement.getAttributes();
                 for (Attribute attribute : attributesList) {
-                    List<String> valueList = new ArrayList<>();
-                    for (XMLObject xmlObject : attribute.getAttributeValues()) {
-                        valueList.add(xmlObject.getDOM().getTextContent());
+                    List<XMLObject> multipleAttributeValues = attribute.getAttributeValues();
+                    if (CollectionUtils.isNotEmpty(multipleAttributeValues)) {
+                        List<String> valueList = new ArrayList<>();
+                        for (XMLObject attributeVal : multipleAttributeValues) {
+                            Element value = attributeVal.getDOM();
+                            valueList.add(value.getTextContent());
+                        }
+                        String attributeValue = StringUtils.join(valueList.iterator(), multiAttributeSeparator);
+                        results.put(attribute.getName(), attributeValue);
                     }
-                    String value = StringUtils.join(valueList, ",");
-                    results.put(attribute.getName(), value);
                 }
             }
 

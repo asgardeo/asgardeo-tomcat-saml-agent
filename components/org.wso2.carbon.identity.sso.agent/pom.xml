@@ -84,6 +84,10 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0</version>
@@ -100,6 +104,9 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>
+                            org.wso2.carbon.identity.sso.agent.internal,
+                        </Private-Package>
                         <Import-Package>
                             javax.crypto,
                             javax.net.ssl,
@@ -126,6 +133,7 @@
                             org.bouncycastle.*; version="[1.52, 1.60.0)",
                         </Import-Package>
                         <Export-Package>
+                            !org.wso2.carbon.identity.sso.agent.internal,
                             org.wso2.carbon.identity.sso.agent.*; version="${identity.sso.agent.package.export.version}",
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
