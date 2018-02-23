@@ -698,12 +698,14 @@ public class SAML2SSOManager {
 
         UserRealm realm;
         try {
-            realm = SSOAgentServiceComponent.getRealmService().getTenantUserRealm
-                    (org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID);
-            UserStoreManager userStoreManager = (UserStoreManager) realm.getUserStoreManager();
+            if (SSOAgentServiceComponent.getRealmService() != null) {
+                realm = SSOAgentServiceComponent.getRealmService().getTenantUserRealm
+                        (org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID);
+                UserStoreManager userStoreManager = (UserStoreManager) realm.getUserStoreManager();
 
-            multiAttributeSeparator = userStoreManager.
-                    getRealmConfiguration().getUserStoreProperty(MULTI_ATTRIBUTE_SEPARATOR);
+                multiAttributeSeparator = userStoreManager.
+                        getRealmConfiguration().getUserStoreProperty(MULTI_ATTRIBUTE_SEPARATOR);
+            }
         } catch (UserStoreException e) {
             log.warn("Error while reading MultiAttributeSeparator value from primary user store ", e);
         }
