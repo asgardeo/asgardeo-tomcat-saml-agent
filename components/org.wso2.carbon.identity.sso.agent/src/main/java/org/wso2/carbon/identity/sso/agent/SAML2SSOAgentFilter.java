@@ -161,7 +161,7 @@ public class SAML2SSOAgentFilter implements Filter {
             }
 
             if (SSOAgentFilterUtils.shouldGoToWelcomePage(request)) {
-                response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/index.jsp");
                 return;
             }
             // pass the request along the filter chain
