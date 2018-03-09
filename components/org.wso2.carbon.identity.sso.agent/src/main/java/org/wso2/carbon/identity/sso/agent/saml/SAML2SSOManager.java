@@ -20,6 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -76,56 +77,51 @@ import org.opensaml.xml.security.SecurityHelper;
 import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.keyinfo.KeyInfoCredentialResolver;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
-import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureValidator;
-import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureImpl;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.opensaml.xml.validation.ValidationException;
+import org.owasp.encoder.Encode;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
+import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.internal.SSOAgentServiceComponent;
 import org.wso2.carbon.identity.sso.agent.security.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.agent.session.management.SSOAgentSessionManager;
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentDataHolder;
-import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
-import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static org.wso2.carbon.CarbonConstants.AUDIT_LOG;
 import static org.wso2.carbon.identity.core.util.IdentityCoreConstants.MULTI_ATTRIBUTE_SEPARATOR;
@@ -222,7 +218,12 @@ public class SAML2SSOManager {
             for (Map.Entry<String, String[]> entry : ssoAgentConfig.getQueryParams().entrySet()) {
                 if (entry.getKey() != null && entry.getValue() != null && entry.getValue().length > 0) {
                     for (String param : entry.getValue()) {
-                        builder.append("&").append(entry.getKey()).append("=").append(param);
+                        try {
+                            builder.append("&").append(entry.getKey()).append("=").append(
+                                    URLEncoder.encode(param, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            throw new SSOAgentException("Error occurred while URLEncoding " + entry.getKey(), e);
+                        }
                     }
                 }
             }
@@ -302,7 +303,7 @@ public class SAML2SSOManager {
             if (entry.getKey() != null && entry.getValue() != null && entry.getValue().length > 0) {
                 for (String param : entry.getValue()) {
                     htmlParams.append("<input type='hidden' name='").append(entry.getKey())
-                            .append("' value='").append(param).append("'>\n");
+                            .append("' value='").append(Encode.forHtmlAttribute(param)).append("'>\n");
                 }
             }
 
