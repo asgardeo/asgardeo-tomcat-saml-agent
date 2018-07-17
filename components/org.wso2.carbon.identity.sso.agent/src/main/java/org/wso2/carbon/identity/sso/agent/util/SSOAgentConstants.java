@@ -40,6 +40,8 @@ public class SSOAgentConstants {
 
         public static final String HTTP_POST_PARAM_SAML2_AUTH_REQ = "SAMLRequest";
         public static final String HTTP_POST_PARAM_SAML2_RESP = "SAMLResponse";
+        public static final String SAML2_ARTIFACT_RESP = "SAMLart";
+        public static final String SUCCESS_CODE = "urn:oasis:names:tc:SAML:2.0:status:Success";
     }
 
     public static class OpenID {
@@ -99,6 +101,15 @@ public class SSOAgentConstants {
                     "SAML2.PostBindingRequestHTMLFilePath";
             public static final String SIGNATURE_VALIDATOR = "SAML2.SignatureValidatorImplClass";
             public static final String TIME_STAMP_SKEW = "SAML2.TimestampSkew";
+
+            public static final String SOAP_ACTION_PARAM_KEY = "SOAPAction";
+            public static final String ACCEPT_PARAM_KEY = "Accept";
+            public static final String CONTENT_TYPE_PARAM_KEY = "Content-Type";
+            public static final String PRAGMA_PARAM_KEY = "Pragma";
+            public static final String CACHE_CONTROL_PARAM_KEY = "Cache-Control";
+            public static final String IS_ARTIFACT_RESOLVE_REQ_SIGNED = "ISArtifactResolveReqSigned";
+            public static final String ARTIFACT_RESOLVE_URL = "SAML2.ArtifactResolveUrl";
+            public static final String ENABLE_ARTIFACT_RESOLVE_SIGNING = "SAML2.EnableArtifactResolveSigning";
 
             private SAML2() {}
         }

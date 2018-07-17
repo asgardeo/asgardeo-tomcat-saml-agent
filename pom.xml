@@ -184,6 +184,11 @@
                 <version>${httpcomponents-httpclient.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpcomponents-apache.wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${encoder.wso2.version}</version>
@@ -269,7 +274,7 @@
     </build>
 
     <properties>
-        <identity.framework.version>5.5.0</identity.framework.version>
+        <identity.framework.version>5.12.55</identity.framework.version>
         <identity.sso.agent.package.export.version>${project.version}</identity.sso.agent.package.export.version>
 
         <carbon.kernel.version>4.4.7</carbon.kernel.version>
@@ -288,6 +293,7 @@
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
         <commons-collections.version>3.2.0.wso2v1</commons-collections.version>
         <httpcomponents-httpclient.wso2.version>4.3.1.wso2v2</httpcomponents-httpclient.wso2.version>
+        <httpcomponents-apache.wso2.version>4.3.1.wso2v1</httpcomponents-apache.wso2.version>
         <commons-codec.version>1.9</commons-codec.version>
 
         <identity.framework.import.version.range>[5.0.0, 6.0.0)</identity.framework.import.version.range>
