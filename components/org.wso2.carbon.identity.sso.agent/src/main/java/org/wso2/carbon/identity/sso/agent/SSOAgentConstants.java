@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
+/**
+ * @deprecated This class is duplicated by {@link org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants}
+ */
+@Deprecated
 public class SSOAgentConstants {
 
     public static final String LOGGER_NAME = "org.wso2.carbon.identity.sso.agent";

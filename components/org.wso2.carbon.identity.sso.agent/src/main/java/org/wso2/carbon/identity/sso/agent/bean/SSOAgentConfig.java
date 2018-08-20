@@ -471,6 +471,9 @@ public class SSOAgentConfig {
         saml2.relayState = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.RELAY_STATE);
         saml2.postBindingRequestHTMLPayload = properties.getProperty(
                 SSOAgentConstants.SSOAgentConfig.SAML2.POST_BINDING_REQUEST_HTML_PAYLOAD);
+        saml2.artifactResolveURL = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.ARTIFACT_RESOLVE_URL);
+        saml2.enableArtifactResolveSigning = StringUtils.equals(
+                properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.ENABLE_ARTIFACT_RESOLVE_SIGNING), "true");
 
         oauth2.tokenURL = properties.getProperty(
                 SSOAgentConstants.SSOAgentConfig.OAuth2.TOKEN_URL);
@@ -742,6 +745,29 @@ public class SSOAgentConfig {
         private String relayState = null;
         private String signatureValidatorImplClass = null;
         private int timeStampSkewInSeconds = 300;
+        private String artifactResolveURL = null;
+        private boolean enableArtifactResolveSigning;
+
+        public void setArtifactResolveURL(String artifactResolveURL) {
+
+            this.artifactResolveURL = artifactResolveURL;
+        }
+
+        public String getArtifactResolveURL() {
+
+            return artifactResolveURL;
+        }
+
+        public void setEnableArtifactResolveSigning(boolean enableArtifactResolveSigning) {
+
+            this.enableArtifactResolveSigning = enableArtifactResolveSigning;
+        }
+
+        public boolean isEnableArtifactResolveSigning() {
+
+            return enableArtifactResolveSigning;
+        }
+
         /**
          * The html page that will auto-submit the SAML2 to the IdP.
          * This should be in valid HTML syntax, with following section within the

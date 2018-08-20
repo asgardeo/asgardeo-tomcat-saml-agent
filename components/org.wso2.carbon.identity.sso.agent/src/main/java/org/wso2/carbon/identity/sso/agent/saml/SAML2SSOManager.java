@@ -31,6 +31,7 @@ import org.opensaml.common.SAMLVersion;
 import org.opensaml.common.SignableSAMLObject;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.common.Extensions;
+import org.opensaml.saml2.core.ArtifactResponse;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
@@ -89,12 +90,14 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.exception.ArtifactResolutionException;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.internal.SSOAgentServiceComponent;
+import org.wso2.carbon.identity.sso.agent.saml.artifact.SAMLSSOArtifactResolutionService;
 import org.wso2.carbon.identity.sso.agent.security.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.agent.session.management.SSOAgentSessionManager;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentDataHolder;
@@ -366,6 +369,81 @@ public class SAML2SSOManager {
     }
 
     /**
+     * Process authentication response with SAML2 artifact.
+     *
+     * @param request Http Servlet Request object.
+     * @throws SSOAgentException
+     */
+    public void processArtifactResponse(HttpServletRequest request) throws SSOAgentException {
+
+        SAMLSSOArtifactResolutionService artifactResolutionService =
+                new SAMLSSOArtifactResolutionService(ssoAgentConfig);
+        try {
+            ArtifactResponse artifactResponse = artifactResolutionService.getSAMLArtifactResponse(
+                    request.getParameter(SSOAgentConstants.SAML2SSO.SAML2_ARTIFACT_RESP));
+
+            if (!StringUtils.equals(artifactResponse.getStatus().getStatusCode().getValue(), StatusCode.SUCCESS_URI)) {
+                throw new SSOAgentException("Received an invalid SAML response with status code: " +
+                        artifactResponse.getStatus().getStatusCode().getValue());
+            }
+            if (artifactResponse.getMessage() == null) {
+                throw new SSOAgentException("Received SAML2 Artifact response message was null.");
+            }
+            XMLObject xmlObject = artifactResponse.getMessage();
+            if (xmlObject instanceof Response || xmlObject instanceof LogoutResponse) {
+                validateSAMLResponseInArtifactResponse(xmlObject);
+                executeSAMLResponse(request, xmlObject);
+            } else {
+                throw new SSOAgentException("Received incorrect Artifact Response message with type: " +
+                        xmlObject.getClass());
+            }
+        } catch (ArtifactResolutionException e) {
+            throw new SSOAgentException("Error when getting the Artifact Response.", e);
+        }
+    }
+
+    /**
+     * Validate Artifact Response message content.
+     *
+     * @param response Message of the received Artifact Response.
+     * @throws SSOAgentException
+     */
+    private void validateSAMLResponseInArtifactResponse(XMLObject response) throws SSOAgentException {
+
+        // Checking for duplicate samlp:Response. This is done to thwart possible XSW attacks
+        NodeList responseList = response.getDOM().getElementsByTagNameNS(SAMLConstants.SAML20P_NS, "Response");
+        if (responseList != null && responseList.getLength() > 0) {
+            throw new SSOAgentException("Error occurred while processing SAML2 response. " +
+                    "Invalid schema for the SAML2 response. Multiple Response elements found.");
+        }
+
+        // Checking for multiple Assertions. This is done to thwart possible XSW attacks.
+        NodeList assertionList = response.getDOM().getElementsByTagNameNS(SAMLConstants.SAML20_NS, "Assertion");
+        if (assertionList != null && assertionList.getLength() > 1) {
+            throw new SSOAgentException("Error occurred while processing SAML2 response. " +
+                    "Invalid schema for the SAML2 response. Multiple Assertion elements found.");
+        }
+    }
+
+    /**
+     * Redirect SAML response received via artifact resolution.
+     *
+     * @param request    Initial authentication request.
+     * @param samlObject Response received via artifact resolution.
+     * @throws SSOAgentException
+     */
+    private void executeSAMLResponse(HttpServletRequest request, XMLObject samlObject) throws SSOAgentException {
+        if (samlObject instanceof LogoutResponse) {
+            // This is a SAML response for a single logout request from the SP.
+            doSLO(request);
+        } else if (samlObject instanceof Response) {
+            processSSOResponse(request, (Response) samlObject);
+        } else {
+            throw new SSOAgentException("Unable to process unknown SAML object of type: " + samlObject.getClass());
+        }
+    }
+
+    /**
      * This method handles the logout requests from the IdP
      * Any request for the defined logout URL is handled here
      *
@@ -421,11 +499,7 @@ public class SAML2SSOManager {
         }
     }
 
-    protected void processSSOResponse(HttpServletRequest servletRequest) throws
-            SSOAgentException {
-
-        LoggedInSessionBean sessionBean = new LoggedInSessionBean();
-        sessionBean.setSAML2SSO(sessionBean.new SAML2SSO());
+    private void processSSOResponse(HttpServletRequest servletRequest) throws SSOAgentException {
 
         String saml2ResponseString =
                 new String(Base64.decode(servletRequest.getParameter(
@@ -447,7 +521,14 @@ public class SAML2SSOManager {
         }
 
         Response saml2Response = (Response) response;
-        sessionBean.getSAML2SSO().setResponseString(saml2ResponseString);
+        processSSOResponse(servletRequest, saml2Response);
+    }
+
+    private void processSSOResponse(HttpServletRequest servletRequest, Response saml2Response) throws SSOAgentException {
+
+        LoggedInSessionBean sessionBean = new LoggedInSessionBean();
+        sessionBean.setSAML2SSO(sessionBean.new SAML2SSO());
+        sessionBean.getSAML2SSO().setResponseString(saml2Response.toString());
         sessionBean.getSAML2SSO().setSAMLResponse(saml2Response);
 
         Assertion assertion = null;
@@ -532,7 +613,6 @@ public class SAML2SSOManager {
         }
 
         servletRequest.getSession(false).setAttribute(SSOAgentConstants.SESSION_BEAN_NAME, sessionBean);
-
     }
 
     protected LogoutRequest buildLogoutRequest(String user, String sessionIdx) throws SSOAgentException {

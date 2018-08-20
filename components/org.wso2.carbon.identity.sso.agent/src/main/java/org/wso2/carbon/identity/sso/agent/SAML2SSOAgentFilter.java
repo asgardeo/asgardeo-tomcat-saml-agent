@@ -20,7 +20,6 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
-import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
@@ -102,6 +101,14 @@ public class SAML2SSOAgentFilter implements Filter {
                     handleException(request, e);
                 }
 
+            } else if (resolver.isSAML2ArtifactResponse()) {
+
+                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                try {
+                    samlSSOManager.processArtifactResponse(request);
+                } catch (SSOAgentException e) {
+                    handleException(request, e);
+                }
             } else if (resolver.isOpenIdLoginResponse()) {
 
                 OpenIDManager openIdManager = new OpenIDManager(ssoAgentConfig);

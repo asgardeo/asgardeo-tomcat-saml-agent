@@ -27,6 +27,7 @@ import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.signature.XMLSignature;
 import org.opensaml.Configuration;
 import org.opensaml.DefaultBootstrap;
+import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.LogoutRequest;
 import org.opensaml.xml.ConfigurationException;
@@ -47,9 +48,25 @@ import org.opensaml.xml.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.security.cert.CertificateEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.XMLConstants;
@@ -61,17 +78,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.security.cert.CertificateEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SSOAgentUtils {
 
@@ -149,6 +155,21 @@ public class SSOAgentUtils {
                                              X509Credential cred) throws SSOAgentException {
 
         return setSignatureValue(logoutRequest, signatureAlgorithm, cred);
+    }
+
+    /**
+     * Sign SAML2 Artifact Resolve.
+     *
+     * @param artifactResolve    ArtifactResolve object to be signed.
+     * @param signatureAlgorithm Signature algorithm.
+     * @param cred               X509 Credential.
+     * @return Signed Artifact Resolve object.
+     * @throws SSOAgentException
+     */
+    public static ArtifactResolve setSignature(ArtifactResolve artifactResolve, String signatureAlgorithm,
+                                               X509Credential cred) throws SSOAgentException {
+
+        return setSignatureValue(artifactResolve, signatureAlgorithm, cred);
     }
 
     /**
@@ -270,6 +291,34 @@ public class SSOAgentUtils {
                     LOGGER.log(Level.WARNING, "Error occurred while closing Writer", e);
                 }
             }
+        }
+    }
+
+    /**
+     * Serializing a SAML2 object into a String.
+     *
+     * @param xmlObject object that needs to serialized.
+     * @return serialized object
+     * @throws SSOAgentException
+     */
+    public static String marshall(XMLObject xmlObject) throws SSOAgentException {
+
+        try {
+            MarshallerFactory marshallerFactory = org.opensaml.xml.Configuration
+                    .getMarshallerFactory();
+            Marshaller marshaller = marshallerFactory.getMarshaller(xmlObject);
+            Element element = marshaller.marshall(xmlObject);
+
+            ByteArrayOutputStream byteArrayOutputStrm = new ByteArrayOutputStream();
+            DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+            DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+            LSSerializer writer = impl.createLSSerializer();
+            LSOutput output = impl.createLSOutput();
+            output.setByteStream(byteArrayOutputStrm);
+            writer.write(element, output);
+            return byteArrayOutputStrm.toString();
+        } catch (Exception e) {
+            throw new SSOAgentException("Error Serializing the SAML Response", e);
         }
     }
 

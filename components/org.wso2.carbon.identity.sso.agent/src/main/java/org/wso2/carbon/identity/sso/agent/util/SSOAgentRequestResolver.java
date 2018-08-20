@@ -53,6 +53,12 @@ public class SSOAgentRequestResolver {
                 request.getParameter(SSOAgentConstants.SAML2SSO.HTTP_POST_PARAM_SAML2_RESP) != null;
     }
 
+    public boolean isSAML2ArtifactResponse() {
+
+        return ssoAgentConfig.isSAML2SSOLoginEnabled() &&
+                request.getParameter(SSOAgentConstants.SAML2SSO.SAML2_ARTIFACT_RESP) != null;
+    }
+
     public boolean isOpenIdLoginResponse() {
         return ssoAgentConfig.isOpenIdLoginEnabled() &&
                 ssoAgentConfig.getOpenId().getMode() != null &&
