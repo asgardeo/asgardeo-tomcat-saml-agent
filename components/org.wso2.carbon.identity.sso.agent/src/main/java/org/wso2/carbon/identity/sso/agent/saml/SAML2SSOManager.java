@@ -113,6 +113,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -600,6 +601,23 @@ public class SAML2SSOManager {
         ((LoggedInSessionBean) servletRequest.getSession(false).getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().
                 setSubjectAttributes(getAssertionStatements(assertion));
+
+        // Create a new session for each authentication and invalidate the current session
+        if (servletRequest.getSession(Boolean.FALSE) != null) {
+            HttpSession session = servletRequest.getSession(Boolean.FALSE);
+            Enumeration<String> attributeNames = session.getAttributeNames();
+            Map<String, Object> sessionMap = new HashMap<String, Object>();
+
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                sessionMap.put(attributeName, session.getAttribute(attributeName));
+            }
+            servletRequest.getSession(Boolean.FALSE).invalidate();
+            HttpSession newSession = servletRequest.getSession(Boolean.TRUE);
+            for (Map.Entry<String, Object> entry : sessionMap.entrySet()) {
+                newSession.setAttribute(entry.getKey(), entry.getValue());
+            }
+        }
 
         //For removing the session when the single sign out request made by the SP itself
         if (ssoAgentConfig.getSAML2().isSLOEnabled()) {
