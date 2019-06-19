@@ -15,24 +15,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.identity.sso.agent.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.user.core.service.RealmService;
 
-/**
- * @scr.reference name="user.realmservice.default"
- * interface="org.wso2.carbon.user.core.service.RealmService"
- * cardinality="1..1" policy="dynamic" bind="setRealmService"
- * unbind="unsetRealmService"
- * @scr.component name="org.wso2.carbon.identity.sso.agent" immediate="true"
- */
+@Component(
+        name = "org.wso2.carbon.identity.sso.agent",
+        immediate = true)
 public class SSOAgentServiceComponent {
 
     private static Log log = LogFactory.getLog(SSOAgentServiceComponent.class);
+
     private static RealmService realmService;
 
     public static RealmService getRealmService() {
@@ -40,6 +42,12 @@ public class SSOAgentServiceComponent {
         return SSOAgentServiceComponent.realmService;
     }
 
+    @Reference(
+            name = "user.realmservice.default",
+            service = org.wso2.carbon.user.core.service.RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService")
     protected void setRealmService(RealmService realmService) {
 
         if (log.isDebugEnabled()) {
@@ -48,6 +56,7 @@ public class SSOAgentServiceComponent {
         SSOAgentServiceComponent.realmService = realmService;
     }
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
 
         if (log.isDebugEnabled()) {
@@ -55,6 +64,7 @@ public class SSOAgentServiceComponent {
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) {
 
         if (log.isDebugEnabled()) {
