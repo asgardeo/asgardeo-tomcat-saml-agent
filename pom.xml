@@ -27,7 +27,7 @@
     <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>identity-agent-sso</artifactId>
-    <version>5.2.3</version>
+    <version>5.2.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - SAML2-OpenID SSO Agent</name>
     <description>
@@ -39,7 +39,7 @@
         <url>https://github.com/wso2-extensions/identity-agent-sso.git</url>
         <developerConnection>scm:git:https://github.com/wso2-extensions/identity-agent-sso.git</developerConnection>
         <connection>scm:git:https://github.com/wso2-extensions/identity-agent-sso.git</connection>
-        <tag>v5.2.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>
