@@ -90,7 +90,6 @@ public class SAML2SSOAgentFilter implements Filter {
                 LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
                 String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
                 SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
-                request.setAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
                 return;
             } else if (resolver.isSAML2SSOResponse()) {
 
@@ -167,10 +166,6 @@ public class SAML2SSOAgentFilter implements Filter {
 
             }
 
-            if (SSOAgentFilterUtils.shouldGoToWelcomePage(request)) {
-                response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/index.jsp");
-                return;
-            }
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
