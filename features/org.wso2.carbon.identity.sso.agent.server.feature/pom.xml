@@ -92,7 +92,7 @@
                                 <bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core:compatible:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core:compatible:${carbon.kernel.feature.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.identity.core:compatible:${identity.framework.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
