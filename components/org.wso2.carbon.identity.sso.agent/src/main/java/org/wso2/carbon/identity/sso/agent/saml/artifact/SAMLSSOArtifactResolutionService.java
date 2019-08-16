@@ -64,7 +64,7 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class SAMLSSOArtifactResolutionService {
 
-    private static Log log = LogFactory.getLog(SAMLSSOArtifactResolutionService.class);
+    private static final Log log = LogFactory.getLog(SAMLSSOArtifactResolutionService.class);
 
     private SSOAgentConfig ssoAgentConfig;
 

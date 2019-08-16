@@ -33,7 +33,7 @@ import org.wso2.carbon.user.core.service.RealmService;
         immediate = true)
 public class SSOAgentServiceComponent {
 
-    private static Log log = LogFactory.getLog(SSOAgentServiceComponent.class);
+    private static final Log log = LogFactory.getLog(SSOAgentServiceComponent.class);
 
     private static RealmService realmService;
 
