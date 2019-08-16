@@ -4,7 +4,7 @@
         <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
         <artifactId>identity-agent-sso</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>5.3.2-SNAPSHOT</version>
+        <version>5.3.2</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
