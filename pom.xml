@@ -291,10 +291,10 @@
     </build>
 
     <properties>
-        <identity.framework.version>5.14.0</identity.framework.version>
+        <identity.framework.version>5.14.67</identity.framework.version>
         <identity.sso.agent.package.export.version>${project.version}</identity.sso.agent.package.export.version>
 
-        <carbon.kernel.version>4.5.0-m3</carbon.kernel.version>
+        <carbon.kernel.version>4.5.0</carbon.kernel.version>
         <carbon.kernel.feature.version>4.5.0</carbon.kernel.feature.version>
         <openid4java.version>1.0.0</openid4java.version>
         <oltu.version>1.0.0.wso2v3</oltu.version>
