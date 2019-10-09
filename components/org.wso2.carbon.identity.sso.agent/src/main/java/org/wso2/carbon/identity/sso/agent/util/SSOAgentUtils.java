@@ -25,26 +25,26 @@ import org.apache.xerces.impl.Constants;
 import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.signature.XMLSignature;
-import org.opensaml.Configuration;
-import org.opensaml.DefaultBootstrap;
-import org.opensaml.saml2.core.ArtifactResolve;
-import org.opensaml.saml2.core.AuthnRequest;
-import org.opensaml.saml2.core.LogoutRequest;
-import org.opensaml.xml.ConfigurationException;
-import org.opensaml.xml.XMLObject;
-import org.opensaml.xml.XMLObjectBuilder;
-import org.opensaml.xml.io.Marshaller;
-import org.opensaml.xml.io.MarshallerFactory;
-import org.opensaml.xml.io.Unmarshaller;
-import org.opensaml.xml.io.UnmarshallerFactory;
-import org.opensaml.xml.io.UnmarshallingException;
-import org.opensaml.xml.security.x509.X509Credential;
-import org.opensaml.xml.signature.KeyInfo;
-import org.opensaml.xml.signature.SignableXMLObject;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.Signer;
-import org.opensaml.xml.signature.X509Data;
-import org.opensaml.xml.util.Base64;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.config.InitializationService;
+import org.opensaml.saml.saml2.core.ArtifactResolve;
+import org.opensaml.saml.saml2.core.AuthnRequest;
+import org.opensaml.saml.saml2.core.LogoutRequest;
+import org.opensaml.core.config.InitializationException;
+import org.opensaml.core.xml.XMLObject;
+import org.opensaml.core.xml.XMLObjectBuilder;
+import org.opensaml.core.xml.io.Marshaller;
+import org.opensaml.core.xml.io.MarshallerFactory;
+import org.opensaml.core.xml.io.Unmarshaller;
+import org.opensaml.core.xml.io.UnmarshallerFactory;
+import org.opensaml.core.xml.io.UnmarshallingException;
+import org.opensaml.security.x509.X509Credential;
+import org.opensaml.xmlsec.signature.KeyInfo;
+import org.opensaml.xmlsec.signature.SignableXMLObject;
+import org.opensaml.xmlsec.signature.Signature;
+import org.opensaml.xmlsec.signature.support.Signer;
+import org.opensaml.xmlsec.signature.X509Data;
+import net.shibboleth.utilities.java.support.codec.Base64Support;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -118,11 +118,46 @@ public class SSOAgentUtils {
 
     public static void doBootstrap() throws SSOAgentException {
         if (!isBootStrapped) {
+            Thread thread = Thread.currentThread();
+            ClassLoader loader = thread.getContextClassLoader();
+            thread.setContextClassLoader(InitializationService.class.getClassLoader());
+
             try {
-                DefaultBootstrap.bootstrap();
+
+                InitializationService.initialize();
+
+                org.opensaml.saml.config.SAMLConfigurationInitializer initializer_1 = new org.opensaml.saml.config.SAMLConfigurationInitializer();
+                initializer_1.init();
+
+                org.opensaml.saml.config.XMLObjectProviderInitializer initializer_2 = new org.opensaml.saml.config.XMLObjectProviderInitializer();
+                initializer_2.init();
+
+                org.opensaml.core.xml.config.XMLObjectProviderInitializer initializer_3 = new org.opensaml.core.xml.config.XMLObjectProviderInitializer();
+                initializer_3.init();
+
+                org.opensaml.core.xml.config.GlobalParserPoolInitializer initializer_4 = new org.opensaml.core.xml.config.GlobalParserPoolInitializer();
+                initializer_4.init();
+
+                org.opensaml.xmlsec.config.JavaCryptoValidationInitializer initializer_5 = new org.opensaml.xmlsec.config.JavaCryptoValidationInitializer();
+                initializer_5.init();
+
+                org.opensaml.xmlsec.config.XMLObjectProviderInitializer initializer_6 = new org.opensaml.xmlsec.config.XMLObjectProviderInitializer();
+                initializer_6.init();
+
+                org.opensaml.xmlsec.config.ApacheXMLSecurityInitializer initializer_7 = new org.opensaml.xmlsec.config.ApacheXMLSecurityInitializer();
+                initializer_7.init();
+
+                org.opensaml.xmlsec.config.GlobalSecurityConfigurationInitializer initializer_8 = new org.opensaml.xmlsec.config.GlobalSecurityConfigurationInitializer();
+                initializer_8.init();
+
+                org.opensaml.xmlsec.config.GlobalAlgorithmRegistryInitializer initializer_9 = new org.opensaml.xmlsec.config.GlobalAlgorithmRegistryInitializer();
+                initializer_9.init();
+
                 isBootStrapped = true;
-            } catch (ConfigurationException e) {
-                throw new SSOAgentException("Error in bootstrapping the OpenSAML2 library", e);
+            } catch (InitializationException e) {
+                throw new SSOAgentException("Error in bootstrapping the OpenSAML3 library", e);
+            } finally {
+                thread.setContextClassLoader(loader);
             }
         }
     }
@@ -194,7 +229,7 @@ public class SSOAgentUtils {
 
             // Marshall and Sign
             MarshallerFactory marshallerFactory =
-                    org.opensaml.xml.Configuration.getMarshallerFactory();
+                    XMLObjectProviderRegistrySupport.getMarshallerFactory();
             Marshaller marshaller = marshallerFactory.getMarshaller(xmlObject);
 
             marshaller.marshall(xmlObject);
@@ -216,8 +251,8 @@ public class SSOAgentUtils {
         try {
             KeyInfo keyInfo = (KeyInfo) buildXMLObject(KeyInfo.DEFAULT_ELEMENT_NAME);
             X509Data data = (X509Data) buildXMLObject(X509Data.DEFAULT_ELEMENT_NAME);
-            org.opensaml.xml.signature.X509Certificate cert =
-                    (org.opensaml.xml.signature.X509Certificate) buildXMLObject(org.opensaml.xml.signature.X509Certificate.DEFAULT_ELEMENT_NAME);
+            org.opensaml.xmlsec.signature.X509Certificate cert =
+                    (org.opensaml.xmlsec.signature.X509Certificate) buildXMLObject(org.opensaml.xmlsec.signature.X509Certificate.DEFAULT_ELEMENT_NAME);
             String value =
                     org.apache.xml.security.utils.Base64.encode(cred.getEntityCertificate().getEncoded());
             cert.setValue(value);
@@ -243,8 +278,8 @@ public class SSOAgentUtils {
             signature.update(httpQueryString.toString().getBytes(Charset.forName("UTF-8")));
             byte[] signatureByteArray = signature.sign();
 
-            String signatureBase64encodedString = Base64.encodeBytes(signatureByteArray,
-                    Base64.DONT_BREAK_LINES);
+            String signatureBase64encodedString = Base64Support.encode(signatureByteArray,
+                    Base64Support.UNCHUNKED);
             httpQueryString.append("&Signature="
                     + URLEncoder.encode(signatureBase64encodedString, "UTF-8").trim());
         } catch (Exception e) {
@@ -262,7 +297,7 @@ public class SSOAgentUtils {
     private static XMLObject buildXMLObject(QName objectQName) throws SSOAgentException {
         doBootstrap();
         XMLObjectBuilder builder =
-                org.opensaml.xml.Configuration.getBuilderFactory()
+                XMLObjectProviderRegistrySupport.getBuilderFactory()
                         .getBuilder(objectQName);
         if (builder == null) {
             throw new SSOAgentException("Unable to retrieve builder for object QName " +
@@ -304,7 +339,7 @@ public class SSOAgentUtils {
     public static String marshall(XMLObject xmlObject) throws SSOAgentException {
 
         try {
-            MarshallerFactory marshallerFactory = org.opensaml.xml.Configuration
+            MarshallerFactory marshallerFactory = XMLObjectProviderRegistrySupport
                     .getMarshallerFactory();
             Marshaller marshaller = marshallerFactory.getMarshaller(xmlObject);
             Element element = marshaller.marshall(xmlObject);
@@ -359,7 +394,7 @@ public class SSOAgentUtils {
                 document = getDocument(documentBuilderFactory, saml2SSOString);
             }
             Element element = document.getDocumentElement();
-            UnmarshallerFactory unmarshallerFactory = Configuration.getUnmarshallerFactory();
+            UnmarshallerFactory unmarshallerFactory = XMLObjectProviderRegistrySupport.getUnmarshallerFactory();
             Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(element);
             return unmarshaller.unmarshall(element);
         } catch (ParserConfigurationException e) {

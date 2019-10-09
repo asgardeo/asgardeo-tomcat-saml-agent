@@ -32,12 +32,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.opensaml.common.SAMLObject;
-import org.opensaml.ws.soap.common.SOAPObjectBuilder;
-import org.opensaml.ws.soap.soap11.Body;
-import org.opensaml.ws.soap.soap11.Envelope;
-import org.opensaml.xml.Configuration;
-import org.opensaml.xml.XMLObjectBuilderFactory;
+import org.opensaml.saml.common.SAMLObject;
+import org.opensaml.soap.common.SOAPObjectBuilder;
+import org.opensaml.soap.soap11.Body;
+import org.opensaml.soap.soap11.Envelope;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.wso2.carbon.identity.sso.agent.exception.ArtifactResolutionException;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 
@@ -65,7 +65,7 @@ public class SAMLSSOSoapMessageService {
      */
     public Envelope buildSOAPMessage(SAMLObject samlMessage) {
 
-        XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
+        XMLObjectBuilderFactory builderFactory = XMLObjectProviderRegistrySupport.getBuilderFactory();
 
         SOAPObjectBuilder<Envelope> envBuilder = (SOAPObjectBuilder<Envelope>) builderFactory.getBuilder(
                 Envelope.DEFAULT_ELEMENT_NAME);
