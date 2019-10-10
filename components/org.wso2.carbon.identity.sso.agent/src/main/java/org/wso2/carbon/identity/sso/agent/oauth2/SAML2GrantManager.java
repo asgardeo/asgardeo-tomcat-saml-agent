@@ -21,7 +21,7 @@
 package org.wso2.carbon.identity.sso.agent.oauth2;
 
 import com.google.gson.Gson;
-import org.opensaml.xml.util.Base64;
+import net.shibboleth.utilities.java.support.codec.Base64Support;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean;
@@ -59,14 +59,14 @@ public class SAML2GrantManager {
         String clientLogin = ssoAgentConfig.getOAuth2().getClientId() + ":" +
                 ssoAgentConfig.getOAuth2().getClientSecret();
         String queryParam = "grant_type=" + SSOAgentConstants.OAuth2.SAML2_BEARER_GRANT_TYPE + "&assertion=" +
-                            URLEncoder.encode(Base64.encodeBytes(
-                                    samlAssertionString.getBytes(Charset.forName("UTF-8"))).replaceAll("\n", ""));
+                            URLEncoder.encode(Base64Support.encode(
+                                    samlAssertionString.getBytes(Charset.forName("UTF-8")), Base64Support.UNCHUNKED).replaceAll("\n", ""));
         String additionalQueryParam = ssoAgentConfig.getRequestQueryParameters();
         if (additionalQueryParam != null) {
             queryParam = queryParam + additionalQueryParam;
         }
         String accessTokenResponse = executePost(queryParam,
-                                                 Base64.encodeBytes(clientLogin.getBytes(Charset.forName("UTF-8")))
+                                                 Base64Support.encode(clientLogin.getBytes(Charset.forName("UTF-8")), Base64Support.UNCHUNKED)
                                                        .replace("\n", ""));
 
         Gson gson = new Gson();
