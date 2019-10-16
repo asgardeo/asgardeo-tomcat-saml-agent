@@ -26,7 +26,6 @@ import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.signature.XMLSignature;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
-import org.opensaml.core.config.InitializationService;
 import org.opensaml.saml.saml2.core.ArtifactResolve;
 import org.opensaml.saml.saml2.core.AuthnRequest;
 import org.opensaml.saml.saml2.core.LogoutRequest;
@@ -52,6 +51,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.wso2.carbon.identity.core.util.SAMLInitializer;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.xml.sax.SAXException;
 
@@ -118,46 +118,11 @@ public class SSOAgentUtils {
 
     public static void doBootstrap() throws SSOAgentException {
         if (!isBootStrapped) {
-            Thread thread = Thread.currentThread();
-            ClassLoader loader = thread.getContextClassLoader();
-            thread.setContextClassLoader(InitializationService.class.getClassLoader());
-
             try {
-
-                InitializationService.initialize();
-
-                org.opensaml.saml.config.SAMLConfigurationInitializer initializer_1 = new org.opensaml.saml.config.SAMLConfigurationInitializer();
-                initializer_1.init();
-
-                org.opensaml.saml.config.XMLObjectProviderInitializer initializer_2 = new org.opensaml.saml.config.XMLObjectProviderInitializer();
-                initializer_2.init();
-
-                org.opensaml.core.xml.config.XMLObjectProviderInitializer initializer_3 = new org.opensaml.core.xml.config.XMLObjectProviderInitializer();
-                initializer_3.init();
-
-                org.opensaml.core.xml.config.GlobalParserPoolInitializer initializer_4 = new org.opensaml.core.xml.config.GlobalParserPoolInitializer();
-                initializer_4.init();
-
-                org.opensaml.xmlsec.config.JavaCryptoValidationInitializer initializer_5 = new org.opensaml.xmlsec.config.JavaCryptoValidationInitializer();
-                initializer_5.init();
-
-                org.opensaml.xmlsec.config.XMLObjectProviderInitializer initializer_6 = new org.opensaml.xmlsec.config.XMLObjectProviderInitializer();
-                initializer_6.init();
-
-                org.opensaml.xmlsec.config.ApacheXMLSecurityInitializer initializer_7 = new org.opensaml.xmlsec.config.ApacheXMLSecurityInitializer();
-                initializer_7.init();
-
-                org.opensaml.xmlsec.config.GlobalSecurityConfigurationInitializer initializer_8 = new org.opensaml.xmlsec.config.GlobalSecurityConfigurationInitializer();
-                initializer_8.init();
-
-                org.opensaml.xmlsec.config.GlobalAlgorithmRegistryInitializer initializer_9 = new org.opensaml.xmlsec.config.GlobalAlgorithmRegistryInitializer();
-                initializer_9.init();
-
+                SAMLInitializer.doBootstrap();
                 isBootStrapped = true;
             } catch (InitializationException e) {
                 throw new SSOAgentException("Error in bootstrapping the OpenSAML3 library", e);
-            } finally {
-                thread.setContextClassLoader(loader);
             }
         }
     }
