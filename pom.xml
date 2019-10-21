@@ -291,7 +291,7 @@
     </build>
 
     <properties>
-        <identity.framework.version>5.14.104-SNAPSHOT</identity.framework.version>
+        <identity.framework.version>5.14.105-SNAPSHOT</identity.framework.version>
         <identity.sso.agent.package.export.version>${project.version}</identity.sso.agent.package.export.version>
 
         <carbon.kernel.version>4.5.0</carbon.kernel.version>
