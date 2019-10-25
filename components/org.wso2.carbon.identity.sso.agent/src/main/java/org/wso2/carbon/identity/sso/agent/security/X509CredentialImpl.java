@@ -80,6 +80,10 @@ public class X509CredentialImpl implements X509Credential {
         return new ArrayList<X509Certificate>();
     }
 
+    /***
+     * get a credential context set
+     * @return Method not supported so will return null
+     */
     @Override
     public CredentialContextSet getCredentialContextSet() {
         return null;
