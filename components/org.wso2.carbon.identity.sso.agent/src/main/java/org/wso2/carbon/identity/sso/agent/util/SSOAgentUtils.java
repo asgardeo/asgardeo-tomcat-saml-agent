@@ -117,6 +117,7 @@ public class SSOAgentUtils {
     }
 
     public static void doBootstrap() throws SSOAgentException {
+
         if (!isBootStrapped) {
             try {
                 SAMLInitializer.doBootstrap();
@@ -125,6 +126,7 @@ public class SSOAgentUtils {
                 throw new SSOAgentException("Error in bootstrapping the OpenSAML3 library", e);
             }
         }
+        
     }
 
     /**
