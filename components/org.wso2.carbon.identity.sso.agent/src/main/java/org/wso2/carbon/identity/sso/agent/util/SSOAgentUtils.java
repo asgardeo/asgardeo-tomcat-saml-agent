@@ -126,7 +126,7 @@ public class SSOAgentUtils {
                 throw new SSOAgentException("Error in bootstrapping the OpenSAML3 library", e);
             }
         }
-        
+
     }
 
     /**
