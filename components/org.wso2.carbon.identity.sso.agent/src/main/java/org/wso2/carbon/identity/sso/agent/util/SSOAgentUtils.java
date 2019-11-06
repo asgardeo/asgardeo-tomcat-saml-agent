@@ -51,7 +51,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-import org.wso2.carbon.identity.core.util.SAMLInitializer;
+import org.wso2.carbon.identity.saml.common.util.SAMLInitializer;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.xml.sax.SAXException;
 
