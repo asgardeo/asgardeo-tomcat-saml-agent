@@ -296,7 +296,7 @@
     </build>
 
     <properties>
-        <identity.framework.version>5.14.120-SNAPSHOT</identity.framework.version>
+        <identity.framework.version>5.14.136-SNAPSHOT</identity.framework.version>
         <identity.sso.agent.package.export.version>${project.version}</identity.sso.agent.package.export.version>
 
         <carbon.kernel.version>4.5.0</carbon.kernel.version>
@@ -319,7 +319,7 @@
         <httpcomponents-apache.wso2.version>4.3.1.wso2v1</httpcomponents-apache.wso2.version>
         <commons-codec.version>1.9</commons-codec.version>
 
-        <saml.common.util.version>1.0.0-SNAPSHOT</saml.common.util.version>
+        <saml.common.util.version>1.0.1</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!-- Pax Logging Version -->
