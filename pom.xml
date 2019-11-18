@@ -319,7 +319,7 @@
         <httpcomponents-apache.wso2.version>4.3.1.wso2v1</httpcomponents-apache.wso2.version>
         <commons-codec.version>1.9</commons-codec.version>
 
-        <saml.common.util.version>1.0.1</saml.common.util.version>
+        <saml.common.util.version>1.0.3</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!-- Pax Logging Version -->
