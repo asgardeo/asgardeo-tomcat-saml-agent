@@ -325,7 +325,7 @@
         <!-- Pax Logging Version -->
         <pax.logging.api.version>1.10.1</pax.logging.api.version>
 
-        <identity.framework.import.version.range>[5.14.67, 6.0.0)</identity.framework.import.version.range>
+        <identity.framework.import.version.range>[5.15.0, 6.0.0)</identity.framework.import.version.range>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <com.google.code.gson.osgi.version.range>[2.3.1,3.0.0)</com.google.code.gson.osgi.version.range>
         <httpcomponents-httpclient.imp.pkg.version.range>[4.3.1.wso2v2,5.0.0)
