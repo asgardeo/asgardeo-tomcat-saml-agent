@@ -55,12 +55,20 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.saml.common</groupId>
+            <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.orbit.org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-ext-jdk15</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.orbit.joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -146,6 +154,7 @@
                             org.joda.time;version="${joda.wso2.osgi.version.range}",
                             org.openid4java.*;version="${openid4java.wso2.osgi.version.range}";resolution:=optional,
                             org.opensaml.*; version="${opensaml2.wso2.osgi.version.range}",
+                            net.shibboleth.utilities.java.support.*; version="${opensaml2.wso2.osgi.version.range}",
                             org.w3c.dom.*,
                             org.xml.sax,
                             org.wso2.carbon.core.util; version="${carbon.kernel.package.import.version.range}",
@@ -153,6 +162,7 @@
                             org.wso2.carbon.user.api; version="${carbon.user.api.imp.pkg.version.range}",
                             org.wso2.carbon.identity.core.util;
                             version="${identity.framework.import.version.range}",
+                            org.wso2.carbon.identity.saml.common.util.*; version="${saml.common.util.version.range}",
                             org.apache.commons.collections; version="${commons-collections.wso2.osgi.version.range}",
                             org.bouncycastle.*; version="[1.60, 2.0.0)",
                         </Import-Package>

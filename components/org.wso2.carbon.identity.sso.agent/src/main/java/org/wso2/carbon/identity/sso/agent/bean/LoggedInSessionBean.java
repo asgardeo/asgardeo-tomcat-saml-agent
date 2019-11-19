@@ -23,8 +23,8 @@ package org.wso2.carbon.identity.sso.agent.bean;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import org.openid4java.discovery.DiscoveryInformation;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.Response;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentUtils;
 

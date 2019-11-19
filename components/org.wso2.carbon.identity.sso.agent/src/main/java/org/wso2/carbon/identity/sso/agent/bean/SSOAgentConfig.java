@@ -22,7 +22,7 @@ package org.wso2.carbon.identity.sso.agent.bean;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.opensaml.common.xml.SAMLConstants;
+import org.opensaml.saml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.AESDecryptor;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;

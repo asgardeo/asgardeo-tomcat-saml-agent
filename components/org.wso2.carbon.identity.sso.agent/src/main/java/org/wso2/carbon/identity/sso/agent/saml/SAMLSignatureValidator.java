@@ -19,8 +19,8 @@
  */
 package org.wso2.carbon.identity.sso.agent.saml;
 
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.Response;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 

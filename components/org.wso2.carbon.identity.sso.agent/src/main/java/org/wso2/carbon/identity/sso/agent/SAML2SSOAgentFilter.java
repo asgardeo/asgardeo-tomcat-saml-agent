@@ -20,7 +20,7 @@
 
 package org.wso2.carbon.identity.sso.agent;
 
-import org.opensaml.saml2.core.LogoutResponse;
+import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;

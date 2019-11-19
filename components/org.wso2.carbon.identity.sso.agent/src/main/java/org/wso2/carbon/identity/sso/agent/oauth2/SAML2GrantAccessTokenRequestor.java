@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.sso.agent.oauth2;
 import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.opensaml.xml.util.Base64;
+import net.shibboleth.utilities.java.support.codec.Base64Support;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentSessionBean;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs;
@@ -60,10 +60,10 @@ public class SAML2GrantAccessTokenRequestor {
             String keySecret = consumerKey+":"+consumerSecret;
 
             String accessTokenResponse = executePost(tokenEndpoint,
-                    SAML2_BEARER_ASSERTION + URLEncoder.encode(Base64
-                            .encodeBytes(samlAssertionString.getBytes(Charset.forName("UTF-8"))).replaceAll("\n", "")),
-                    Base64.encodeBytes(keySecret.getBytes(Charset.forName
-                            ("UTF-8")))
+                    SAML2_BEARER_ASSERTION + URLEncoder.encode(Base64Support
+                            .encode(samlAssertionString.getBytes(Charset.forName("UTF-8")), Base64Support.UNCHUNKED).replaceAll("\n", "")),
+                    Base64Support.encode(keySecret.getBytes(Charset.forName
+                            ("UTF-8")), Base64Support.UNCHUNKED)
                     .replace("\n",
                             ""));
 

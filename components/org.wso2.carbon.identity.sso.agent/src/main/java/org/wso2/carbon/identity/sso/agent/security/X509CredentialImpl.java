@@ -20,10 +20,10 @@
 
 package org.wso2.carbon.identity.sso.agent.security;
 
-import org.opensaml.xml.security.credential.Credential;
-import org.opensaml.xml.security.credential.CredentialContextSet;
-import org.opensaml.xml.security.credential.UsageType;
-import org.opensaml.xml.security.x509.X509Credential;
+import org.opensaml.security.credential.Credential;
+import org.opensaml.security.credential.CredentialContextSet;
+import org.opensaml.security.credential.UsageType;
+import org.opensaml.security.x509.X509Credential;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509Credential;
 
@@ -80,8 +80,12 @@ public class X509CredentialImpl implements X509Credential {
         return new ArrayList<X509Certificate>();
     }
 
+    /***
+     * Get the credential context set.
+     * @return This method is not supported so the return is null.
+     */
     @Override
-    public CredentialContextSet getCredentalContextSet() {
+    public CredentialContextSet getCredentialContextSet() {
         return null;
     }
 
