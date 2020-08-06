@@ -347,6 +347,7 @@
     </properties>
 
     <modules>
+        <module>components/org.wso2.carbon.identity.sso.agent</module>
         <module>components/org.wso2.carbon.identity.sso.agent.saml</module>
         <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
         <module>components/org.wso2.carbon.identity.sso.encryptor</module>
