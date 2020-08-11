@@ -22,7 +22,6 @@ package org.wso2.carbon.identity.sso.agent.saml.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 
 import java.io.FileInputStream;
@@ -38,7 +37,7 @@ import javax.servlet.FilterConfig;
 public class SSOAgentConfigs {
 
     private static final Logger LOGGER = Logger.getLogger("InfoLogging");
-    private static final Log log = LogFactory.getLog(SSOAgentConfig.class);
+    private static final Log log = LogFactory.getLog(SSOAgentConfigs.class);
 
     private static Boolean samlSSOLoginEnabled;
     private static String sessionBeanName;
