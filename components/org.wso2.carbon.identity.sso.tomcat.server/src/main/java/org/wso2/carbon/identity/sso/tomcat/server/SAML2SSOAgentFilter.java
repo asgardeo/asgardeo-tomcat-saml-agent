@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.sso.tomcat.server;
 
 import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
+import org.wso2.carbon.identity.sso.agent.saml.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
@@ -40,6 +41,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet Filter implementation class SAML2SSOAgentFilter.
@@ -146,9 +148,23 @@ public class SAML2SSOAgentFilter implements Filter {
                 ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
                 response.sendRedirect(redirectUrl);
                 return;
-
             }
 
+            if (request.getSession(false) != null &&
+                    request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
+                request.getSession().invalidate();
+                response.sendRedirect("index.html");
+                return;
+            }
+
+            HttpSession session = request.getSession();
+            LoggedInSessionBean
+                    sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
+
+            if (sessionBean == null || sessionBean.getSAML2SSO() == null) {
+                response.sendRedirect("index.html");
+                return;
+            }
             // pass the request along the filter chain
             chain.doFilter(request, response);
 
