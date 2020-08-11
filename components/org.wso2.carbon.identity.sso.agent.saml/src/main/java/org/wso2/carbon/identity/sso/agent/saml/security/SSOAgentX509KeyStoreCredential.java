@@ -59,16 +59,19 @@ public class SSOAgentX509KeyStoreCredential implements SSOAgentX509Credential {
 
     @Override
     public PublicKey getPublicKey() throws SSOAgentException {
+
         return publicKey;
     }
 
     @Override
     public PrivateKey getPrivateKey() throws SSOAgentException {
+
         return privateKey;
     }
 
     @Override
     public X509Certificate getEntityCertificate() throws SSOAgentException {
+
         return entityCertificate;
     }
 
@@ -117,7 +120,7 @@ public class SSOAgentX509KeyStoreCredential implements SSOAgentX509Credential {
                 try {
                     keyStoreInputStream.close();
                 } catch (IOException ignored) {
-                    if (log.isDebugEnabled()){
+                    if (log.isDebugEnabled()) {
                         log.debug("Ignoring IO Exception : ", ignored);
                     }
                     throw new SSOAgentException("Error while closing input stream of key store");

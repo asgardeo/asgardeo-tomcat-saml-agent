@@ -18,17 +18,22 @@
 
 package org.wso2.carbon.identity.sso.agent.saml;
 
+import net.shibboleth.utilities.java.support.codec.Base64Support;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.signature.XMLSignature;
 import org.joda.time.DateTime;
+import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.xml.io.Marshaller;
+import org.opensaml.core.xml.io.MarshallerFactory;
+import org.opensaml.core.xml.io.MarshallingException;
 import org.opensaml.saml.common.SAMLVersion;
 import org.opensaml.saml.common.SignableSAMLObject;
 import org.opensaml.saml.common.xml.SAMLConstants;
-import org.opensaml.saml.saml2.core.Extensions;
 import org.opensaml.saml.saml2.core.ArtifactResponse;
 import org.opensaml.saml.saml2.core.Assertion;
 import org.opensaml.saml.saml2.core.Attribute;
@@ -40,6 +45,7 @@ import org.opensaml.saml.saml2.core.AuthnContextComparisonTypeEnumeration;
 import org.opensaml.saml.saml2.core.AuthnRequest;
 import org.opensaml.saml.saml2.core.Conditions;
 import org.opensaml.saml.saml2.core.EncryptedAssertion;
+import org.opensaml.saml.saml2.core.Extensions;
 import org.opensaml.saml.saml2.core.Issuer;
 import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.LogoutResponse;
@@ -67,20 +73,14 @@ import org.opensaml.saml.saml2.core.impl.StatusMessageBuilder;
 import org.opensaml.saml.saml2.ecp.RelayState;
 import org.opensaml.saml.saml2.encryption.Decrypter;
 import org.opensaml.saml.security.impl.SAMLSignatureProfileValidator;
-import org.opensaml.core.xml.XMLObject;
-import org.opensaml.xmlsec.encryption.EncryptedKey;
-import org.opensaml.core.xml.io.Marshaller;
-import org.opensaml.core.xml.io.MarshallerFactory;
-import org.opensaml.core.xml.io.MarshallingException;
-import org.opensaml.security.credential.CredentialSupport;
 import org.opensaml.security.credential.Credential;
+import org.opensaml.security.credential.CredentialSupport;
+import org.opensaml.xmlsec.encryption.EncryptedKey;
 import org.opensaml.xmlsec.keyinfo.KeyInfoCredentialResolver;
 import org.opensaml.xmlsec.keyinfo.impl.StaticKeyInfoCredentialResolver;
 import org.opensaml.xmlsec.signature.impl.SignatureImpl;
-import org.opensaml.xmlsec.signature.support.SignatureValidator;
-import net.shibboleth.utilities.java.support.codec.Base64Support;
-import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import org.opensaml.xmlsec.signature.support.SignatureException;
+import org.opensaml.xmlsec.signature.support.SignatureValidator;
 import org.owasp.encoder.Encode;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -88,16 +88,16 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.saml.artifact.SAMLSSOArtifactResolutionService;
 import org.wso2.carbon.identity.sso.agent.saml.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.exception.ArtifactResolutionException;
 import org.wso2.carbon.identity.sso.agent.saml.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.saml.internal.SSOAgentServiceComponent;
-import org.wso2.carbon.identity.sso.agent.saml.artifact.SAMLSSOArtifactResolutionService;
 import org.wso2.carbon.identity.sso.agent.saml.security.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.agent.saml.session.management.SSOAgentSessionManager;
+import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentDataHolder;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentUtils;
 import org.wso2.carbon.user.api.UserRealm;
@@ -120,6 +120,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -134,16 +135,14 @@ import static org.wso2.carbon.identity.core.util.IdentityCoreConstants.MULTI_ATT
  */
 public class SAML2SSOManager {
 
-    private static String DEFAULT_MULTI_ATTRIBUTE_SEPARATOR = ",";
     private static final Log log = LogFactory.getLog(SAML2SSOManager.class);
-
-
     private static final Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
+    private static String DEFAULT_MULTI_ATTRIBUTE_SEPARATOR = ",";
     private SSOAgentConfig ssoAgentConfig = null;
 
     public SAML2SSOManager(SSOAgentConfig ssoAgentConfig) throws SSOAgentException {
 
-		/* Initializing the OpenSAML library, loading default configurations */
+        /* Initializing the OpenSAML library, loading default configurations */
         this.ssoAgentConfig = ssoAgentConfig;
         //load custom Signature Validator Class
         String signerClassName = ssoAgentConfig.getSAML2().getSignatureValidatorImplClass();
@@ -231,8 +230,6 @@ public class SAML2SSOManager {
             }
             httpQueryString.append(builder);
         }
-
-
 
         if (ssoAgentConfig.getSAML2().getIdPURL().indexOf("?") > -1) {
             idpUrl = ssoAgentConfig.getSAML2().getIdPURL().concat("&").concat(httpQueryString.toString());
@@ -351,7 +348,9 @@ public class SAML2SSOManager {
             if (samlObject instanceof LogoutResponse) {
                 //This is a SAML response for a single logout request from the SP
                 doSLO(request);
-                request.setAttribute(org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
+                request.setAttribute(
+                        org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE,
+                        "true");
             } else {
                 processSSOResponse(request);
             }
@@ -432,6 +431,7 @@ public class SAML2SSOManager {
      * @throws SSOAgentException
      */
     private void executeSAMLResponse(HttpServletRequest request, XMLObject samlObject) throws SSOAgentException {
+
         if (samlObject instanceof LogoutResponse) {
             // This is a SAML response for a single logout request from the SP.
             doSLO(request);
@@ -523,7 +523,8 @@ public class SAML2SSOManager {
         processSSOResponse(servletRequest, saml2Response);
     }
 
-    private void processSSOResponse(HttpServletRequest servletRequest, Response saml2Response) throws SSOAgentException {
+    private void processSSOResponse(HttpServletRequest servletRequest, Response saml2Response)
+            throws SSOAgentException {
 
         LoggedInSessionBean sessionBean = new LoggedInSessionBean();
         sessionBean.setSAML2SSO(sessionBean.new SAML2SSO());
@@ -554,7 +555,9 @@ public class SAML2SSOManager {
         if (assertion == null) {
             if (isNoPassive(saml2Response)) {
                 LOGGER.log(Level.FINE, "Cannot authenticate in passive mode");
-                servletRequest.setAttribute(org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE, "true");
+                servletRequest.setAttribute(
+                        org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE,
+                        "true");
                 return;
             }
             throw new SSOAgentException("SAML2 Assertion not found in the Response");
@@ -691,22 +694,23 @@ public class SAML2SSOManager {
                         "Issuer", "samlp");
         issuer.setValue(ssoAgentConfig.getSAML2().getSPEntityId());
 
-		/* NameIDPolicy */
+        /* NameIDPolicy */
         NameIDPolicyBuilder nameIdPolicyBuilder = new NameIDPolicyBuilder();
         NameIDPolicy nameIdPolicy = nameIdPolicyBuilder.buildObject();
         nameIdPolicy.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
         nameIdPolicy.setSPNameQualifier("Issuer");
         nameIdPolicy.setAllowCreate(true);
 
-		/* AuthnContextClass */
+        /* AuthnContextClass */
         AuthnContextClassRefBuilder authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
         AuthnContextClassRef authnContextClassRef =
                 authnContextClassRefBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:assertion",
                         "AuthnContextClassRef",
                         "saml");
-        authnContextClassRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+        authnContextClassRef
+                .setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
 
-		/* AuthnContex */
+        /* AuthnContex */
         RequestedAuthnContextBuilder requestedAuthnContextBuilder =
                 new RequestedAuthnContextBuilder();
         RequestedAuthnContext requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
@@ -715,7 +719,7 @@ public class SAML2SSOManager {
 
         DateTime issueInstant = new DateTime();
 
-		/* Creation of AuthRequestObject */
+        /* Creation of AuthRequestObject */
         AuthnRequestBuilder authRequestBuilder = new AuthnRequestBuilder();
         AuthnRequest authRequest =
                 authRequestBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:protocol",
@@ -736,7 +740,7 @@ public class SAML2SSOManager {
             authRequest.setExtensions((Extensions) request.getAttribute(Extensions.DEFAULT_ELEMENT_LOCAL_NAME));
         }
 
-		/* Requesting Attributes. This Index value is registered in the IDP */
+        /* Requesting Attributes. This Index value is registered in the IDP */
         if (ssoAgentConfig.getSAML2().getAttributeConsumingServiceIndex() != null &&
                 ssoAgentConfig.getSAML2().getAttributeConsumingServiceIndex().trim().length() > 0) {
             authRequest.setAttributeConsumingServiceIndex(Integer.parseInt(
@@ -784,7 +788,6 @@ public class SAML2SSOManager {
         }
     }
 
-
     /*
      * Process the response and returns the results
      */
@@ -810,7 +813,6 @@ public class SAML2SSOManager {
         if (assertion != null && assertion.getAttributeStatements() != null) {
 
             List<AttributeStatement> attributeStatementList = assertion.getAttributeStatements();
-
 
             for (AttributeStatement statement : attributeStatementList) {
                 List<Attribute> attributesList = statement.getAttributes();
@@ -848,7 +850,7 @@ public class SAML2SSOManager {
                     boolean audienceFound = false;
                     for (AudienceRestriction audienceRestriction : audienceRestrictions) {
                         if (audienceRestriction.getAudiences() != null && !audienceRestriction.getAudiences().isEmpty()
-                                ) {
+                        ) {
                             for (Audience audience : audienceRestriction.getAudiences()) {
                                 if (ssoAgentConfig.getSAML2().getSPEntityId().equals(audience.getAudienceURI())) {
                                     audienceFound = true;
@@ -872,7 +874,6 @@ public class SAML2SSOManager {
         }
     }
 
-
     /**
      * Validate the signature of a SAML2 Response and Assertion
      *
@@ -890,14 +891,16 @@ public class SAML2SSOManager {
             //If custom implementation not found, Execute the default implementation
             if (ssoAgentConfig.getSAML2().isResponseSigned()) {
                 if (response.getSignature() == null) {
-                    throw new SSOAgentException("SAML2 Response signing is enabled, but signature element not found in SAML2 Response element");
+                    throw new SSOAgentException(
+                            "SAML2 Response signing is enabled, but signature element not found in SAML2 Response element");
                 } else {
                     validateSignature(response.getSignature());
                 }
             }
             if (ssoAgentConfig.getSAML2().isAssertionSigned()) {
                 if (assertion.getSignature() == null) {
-                    throw new SSOAgentException("SAML2 Assertion signing is enabled, but signature element not found in SAML2 Assertion element");
+                    throw new SSOAgentException(
+                            "SAML2 Assertion signing is enabled, but signature element not found in SAML2 Assertion element");
                 } else {
                     validateSignature(assertion.getSignature());
                 }
@@ -978,6 +981,7 @@ public class SAML2SSOManager {
     }
 
     public SSOAgentConfig getSsoAgentConfig() {
+
         return ssoAgentConfig;
     }
 
@@ -1017,7 +1021,7 @@ public class SAML2SSOManager {
      * @throws SSOAgentException
      */
 
-    private void validateSignature(XMLObject signature) throws SSOAgentException{
+    private void validateSignature(XMLObject signature) throws SSOAgentException {
 
         SignatureImpl signImpl = (SignatureImpl) signature;
         try {
@@ -1034,7 +1038,8 @@ public class SAML2SSOManager {
         }
 
         try {
-            SignatureValidator.validate(signImpl, new X509CredentialImpl(ssoAgentConfig.getSAML2().getSSOAgentX509Credential()));
+            SignatureValidator
+                    .validate(signImpl, new X509CredentialImpl(ssoAgentConfig.getSAML2().getSSOAgentX509Credential()));
         } catch (SignatureException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Validation exception : ", e);

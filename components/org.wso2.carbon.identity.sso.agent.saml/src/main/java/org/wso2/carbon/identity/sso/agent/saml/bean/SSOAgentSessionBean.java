@@ -31,10 +31,12 @@ public class SSOAgentSessionBean {
     private SAMLSSOSessionBean samlssoSessionBean;
 
     public SAMLSSOSessionBean getSAMLSSOSessionBean() {
+
         return samlssoSessionBean;
     }
 
     public void setSAMLSSOSessionBean(SAMLSSOSessionBean samlssoSessionBean) {
+
         this.samlssoSessionBean = samlssoSessionBean;
     }
 
@@ -49,39 +51,48 @@ public class SSOAgentSessionBean {
         private String expires_in;
 
         public String getAccess_token() {
+
             return access_token;
         }
 
         public void setAccess_token(String access_token) {
+
             this.access_token = access_token;
         }
 
         public String getRefresh_token() {
+
             return refresh_token;
         }
 
         public void setRefresh_token(String refresh_token) {
+
             this.refresh_token = refresh_token;
         }
 
         public String getToken_type() {
+
             return token_type;
         }
 
         public void setToken_type(String token_type) {
+
             this.token_type = token_type;
         }
 
         public String getExpires_in() {
+
             return expires_in;
         }
 
         public void setExpires_in(String expires_in) {
+
             this.expires_in = expires_in;
         }
 
-       @Override
-       public String toString() {
+        @Override
+        public String toString() {
+
             Gson gson = new Gson();
             return gson.toJson(this);
         }
@@ -106,66 +117,82 @@ public class SSOAgentSessionBean {
         private Map<String, String> samlSSOAttributes;
 
         public String getSubjectId() {
+
             return subjectId;
         }
 
         public void setSubjectId(String subjectId) {
+
             this.subjectId = subjectId;
         }
 
         public Map<String, String> getSAMLSSOAttributes() {
+
             return samlSSOAttributes;
         }
 
         public void setSAMLSSOAttributes(Map<String, String> samlSSOAttributes) {
+
             this.samlSSOAttributes = samlSSOAttributes;
         }
 
         public String getIdPSessionIndex() {
+
             return idPSessionIndex;
         }
 
         public void setIdPSessionIndex(String idPSessionIndex) {
+
             this.idPSessionIndex = idPSessionIndex;
         }
 
         public Response getSAMLResponse() {
+
             return samlResponse;
         }
 
         public void setSAMLResponse(Response samlResponse) {
+
             this.samlResponse = samlResponse;
         }
 
         public String getSAMLResponseString() {
+
             return samlResponseString;
         }
 
         public void setSAMLResponseString(String samlResponseString) {
+
             this.samlResponseString = samlResponseString;
         }
 
         public Assertion getSAMLAssertion() {
+
             return samlAssertion;
         }
 
         public void setSAMLAssertion(Assertion samlAssertion) {
+
             this.samlAssertion = samlAssertion;
         }
 
         public String getSAMLAssertionString() {
+
             return samlAssertionString;
         }
 
         public void setSAMLAssertionString(String samlAssertionString) {
+
             this.samlAssertionString = samlAssertionString;
         }
 
         public AccessTokenResponseBean getAccessTokenResponseBean() {
+
             return accessTokenResponseBean;
         }
 
         public void setAccessTokenResponseBean(AccessTokenResponseBean accessTokenResponseBean) {
+
             this.accessTokenResponseBean = accessTokenResponseBean;
         }
     }

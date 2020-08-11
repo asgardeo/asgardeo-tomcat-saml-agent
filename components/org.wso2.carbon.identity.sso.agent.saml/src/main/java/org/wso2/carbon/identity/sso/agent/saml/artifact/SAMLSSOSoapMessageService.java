@@ -32,12 +32,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.opensaml.core.xml.XMLObjectBuilderFactory;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.saml.common.SAMLObject;
 import org.opensaml.soap.common.SOAPObjectBuilder;
 import org.opensaml.soap.soap11.Body;
 import org.opensaml.soap.soap11.Envelope;
-import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
-import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.wso2.carbon.identity.sso.agent.saml.exception.ArtifactResolutionException;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 
@@ -56,6 +56,21 @@ public class SAMLSSOSoapMessageService {
     private static final String CONTENT_TYPE = "text/xml; charset=utf-8";
     private static final String MIME_TYPE = "text/xml";
     private static final Log log = LogFactory.getLog(SAMLSSOSoapMessageService.class);
+
+    private static String getResponseBody(HttpResponse response) throws ArtifactResolutionException {
+
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        String responseBody;
+        try {
+            responseBody = responseHandler.handleResponse(response);
+        } catch (IOException e) {
+            throw new ArtifactResolutionException("Error when retrieving the HTTP response body.", e);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Response Body:" + responseBody);
+        }
+        return responseBody;
+    }
 
     /**
      * Build a SOAP Message.
@@ -133,21 +148,6 @@ public class SAMLSSOSoapMessageService {
         httpPost.addHeader(SSOAgentConstants.SSOAgentConfig.SAML2.CACHE_CONTROL_PARAM_KEY, "no-cache, no-store");
 
         httpPost.setEntity(new StringEntity(message, ContentType.create(MIME_TYPE, StandardCharsets.UTF_8)));
-    }
-
-    private static String getResponseBody(HttpResponse response) throws ArtifactResolutionException {
-
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        String responseBody;
-        try {
-            responseBody = responseHandler.handleResponse(response);
-        } catch (IOException e) {
-            throw new ArtifactResolutionException("Error when retrieving the HTTP response body.", e);
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Response Body:" + responseBody);
-        }
-        return responseBody;
     }
 
     private HttpClient getHttpClient() throws ArtifactResolutionException {

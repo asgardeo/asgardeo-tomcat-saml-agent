@@ -44,16 +44,19 @@ public class SSOAgentCarbonX509Credential implements SSOAgentX509Credential {
 
     @Override
     public PublicKey getPublicKey() {
+
         return publicKey;
     }
 
     @Override
     public PrivateKey getPrivateKey() {
+
         return privateKey;
     }
 
     @Override
     public X509Certificate getEntityCertificate() {
+
         return entityCertificate;
     }
 

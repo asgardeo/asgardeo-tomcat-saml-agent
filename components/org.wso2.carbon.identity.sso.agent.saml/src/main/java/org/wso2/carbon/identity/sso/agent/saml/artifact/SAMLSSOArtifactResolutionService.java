@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.signature.XMLSignature;
 import org.joda.time.DateTime;
+import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.saml.common.SAMLObject;
 import org.opensaml.saml.common.SAMLObjectBuilder;
@@ -34,7 +35,6 @@ import org.opensaml.saml.saml2.core.ArtifactResponse;
 import org.opensaml.saml.saml2.core.Issuer;
 import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.soap.soap11.Envelope;
-import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.exception.ArtifactResolutionException;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
@@ -48,6 +48,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.UUID;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
@@ -243,7 +244,8 @@ public class SAMLSSOArtifactResolutionService {
         Artifact artifact = artifactBuilder.buildObject();
         artifact.setArtifact(samlArtReceived);
 
-        SAMLObjectBuilder<Issuer> issuerBuilder = (SAMLObjectBuilder<Issuer>) builderFactory.getBuilder(Issuer.DEFAULT_ELEMENT_NAME);
+        SAMLObjectBuilder<Issuer> issuerBuilder =
+                (SAMLObjectBuilder<Issuer>) builderFactory.getBuilder(Issuer.DEFAULT_ELEMENT_NAME);
         Issuer issuer = issuerBuilder.buildObject();
         issuer.setValue(ssoAgentConfig.getSAML2().getSPEntityId());
 

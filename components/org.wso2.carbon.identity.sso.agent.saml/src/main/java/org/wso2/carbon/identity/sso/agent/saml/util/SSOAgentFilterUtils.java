@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SSOAgentFilterUtils {
 
-    public static SSOAgentConfig getSSOAgentConfig(FilterConfig filterConfig) throws SSOAgentException{
+    public static SSOAgentConfig getSSOAgentConfig(FilterConfig filterConfig) throws SSOAgentException {
 
         return getSSOAgentConfig(filterConfig.getServletContext());
     }

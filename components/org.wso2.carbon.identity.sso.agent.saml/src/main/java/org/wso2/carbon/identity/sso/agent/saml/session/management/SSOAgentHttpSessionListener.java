@@ -20,10 +20,11 @@ package org.wso2.carbon.identity.sso.agent.saml.session.management;
 
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 public class SSOAgentHttpSessionListener implements HttpSessionListener {
 
@@ -31,6 +32,7 @@ public class SSOAgentHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+
         if (httpSessionEvent.getSession().getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
             // This log is not accurate, since we depend on request.getSession() to create new session
             // if there is no existing session. After that only we set the Session-Bean.

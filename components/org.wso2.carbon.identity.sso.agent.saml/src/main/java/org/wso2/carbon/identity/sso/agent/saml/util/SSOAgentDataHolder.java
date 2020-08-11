@@ -20,25 +20,27 @@
 
 package org.wso2.carbon.identity.sso.agent.saml.util;
 
-
 public class SSOAgentDataHolder {
 
-    private  Object signatureValidator = null;
-
-    private  static SSOAgentDataHolder instance = new SSOAgentDataHolder();
+    private static SSOAgentDataHolder instance = new SSOAgentDataHolder();
+    private Object signatureValidator = null;
 
     private SSOAgentDataHolder() {
+
+    }
+
+    public static SSOAgentDataHolder getInstance() {
+
+        return instance;
     }
 
     public Object getSignatureValidator() {
+
         return signatureValidator;
     }
 
     public void setSignatureValidator(Object signatureValidator) {
-        this.signatureValidator = signatureValidator;
-    }
 
-    public static SSOAgentDataHolder getInstance(){
-        return instance;
+        this.signatureValidator = signatureValidator;
     }
 }

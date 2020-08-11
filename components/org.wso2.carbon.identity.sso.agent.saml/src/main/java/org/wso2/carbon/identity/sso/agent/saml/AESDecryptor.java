@@ -22,16 +22,16 @@ import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 
 /**
  * Class for decrypt the encrypted values using AES algorithm.
@@ -47,7 +47,7 @@ public class AESDecryptor {
      * Decrypt and decrypt the encrypted values.
      *
      * @param encryptedSecret encrypted value.
-     * @param cipherKey password used for encryption.
+     * @param cipherKey       password used for encryption.
      * @return
      * @throws SSOAgentException If an error occurred.
      */

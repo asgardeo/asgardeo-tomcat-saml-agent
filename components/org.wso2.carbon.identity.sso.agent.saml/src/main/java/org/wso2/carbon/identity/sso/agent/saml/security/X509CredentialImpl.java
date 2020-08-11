@@ -25,15 +25,15 @@ import org.opensaml.security.credential.CredentialContextSet;
 import org.opensaml.security.credential.UsageType;
 import org.opensaml.security.x509.X509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.security.SSOAgentX509Credential;
 
-import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.crypto.SecretKey;
 
 /**
  * X509Credential implementation for signing and verification.
@@ -45,6 +45,7 @@ public class X509CredentialImpl implements X509Credential {
     private PrivateKey privateKey = null;
 
     public X509CredentialImpl(SSOAgentX509Credential credential) throws SSOAgentException {
+
         publicKey = credential.getPublicKey();
         this.entityCertificate = credential.getEntityCertificate();
         this.privateKey = credential.getPrivateKey();
@@ -55,16 +56,19 @@ public class X509CredentialImpl implements X509Credential {
      */
     @Override
     public PublicKey getPublicKey() {
+
         return publicKey;
     }
 
     @Override
     public PrivateKey getPrivateKey() {
+
         return privateKey;
     }
 
     @Override
     public X509Certificate getEntityCertificate() {
+
         return entityCertificate;
     }
 
@@ -72,11 +76,13 @@ public class X509CredentialImpl implements X509Credential {
 
     @Override
     public Collection<X509CRL> getCRLs() {
+
         return new ArrayList<X509CRL>();
     }
 
     @Override
     public Collection<X509Certificate> getEntityCertificateChain() {
+
         return new ArrayList<X509Certificate>();
     }
 
@@ -86,31 +92,37 @@ public class X509CredentialImpl implements X509Credential {
      */
     @Override
     public CredentialContextSet getCredentialContextSet() {
+
         return null;
     }
 
     @Override
     public Class<? extends Credential> getCredentialType() {
+
         return null;
     }
 
     @Override
     public String getEntityId() {
+
         return null;
     }
 
     @Override
     public Collection<String> getKeyNames() {
+
         return new ArrayList<String>();
     }
 
     @Override
     public SecretKey getSecretKey() {
+
         return null;
     }
 
     @Override
     public UsageType getUsageType() {
+
         return null;
     }
 }

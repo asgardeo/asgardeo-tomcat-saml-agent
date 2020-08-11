@@ -24,10 +24,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.opensaml.saml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.saml.AESDecryptor;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.saml.security.SSOAgentCarbonX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.security.SSOAgentX509Credential;
+import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -49,6 +49,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -82,84 +83,104 @@ public class SSOAgentConfig {
     private String idpPublicCertAlias;
 
     public Boolean getEnableHostNameVerification() {
+
         return enableHostNameVerification;
     }
 
     public Boolean getEnableSSLVerification() {
+
         return enableSSLVerification;
     }
 
     public String getRequestQueryParameters() {
+
         return requestQueryParameters;
     }
 
     public Boolean isSAML2SSOLoginEnabled() {
+
         return isSAML2SSOLoginEnabled;
     }
 
     public String getSAML2SSOURL() {
+
         return saml2SSOURL;
     }
 
     public void setSAML2SSOURL(String saml2SSOURL) {
+
         this.saml2SSOURL = saml2SSOURL;
     }
 
     public Set<String> getSkipURIs() {
+
         return skipURIs;
     }
 
     public void setSkipURIs(Set<String> skipURIs) {
+
         this.skipURIs = skipURIs;
     }
 
     public Map<String, String[]> getQueryParams() {
+
         return queryParams;
     }
 
     public void setQueryParams(Map<String, String[]> queryParams) {
+
         this.queryParams = queryParams;
     }
 
     public SAML2 getSAML2() {
+
         return saml2;
     }
 
     public void setSAML2SSOLoginEnabled(Boolean isSAML2SSOLoginEnabled) {
+
         this.isSAML2SSOLoginEnabled = isSAML2SSOLoginEnabled;
     }
 
     private InputStream getKeyStoreStream() {
+
         return keyStoreStream;
     }
 
     public void setKeyStoreStream(InputStream keyStoreStream) {
+
         if (this.keyStoreStream == null) {
             this.keyStoreStream = keyStoreStream;
         }
     }
 
     public String getPrivateKeyPassword() {
+
         return privateKeyPassword;
     }
 
     public String getPrivateKeyAlias() {
+
         return privateKeyAlias;
     }
 
     public String getIdPPublicCertAlias() {
+
         return idpPublicCertAlias;
     }
 
     public String getKeyStorePassword() {
+
         return keyStorePassword;
     }
 
     public void setKeyStorePassword(String keyStorePassword) {
+
         this.keyStorePassword = keyStorePassword;
     }
 
     public KeyStore getKeyStore() throws org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException {
+
         if (keyStore == null) {
             setKeyStore(readKeyStore(getKeyStoreStream(), getKeyStorePassword()));
         }
@@ -167,6 +188,7 @@ public class SSOAgentConfig {
     }
 
     public void setKeyStore(KeyStore keyStore) {
+
         this.keyStore = keyStore;
     }
 
@@ -361,7 +383,7 @@ public class SSOAgentConfig {
                 saml2.signatureValidatorImplClass = signatureValidatorImplClass;
             } else {
                 LOGGER.log(Level.FINE, SSOAgentConstants.SSOAgentConfig.SAML2.SIGNATURE_VALIDATOR +
-                                       " not configured.");
+                        " not configured.");
             }
         }
 
@@ -418,9 +440,8 @@ public class SSOAgentConfig {
             saml2.timeStampSkewInSeconds = Integer.parseInt(timeStampSkew);
         } else {
             LOGGER.log(Level.FINE, SSOAgentConstants.SSOAgentConfig.SAML2.TIME_STAMP_SKEW +
-                                   " not configured. Defaulting to 300s");
+                    " not configured. Defaulting to 300s");
         }
-
 
         SSLContext sc;
         try {
@@ -505,10 +526,11 @@ public class SSOAgentConfig {
      * @throws org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException if fails to load key store
      */
     private KeyStore readKeyStore(InputStream is, String storePassword) throws
-                                                                               org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException {
+            org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException {
 
         if (storePassword == null) {
-            throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException("KeyStore password can not be null");
+            throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException(
+                    "KeyStore password can not be null");
         }
 
         try {
@@ -517,24 +539,28 @@ public class SSOAgentConfig {
             return keyStore;
         } catch (Exception e) {
 
-            throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException("Error while loading key store file", e);
+            throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException(
+                    "Error while loading key store file", e);
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException ignored) {
 
-                    throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException("Error while closing input stream of key store", ignored);
+                    throw new org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException(
+                            "Error while closing input stream of key store", ignored);
                 }
             }
         }
     }
 
-    private void doHostNameVerification(){
+    private void doHostNameVerification() {
+
         if (!this.getEnableHostNameVerification()) {
             // Create empty HostnameVerifier
             HostnameVerifier hv = new HostnameVerifier() {
                 public boolean verify(String urlHostName, SSLSession session) {
+
                     return true;
                 }
             };
@@ -543,6 +569,7 @@ public class SSOAgentConfig {
     }
 
     private TrustManager[] doSSLVerification() throws Exception {
+
         TrustManager[] trustManagers = null;
         if (this.getEnableSSLVerification()) {
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -550,19 +577,22 @@ public class SSOAgentConfig {
             trustManagers = tmf.getTrustManagers();
         } else {
             // Create a trust manager that does not validate certificate chains
-            trustManagers = new TrustManager[] { new X509TrustManager() {
+            trustManagers = new TrustManager[]{new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+
                     return null;
                 }
 
                 public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
                                                String authType) {
+
                 }
 
                 public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
                                                String authType) {
+
                 }
-            } };
+            }};
         }
         return trustManagers;
     }
@@ -589,27 +619,6 @@ public class SSOAgentConfig {
         private int timeStampSkewInSeconds = 300;
         private String artifactResolveURL = null;
         private boolean enableArtifactResolveSigning;
-
-        public void setArtifactResolveURL(String artifactResolveURL) {
-
-            this.artifactResolveURL = artifactResolveURL;
-        }
-
-        public String getArtifactResolveURL() {
-
-            return artifactResolveURL;
-        }
-
-        public void setEnableArtifactResolveSigning(boolean enableArtifactResolveSigning) {
-
-            this.enableArtifactResolveSigning = enableArtifactResolveSigning;
-        }
-
-        public boolean isEnableArtifactResolveSigning() {
-
-            return enableArtifactResolveSigning;
-        }
-
         /**
          * The html page that will auto-submit the SAML2 to the IdP.
          * This should be in valid HTML syntax, with following section within the
@@ -622,147 +631,203 @@ public class SSOAgentConfig {
          */
         private String postBindingRequestHTMLPayload = null;
 
+        public String getArtifactResolveURL() {
+
+            return artifactResolveURL;
+        }
+
+        public void setArtifactResolveURL(String artifactResolveURL) {
+
+            this.artifactResolveURL = artifactResolveURL;
+        }
+
+        public boolean isEnableArtifactResolveSigning() {
+
+            return enableArtifactResolveSigning;
+        }
+
+        public void setEnableArtifactResolveSigning(boolean enableArtifactResolveSigning) {
+
+            this.enableArtifactResolveSigning = enableArtifactResolveSigning;
+        }
+
         public String getHttpBinding() {
+
             return httpBinding;
         }
 
         public void setHttpBinding(String httpBinding) {
+
             this.httpBinding = httpBinding;
         }
 
         public String getSPEntityId() {
+
             return spEntityId;
         }
 
         public void setSPEntityId(String spEntityId) {
+
             this.spEntityId = spEntityId;
         }
 
         public String getACSURL() {
+
             return acsURL;
         }
 
         public void setACSURL(String acsURL) {
+
             this.acsURL = acsURL;
         }
 
         public String getIdPEntityId() {
+
             return idPEntityId;
         }
 
         public void setIdPEntityId(String idPEntityId) {
+
             this.idPEntityId = idPEntityId;
         }
 
         public String getIdPURL() {
+
             return idPURL;
         }
 
         public void setIdPURL(String idPURL) {
+
             this.idPURL = idPURL;
         }
 
         public Boolean isSLOEnabled() {
+
             return isSLOEnabled;
         }
 
         public String getSLOURL() {
+
             return sloURL;
         }
 
         public void setSLOURL(String sloURL) {
+
             this.sloURL = sloURL;
         }
 
         public String getAttributeConsumingServiceIndex() {
+
             return attributeConsumingServiceIndex;
         }
 
         public void setAttributeConsumingServiceIndex(String attributeConsumingServiceIndex) {
+
             this.attributeConsumingServiceIndex = attributeConsumingServiceIndex;
         }
 
         public SSOAgentX509Credential getSSOAgentX509Credential() {
+
             return ssoAgentX509Credential;
         }
 
         public void setSSOAgentX509Credential(SSOAgentX509Credential ssoAgentX509Credential) {
+
             this.ssoAgentX509Credential = ssoAgentX509Credential;
         }
 
         public Boolean isAssertionSigned() {
+
             return isAssertionSigned;
         }
 
         public Boolean isAssertionEncrypted() {
+
             return isAssertionEncrypted;
         }
 
         public Boolean isResponseSigned() {
+
             return isResponseSigned;
         }
 
         public Boolean isRequestSigned() {
+
             return isRequestSigned;
         }
 
         public Boolean isPassiveAuthn() {
+
             return isPassiveAuthn;
         }
 
         public Boolean isForceAuthn() {
+
             return isForceAuthn;
         }
 
         public String getRelayState() {
+
             return relayState;
         }
 
         public void setRelayState(String relayState) {
+
             this.relayState = relayState;
         }
 
         public String getPostBindingRequestHTMLPayload() {
+
             return postBindingRequestHTMLPayload;
         }
 
         public void setPostBindingRequestHTMLPayload(String postBindingRequestHTMLPayload) {
+
             this.postBindingRequestHTMLPayload = postBindingRequestHTMLPayload;
         }
 
         public void setSLOEnabled(Boolean isSLOEnabled) {
+
             this.isSLOEnabled = isSLOEnabled;
         }
 
         public void setAssertionSigned(Boolean isAssertionSigned) {
+
             this.isAssertionSigned = isAssertionSigned;
         }
 
         public void setAssertionEncrypted(Boolean isAssertionEncrypted) {
+
             this.isAssertionEncrypted = isAssertionEncrypted;
         }
 
         public void setResponseSigned(Boolean isResponseSigned) {
+
             this.isResponseSigned = isResponseSigned;
         }
 
         public void setRequestSigned(Boolean isRequestSigned) {
+
             this.isRequestSigned = isRequestSigned;
         }
 
         public void setPassiveAuthn(Boolean isPassiveAuthn) {
+
             this.isPassiveAuthn = isPassiveAuthn;
         }
 
         public void setForceAuthn(Boolean isForceAuthn) {
+
             this.isForceAuthn = isForceAuthn;
         }
 
         public String getSignatureValidatorImplClass() {
+
             return signatureValidatorImplClass;
         }
 
         public int getTimeStampSkewInSeconds() {
+
             return timeStampSkewInSeconds;
         }
     }

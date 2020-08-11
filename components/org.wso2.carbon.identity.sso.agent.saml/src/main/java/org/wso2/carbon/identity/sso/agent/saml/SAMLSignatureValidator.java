@@ -19,9 +19,11 @@ package org.wso2.carbon.identity.sso.agent.saml;
 
 import org.opensaml.saml.saml2.core.Assertion;
 import org.opensaml.saml.saml2.core.Response;
-import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 
 public interface SAMLSignatureValidator {
-    void validateSignature(Response response, Assertion assertion, SSOAgentConfig ssoAgentConfig) throws SSOAgentException;
+
+    void validateSignature(Response response, Assertion assertion, SSOAgentConfig ssoAgentConfig)
+            throws SSOAgentException;
 }

@@ -34,17 +34,20 @@ public class SSOAgentConstants {
     public static final String PROPERTY_FILE_PARAMETER_NAME = "property-file";
     public static final String CERTIFICATE_FILE_PARAMETER_NAME = "certificate-file";
 
-    public static class SAML2SSO {
+    private SSOAgentConstants() {
 
-        private SAML2SSO() {}
+    }
+
+    public static class SAML2SSO {
 
         public static final String HTTP_POST_PARAM_SAML2_AUTH_REQ = "SAMLRequest";
         public static final String HTTP_POST_PARAM_SAML2_RESP = "SAMLResponse";
         public static final String SAML2_ARTIFACT_RESP = "SAMLart";
         public static final String SUCCESS_CODE = "urn:oasis:names:tc:SAML:2.0:status:Success";
-    }
+        private SAML2SSO() {
 
-    private SSOAgentConstants() {}
+        }
+    }
 
     public static class SSOAgentConfig {
 
@@ -54,7 +57,9 @@ public class SSOAgentConstants {
         public static final String QUERY_PARAMS = "QueryParams";
         public static final String PASSWORD_FILEPATH = "/conf/password_temp.txt";
 
-        private SSOAgentConfig() {}
+        private SSOAgentConfig() {
+
+        }
 
         public static class SAML2 {
 
@@ -93,7 +98,9 @@ public class SSOAgentConstants {
             public static final String ARTIFACT_RESOLVE_URL = "SAML2.ArtifactResolveUrl";
             public static final String ENABLE_ARTIFACT_RESOLVE_SIGNING = "SAML2.EnableArtifactResolveSigning";
 
-            private SAML2() {}
+            private SAML2() {
+
+            }
         }
     }
 

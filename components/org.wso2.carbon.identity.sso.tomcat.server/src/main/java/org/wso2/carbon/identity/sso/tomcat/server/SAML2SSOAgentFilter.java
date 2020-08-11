@@ -19,10 +19,10 @@
 package org.wso2.carbon.identity.sso.tomcat.server;
 
 import org.opensaml.saml.saml2.core.LogoutResponse;
+import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.exception.InvalidSessionException;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentFilterUtils;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentRequestResolver;
@@ -31,6 +31,7 @@ import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentUtils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -53,6 +54,7 @@ public class SAML2SSOAgentFilter implements Filter {
      */
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
+
         this.filterConfig = fConfig;
     }
 
@@ -157,12 +159,12 @@ public class SAML2SSOAgentFilter implements Filter {
         }
     }
 
-
     /**
      * @see Filter#destroy()
      */
     @Override
     public void destroy() {
+
         return;
     }
 

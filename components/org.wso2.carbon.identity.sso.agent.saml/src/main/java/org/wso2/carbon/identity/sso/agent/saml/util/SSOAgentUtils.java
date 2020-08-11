@@ -20,30 +20,30 @@
 
 package org.wso2.carbon.identity.sso.agent.saml.util;
 
+import net.shibboleth.utilities.java.support.codec.Base64Support;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.impl.Constants;
 import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.signature.XMLSignature;
-import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
-import org.opensaml.saml.saml2.core.ArtifactResolve;
-import org.opensaml.saml.saml2.core.AuthnRequest;
-import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.core.config.InitializationException;
 import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.XMLObjectBuilder;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.io.Marshaller;
 import org.opensaml.core.xml.io.MarshallerFactory;
 import org.opensaml.core.xml.io.Unmarshaller;
 import org.opensaml.core.xml.io.UnmarshallerFactory;
 import org.opensaml.core.xml.io.UnmarshallingException;
+import org.opensaml.saml.saml2.core.ArtifactResolve;
+import org.opensaml.saml.saml2.core.AuthnRequest;
+import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.security.x509.X509Credential;
 import org.opensaml.xmlsec.signature.KeyInfo;
 import org.opensaml.xmlsec.signature.SignableXMLObject;
 import org.opensaml.xmlsec.signature.Signature;
-import org.opensaml.xmlsec.signature.support.Signer;
 import org.opensaml.xmlsec.signature.X509Data;
-import net.shibboleth.utilities.java.support.codec.Base64Support;
+import org.opensaml.xmlsec.signature.support.Signer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.XMLConstants;
@@ -81,13 +82,13 @@ import javax.xml.xpath.XPathFactory;
 
 public class SSOAgentUtils {
 
+    private static final int ENTITY_EXPANSION_LIMIT = 0;
     private static Logger LOGGER = Logger.getLogger(SSOAgentConstants.LOGGER_NAME);
     private static boolean isBootStrapped = false;
-
     private static Random random = new Random();
-    private static final int ENTITY_EXPANSION_LIMIT = 0;
 
     private SSOAgentUtils() {
+
     }
 
     /**
@@ -139,7 +140,8 @@ public class SSOAgentUtils {
      * @throws SSOAgentException
      */
     public static AuthnRequest setSignature(AuthnRequest authnRequest, String signatureAlgorithm,
-                                        X509Credential cred) throws SSOAgentException {
+                                            X509Credential cred) throws SSOAgentException {
+
         doBootstrap();
         return setSignatureValue(authnRequest, signatureAlgorithm, cred);
     }
@@ -176,10 +178,11 @@ public class SSOAgentUtils {
 
     /**
      * Add signature to any singable XML object.
-     * @param xmlObject Singable xml object.
+     *
+     * @param xmlObject          Singable xml object.
      * @param signatureAlgorithm Signature algorithm to be used.
-     * @param cred X509 Credentials.
-     * @param <T> Singable XML object with signature.
+     * @param cred               X509 Credentials.
+     * @param <T>                Singable XML object with signature.
      * @return Singable XML object with signature.
      * @throws SSOAgentException If error occurred.
      */
@@ -210,6 +213,7 @@ public class SSOAgentUtils {
     }
 
     private static Signature setSignatureRaw(String signatureAlgorithm, X509Credential cred) throws SSOAgentException {
+
         Signature signature = (Signature) buildXMLObject(Signature.DEFAULT_ELEMENT_NAME);
         signature.setSigningCredential(cred);
         signature.setSignatureAlgorithm(signatureAlgorithm);
@@ -219,7 +223,8 @@ public class SSOAgentUtils {
             KeyInfo keyInfo = (KeyInfo) buildXMLObject(KeyInfo.DEFAULT_ELEMENT_NAME);
             X509Data data = (X509Data) buildXMLObject(X509Data.DEFAULT_ELEMENT_NAME);
             org.opensaml.xmlsec.signature.X509Certificate cert =
-                    (org.opensaml.xmlsec.signature.X509Certificate) buildXMLObject(org.opensaml.xmlsec.signature.X509Certificate.DEFAULT_ELEMENT_NAME);
+                    (org.opensaml.xmlsec.signature.X509Certificate) buildXMLObject(
+                            org.opensaml.xmlsec.signature.X509Certificate.DEFAULT_ELEMENT_NAME);
             String value =
                     org.apache.xml.security.utils.Base64.encode(cred.getEntityCertificate().getEncoded());
             cert.setValue(value);
@@ -235,6 +240,7 @@ public class SSOAgentUtils {
 
     public static void addDeflateSignatureToHTTPQueryString(StringBuilder httpQueryString,
                                                             X509Credential cred) throws SSOAgentException {
+
         doBootstrap();
         try {
             httpQueryString.append("&SigAlg="
@@ -262,6 +268,7 @@ public class SSOAgentUtils {
      * @throws SSOAgentException
      */
     private static XMLObject buildXMLObject(QName objectQName) throws SSOAgentException {
+
         doBootstrap();
         XMLObjectBuilder builder =
                 XMLObjectProviderRegistrySupport.getBuilderFactory()
@@ -343,9 +350,10 @@ public class SSOAgentUtils {
 
         } catch (ParserConfigurationException e) {
             LOGGER.log(Level.SEVERE,
-                       "Failed to load XML Processor Feature " + Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE + " or " +
-                       Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE + " or " + Constants.LOAD_EXTERNAL_DTD_FEATURE +
-                       " or secure-processing.");
+                    "Failed to load XML Processor Feature " + Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE + " or " +
+                            Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE + " or " +
+                            Constants.LOAD_EXTERNAL_DTD_FEATURE +
+                            " or secure-processing.");
         }
 
         org.apache.xerces.util.SecurityManager securityManager = new SecurityManager();

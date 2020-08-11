@@ -18,15 +18,15 @@
 
 package org.wso2.carbon.identity.sso.agent.saml.session.management;
 
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.saml.bean.LoggedInSessionBean;
+import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
 
 public class SSOAgentSessionManager {
 
@@ -38,9 +38,11 @@ public class SSOAgentSessionManager {
             new HashMap<String, Set<HttpSession>>();
 
     private SSOAgentSessionManager() {
+
     }
 
     public static void invalidateSession(HttpSession session) {
+
         LoggedInSessionBean sessionBean = (LoggedInSessionBean) session.getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME);
         if (sessionBean != null && sessionBean.getSAML2SSO() != null) {
@@ -55,6 +57,7 @@ public class SSOAgentSessionManager {
     }
 
     public static Set<HttpSession> invalidateAllSessions(HttpSession session) {
+
         LoggedInSessionBean sessionBean = (LoggedInSessionBean) session.getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME);
         Set<HttpSession> sessions = new HashSet<HttpSession>();
@@ -71,6 +74,7 @@ public class SSOAgentSessionManager {
     }
 
     public static Set<HttpSession> invalidateAllSessions(String sessionIndex) {
+
         Set<HttpSession> sessions = ssoSessionsMap.remove(sessionIndex);
         if (sessions == null) {
             sessions = new HashSet<HttpSession>();
@@ -79,6 +83,7 @@ public class SSOAgentSessionManager {
     }
 
     public static void addAuthenticatedSession(HttpSession session) {
+
         String sessionIndex = ((LoggedInSessionBean) session.getAttribute(
                 SSOAgentConstants.SESSION_BEAN_NAME)).getSAML2SSO().getSessionIndex();
         if (ssoSessionsMap.get(sessionIndex) != null) {

@@ -21,7 +21,6 @@
 package org.wso2.carbon.identity.sso.agent.saml.util;
 
 import org.opensaml.saml.common.xml.SAMLConstants;
-import org.wso2.carbon.identity.sso.agent.saml.bean.LoggedInSessionBean;
 import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,30 +59,34 @@ public class SSOAgentRequestResolver {
     }
 
     public boolean isSLOURL() {
+
         return ssoAgentConfig.isSAML2SSOLoginEnabled() &&
                 ssoAgentConfig.getSAML2().isSLOEnabled() &&
                 request.getRequestURI().endsWith(ssoAgentConfig.getSAML2().getSLOURL());
     }
 
     public boolean isHttpPostBinding() {
+
         return ssoAgentConfig.getSAML2().getHttpBinding() != null &&
                 SAMLConstants.SAML2_POST_BINDING_URI.equals(
                         ssoAgentConfig.getSAML2().getHttpBinding());
     }
 
     public boolean isSAML2SSOURL() {
+
         return ssoAgentConfig.isSAML2SSOLoginEnabled() &&
                 request.getRequestURI().endsWith(ssoAgentConfig.getSAML2SSOURL());
     }
 
-
     public boolean isPassiveAuthnRequest() {
+
         return (ssoAgentConfig.isSAML2SSOLoginEnabled() &&
                 (request.getSession(false) == null ||
                         request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null));
     }
 
     public boolean isURLToSkip() {
+
         return ssoAgentConfig.getSkipURIs().contains(request.getRequestURI());
     }
 }

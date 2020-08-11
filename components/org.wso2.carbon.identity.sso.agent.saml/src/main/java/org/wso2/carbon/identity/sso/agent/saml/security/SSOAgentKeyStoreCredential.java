@@ -53,15 +53,16 @@ public class SSOAgentKeyStoreCredential implements SSOAgentCredential {
                 privateKey = (PrivateKey) keyStore.getKey(privateKeyAlias, privateKeyPassword.toCharArray());
 
                 if (privateKey == null) {
-                    throw new SSOAgentException("RequestSigning is enabled, but cannot find private key with the alias " +
-                            privateKeyAlias + " in the key store");
+                    throw new SSOAgentException(
+                            "RequestSigning is enabled, but cannot find private key with the alias " +
+                                    privateKeyAlias + " in the key store");
                 }
             }
 
-
             cert = (X509Certificate) keyStore.getCertificate(idpCertAlias);
             if (cert == null) {
-                throw new SSOAgentException("Cannot find IDP certificate with the alias " + idpCertAlias + " in the trust store");
+                throw new SSOAgentException(
+                        "Cannot find IDP certificate with the alias " + idpCertAlias + " in the trust store");
             }
         } catch (KeyStoreException e) {
             throw new SSOAgentException("Error when reading keystore", e);
@@ -78,21 +79,25 @@ public class SSOAgentKeyStoreCredential implements SSOAgentCredential {
 
     @Override
     public void init() throws SSOAgentException {
+
         readX509Credentials();
     }
 
     @Override
     public PublicKey getPublicKey() {
+
         return publicKey;
     }
 
     @Override
     public PrivateKey getPrivateKey() {
+
         return privateKey;
     }
 
     @Override
     public X509Certificate getEntityCertificate() {
+
         return entityCertificate;
     }
 }

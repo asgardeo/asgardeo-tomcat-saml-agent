@@ -27,10 +27,11 @@ import org.opensaml.saml.saml2.core.Response;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentUtils;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+
+import javax.xml.bind.annotation.XmlAttribute;
 
 public class LoggedInSessionBean implements Serializable {
 
@@ -39,76 +40,88 @@ public class LoggedInSessionBean implements Serializable {
     private SAML2SSO saml2SSO;
 
     public SAML2SSO getSAML2SSO() {
+
         return saml2SSO;
     }
 
     public void setSAML2SSO(SAML2SSO saml2SSO) {
+
         this.saml2SSO = saml2SSO;
     }
 
-    public static class AccessTokenResponseBean implements Serializable{
+    public static class AccessTokenResponseBean implements Serializable {
 
-        @XmlAttribute(name="access_token")
+        @XmlAttribute(name = "access_token")
         @SerializedName("access_token")
         private String accessToken;
 
-        @XmlAttribute(name="refresh_token")
+        @XmlAttribute(name = "refresh_token")
         @SerializedName("refresh_token")
         private String refreshToken;
 
-        @XmlAttribute(name="token_type")
+        @XmlAttribute(name = "token_type")
         @SerializedName("token_type")
         private String tokenType;
 
-        @XmlAttribute(name="expires_in")
+        @XmlAttribute(name = "expires_in")
         @SerializedName("expires_in")
         private String expiresIn;
 
         public String getAccessToken() {
+
             return accessToken;
         }
 
         public void setAccessToken(String accessToken) {
+
             this.accessToken = accessToken;
         }
 
         public String getRefreshToken() {
+
             return refreshToken;
         }
 
         public void setRefreshToken(String refreshToken) {
+
             this.refreshToken = refreshToken;
         }
 
         public String getTokenType() {
+
             return tokenType;
         }
 
         public void setTokenType(String tokenType) {
+
             this.tokenType = tokenType;
         }
 
         public String getExpiresIn() {
+
             return expiresIn;
         }
 
         public void setExpiresIn(String expiresIn) {
+
             this.expiresIn = expiresIn;
         }
 
         @Override
         public String toString() {
+
             Gson gson = new Gson();
             return gson.toJson(this);
         }
 
         public AccessTokenResponseBean deSerialize(String accessTokenResponseBeanString) {
+
             Gson gson = new Gson();
             return gson.fromJson(accessTokenResponseBeanString, AccessTokenResponseBean.class);
         }
     }
 
-    public class SAML2SSO implements Serializable{
+    public class SAML2SSO implements Serializable {
 
         public static final String EMPTY_STRING = "";
         private String subjectId;
@@ -171,66 +184,82 @@ public class LoggedInSessionBean implements Serializable {
         }
 
         public String getSubjectId() {
+
             return subjectId;
         }
 
         public void setSubjectId(String subjectId) {
+
             this.subjectId = subjectId;
         }
 
         public Map<String, String> getSubjectAttributes() {
+
             return subjectAttributes;
         }
 
         public void setSubjectAttributes(Map<String, String> samlSSOAttributes) {
+
             this.subjectAttributes = samlSSOAttributes;
         }
 
         public String getSessionIndex() {
+
             return sessionIndex;
         }
 
         public void setSessionIndex(String sessionIndex) {
+
             this.sessionIndex = sessionIndex;
         }
 
         public Response getSAMLResponse() {
+
             return response;
         }
 
         public void setSAMLResponse(Response samlResponse) {
+
             this.response = samlResponse;
         }
 
         public String getResponseString() {
+
             return responseString;
         }
 
         public void setResponseString(String responseString) {
+
             this.responseString = responseString;
         }
 
         public Assertion getAssertion() {
+
             return assertion;
         }
 
         public void setAssertion(Assertion samlAssertion) {
+
             this.assertion = samlAssertion;
         }
 
         public String getAssertionString() {
+
             return assertionString;
         }
 
         public void setAssertionString(String samlAssertionString) {
+
             this.assertionString = samlAssertionString;
         }
 
         public AccessTokenResponseBean getAccessTokenResponseBean() {
+
             return accessTokenResponseBean;
         }
 
         public void setAccessTokenResponseBean(AccessTokenResponseBean accessTokenResponseBean) {
+
             this.accessTokenResponseBean = accessTokenResponseBean;
         }
     }

@@ -24,14 +24,17 @@ package org.wso2.carbon.identity.sso.agent.saml.exception;
 public class InvalidSessionException extends SSOAgentException {
 
     public InvalidSessionException(String message) {
+
         super(message);
     }
 
     public InvalidSessionException(Throwable cause) {
+
         super(cause);
     }
 
     public InvalidSessionException(String message, Throwable cause) {
+
         super(message, cause);
     }
 }

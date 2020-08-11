@@ -28,14 +28,17 @@ import javax.servlet.ServletException;
 public class SSOAgentException extends ServletException {
 
     public SSOAgentException(String message) {
+
         super(message);
     }
 
     public SSOAgentException(Throwable cause) {
+
         super(cause);
     }
 
     public SSOAgentException(String message, Throwable cause) {
+
         super(message, cause);
     }
 }
