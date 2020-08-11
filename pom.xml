@@ -27,7 +27,7 @@
     <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>identity-agent-sso</artifactId>
-    <version>5.4.1-SNAPSHOT</version>
+    <version>5.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - SAML2-OpenID SSO Agent</name>
     <description>
@@ -177,6 +177,11 @@
                 <groupId>org.wso2.carbon.identity.saml.common</groupId>
                 <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
                 <version>${saml.common.util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
+                <artifactId>org.wso2.carbon.identity.sso.agent.saml</artifactId>
+                <version>${identity.sso.agent.package.export.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections.wso2</groupId>
@@ -343,8 +348,10 @@
 
     <modules>
         <module>components/org.wso2.carbon.identity.sso.agent</module>
+        <module>components/org.wso2.carbon.identity.sso.agent.saml</module>
         <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
         <module>components/org.wso2.carbon.identity.sso.encryptor</module>
+        <module>components/org.wso2.carbon.identity.sso.tomcat.server</module>
     </modules>
 
 </project>
