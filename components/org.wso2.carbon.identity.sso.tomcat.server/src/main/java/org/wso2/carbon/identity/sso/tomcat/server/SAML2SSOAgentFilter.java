@@ -153,7 +153,7 @@ public class SAML2SSOAgentFilter implements Filter {
             if (request.getSession(false) != null &&
                     request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
                 request.getSession().invalidate();
-                response.sendRedirect("samlsso?SAML2.HTTPBinding=HTTP-POST");
+                response.sendRedirect("index.html");
                 return;
             }
 
@@ -162,7 +162,7 @@ public class SAML2SSOAgentFilter implements Filter {
                     sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
 
             if (sessionBean == null || sessionBean.getSAML2SSO() == null) {
-                response.sendRedirect("samlsso?SAML2.HTTPBinding=HTTP-POST");
+                response.sendRedirect("index.html");
                 return;
             }
             // pass the request along the filter chain
