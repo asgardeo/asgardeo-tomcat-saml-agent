@@ -181,7 +181,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.agent.saml</artifactId>
-                <version>${identity.sso.agent.package.export.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections.wso2</groupId>
