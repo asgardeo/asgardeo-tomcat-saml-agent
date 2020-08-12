@@ -307,8 +307,12 @@ public class SSOAgentConfig {
                 skipURIs.add(skipURI);
             }
         }
-        setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
-        skipURIs.add(indexPage);
+        if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE))) {
+            setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
+            skipURIs.add(indexPage);
+        } else {
+            setIndexPage("samlsso?SAML2.HTTPBinding=HTTP-POST");
+        }
 
         String queryParamsString = properties.getProperty(SSOAgentConstants.SSOAgentConfig.QUERY_PARAMS);
         if (!StringUtils.isBlank(queryParamsString)) {
