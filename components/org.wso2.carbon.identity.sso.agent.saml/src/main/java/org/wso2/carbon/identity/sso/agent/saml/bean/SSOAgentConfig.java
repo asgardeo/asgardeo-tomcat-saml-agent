@@ -68,6 +68,7 @@ public class SSOAgentConfig {
 
     private String saml2SSOURL = null;
     private Set<String> skipURIs = new HashSet<String>();
+    private String indexPage;
 
     private Map<String, String[]> queryParams = new HashMap<String, String[]>();
 
@@ -120,6 +121,16 @@ public class SSOAgentConfig {
     public void setSkipURIs(Set<String> skipURIs) {
 
         this.skipURIs = skipURIs;
+    }
+
+    public String getIndexPage() {
+
+        return indexPage;
+    }
+
+    public void setIndexPage(String indexPage) {
+
+        this.indexPage = indexPage;
     }
 
     public Map<String, String[]> getQueryParams() {
@@ -296,6 +307,8 @@ public class SSOAgentConfig {
                 skipURIs.add(skipURI);
             }
         }
+        setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
+        skipURIs.add(indexPage);
 
         String queryParamsString = properties.getProperty(SSOAgentConstants.SSOAgentConfig.QUERY_PARAMS);
         if (!StringUtils.isBlank(queryParamsString)) {

@@ -46,6 +46,7 @@ public class SSOAgentConfigs {
     private static String issuerId;
     private static String consumerUrl;
     private static String idPUrl;
+    private static String indexPage;
 
     private static String attributeConsumingServiceIndex;
     private static Boolean isSLOEnabled;
@@ -129,6 +130,7 @@ public class SSOAgentConfigs {
 
         loginUrl = properties.getProperty("LoginUrl");
         samlSSOUrl = properties.getProperty("SAMLSSOUrl");
+        indexPage = properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE);
         issuerId = properties.getProperty("SAML.IssuerID");
         consumerUrl = properties.getProperty("SAML.ConsumerUrl");
         idPUrl = properties.getProperty("SAML.IdPUrl");
