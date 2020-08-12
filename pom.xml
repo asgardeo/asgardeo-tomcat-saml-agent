@@ -184,6 +184,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
+                <artifactId>org.wso2.carbon.identity.sso.tomcat.server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-collections.wso2</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
@@ -352,6 +357,7 @@
         <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
         <module>components/org.wso2.carbon.identity.sso.encryptor</module>
         <module>components/org.wso2.carbon.identity.sso.tomcat.server</module>
+        <module>resources/SampleApp</module>
     </modules>
 
 </project>
