@@ -21,7 +21,7 @@ This allows the developers to turn a Java application into a SP (Service Provide
 
 ### Trying out the sample
 A sample app for demonstrating SAML based SSO authentication, SLO and attribute retrieval is hosted at:
-[release link]
+https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp
 
 You can either download the pre-built SampleApp.war from here[link] or build it from the source:
 
@@ -118,7 +118,7 @@ Clicking on the logout link would trigger the SLO flow engaging the same filter 
 ## Integrating SAML into your Java application
 
 
-A sample application boilerplate is included in [TODO] which we would use for the following section. The structure of
+A sample application boilerplate is included in https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp-boilerplate which we would use for the following section. The structure of
  the web app boilerplate would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
@@ -162,8 +162,7 @@ Now we need to update the form action to trigger a SAML authentication request a
 
 `<form method="post" action="samlsso?SAML2.HTTPBinding=HTTP-POST">`
 
-The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost
-:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
+The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
  place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to
   create a SLO request.
 
@@ -406,8 +405,7 @@ Please read [Contributing to the Code Base](http://wso2.github.io/) for details 
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/wso2-extensions/identity-agent-sso
-/tags). 
+For the versions available, see the [tags on this repository](https://github.com/wso2-extensions/identity-agent-sso/tags). 
 
 ## Authors
 
