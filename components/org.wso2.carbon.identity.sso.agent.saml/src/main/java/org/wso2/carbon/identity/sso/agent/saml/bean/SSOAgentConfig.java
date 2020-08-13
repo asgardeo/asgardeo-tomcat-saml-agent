@@ -311,7 +311,17 @@ public class SSOAgentConfig {
             setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
             skipURIs.add(indexPage);
         } else {
-            setIndexPage("samlsso?SAML2.HTTPBinding=HTTP-POST");
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2_SSO_URL))
+            .append("?")
+            .append(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING)
+            .append("=");
+            if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING))) {
+                stringBuilder.append(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING));
+            } else {
+                stringBuilder.append("HTTP-POST");
+            }
+            setIndexPage(stringBuilder.toString());
         }
 
         String queryParamsString = properties.getProperty(SSOAgentConstants.SSOAgentConfig.QUERY_PARAMS);
