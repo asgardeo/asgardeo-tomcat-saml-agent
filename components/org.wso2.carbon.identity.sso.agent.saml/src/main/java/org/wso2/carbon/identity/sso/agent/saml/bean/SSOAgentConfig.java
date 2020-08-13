@@ -22,6 +22,7 @@ package org.wso2.carbon.identity.sso.agent.saml.bean;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.opensaml.saml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.saml.AESDecryptor;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
@@ -34,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -311,17 +313,11 @@ public class SSOAgentConfig {
             setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
             skipURIs.add(indexPage);
         } else {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2_SSO_URL))
-            .append("?")
-            .append(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING)
-            .append("=");
-            if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING))) {
-                stringBuilder.append(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING));
-            } else {
-                stringBuilder.append("HTTP-POST");
+            try {
+                setIndexPage(buildIndexPageURL(properties));
+            } catch (URISyntaxException e) {
+                throw new SSOAgentException("Error while fetching index page URL.", e);
             }
-            setIndexPage(stringBuilder.toString());
         }
 
         String queryParamsString = properties.getProperty(SSOAgentConstants.SSOAgentConfig.QUERY_PARAMS);
@@ -579,6 +575,22 @@ public class SSOAgentConfig {
                 }
             }
         }
+    }
+
+    private String buildIndexPageURL(Properties properties) throws URISyntaxException {
+
+        String httpBinding;
+        if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING))) {
+            httpBinding = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING);
+        } else {
+            // Set default http binding to HTTP-POST.
+            httpBinding = "HTTP-POST";
+        }
+
+        return new URIBuilder(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2_SSO_URL))
+                            .addParameter(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING, httpBinding)
+                            .build()
+                            .toString();
     }
 
     private void doHostNameVerification() {
