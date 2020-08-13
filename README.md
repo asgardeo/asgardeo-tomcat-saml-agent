@@ -1,11 +1,15 @@
 # WSO2 SAML SDK for Java
 
-The WSO2 Security Assertions Markup Language (SAML) Software Development Kit (SDK) for Java enables software developers to integrate SAML based SSO authentication with Java Web applications. The SDK is built on top of the OpenSAML library which allows Java developers to develop cross-domain single sign-on and federated access control solutions with minimum hassle.
+The WSO2 Security Assertions Markup Language (SAML) Software Development Kit (SDK) for Java enables software
+ developers to integrate SAML based SSO authentication with Java Web applications. The SDK is built on top of the
+  OpenSAML library which allows Java developers to develop cross-domain single sign-on and federated access control
+   solutions with minimum hassle.
 
 ## Getting Started
 
 These instructions will guide you on integrating SAML into your Java application with the WSO2 SAML SDK.
-This allows the developers to turn a Java application into a SP (Service Provider) that can be connected to an IdP (Identity Provider) which can support the following main features among many others.
+This allows the developers to turn a Java application into a SP (Service Provider) that can be connected to an IdP
+ (Identity Provider) which can support the following main features among many others.
 
 - Single Sign-On (SSO) and Single Log-Out (SLO) (SP-Initiated and IdP-Initiated).
 - Assertion and nameID encryption.
@@ -47,7 +51,8 @@ In order to check SSO using SAML2, please follow these steps
 
    Keep other default settings as it is and save the configuration.
    
-   Next, expand the Claim Configuration section. In this configuration, add the claims you need to retrive from the web app.
+   Next, expand the Claim Configuration section. In this configuration, add the claims you need to retrive from the
+    web app.
 
 
 
@@ -61,49 +66,60 @@ In order to check SSO using SAML2, please follow these steps
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)
 
-**NOTE:** Some browsers do not support cookie creation for naked host names (ex:- localhost). SSO functionality require cookies 
+**NOTE:** Some browsers do not support cookie creation for naked host names (ex:- localhost). SSO functionality
+ require cookies 
 in the browser. 
 
-In that case, use `localhost.com` host name for the sample application. You will require to edit the SampleApp.properties file in <TOMCAT_HOME>/webapps/SampleApp/WEB-INF/classes directory and set the following:
+In that case, use `localhost.com` host name for the sample application. You will require to edit the SampleApp
+.properties file in <TOMCAT_HOME>/webapps/SampleApp/WEB-INF/classes directory and set the following:
 
 `SAML2.AssertionConsumerURL=http://localhost.com:8080/SampleApp/home.jsp`
 
 and update the Assertion Consumer URLs in the Identity Server Service Provider configurations accordingly.
 
 You will also require to add this entry 
-to `hosts` file. For windows this file locations is at `<Windows-Installation-Drive>\Windows\System32\drivers\etc\hosts`.
+to `hosts` file. For windows this file locations is at `<Windows-Installation-Drive>\Windows\System32\drivers\etc
+\hosts`.
 For Linux/Mac OS, this file location is at `/etc/hosts`.
 
 ## How it works
 
-In the SampleApp sample, we have two pages. A landing page (index.html) which we have not secured, and a secondary page (home.jsp) which we have secured.
+In the SampleApp sample, we have two pages. A landing page (index.html) which we have not secured, and a secondary
+ page (home.jsp) which we have secured.
 
-In the SampleApp.properties file in the `identity-agent-sso/resources/SampleApp/src/main/resources` directory, we have set the /SampleApp/index.html as the index page via the following property:
+In the SampleApp.properties file in the `identity-agent-sso/resources/SampleApp/src/main/resources` directory, we
+ have set the /SampleApp/index.html as the index page via the following property:
 
     IndexPage=/SampleApp/index.html
 
-Hence, the sso agent regards the index.html page as the landing page and would be added to the skipURIs. Then, the index page would be regarded as a page that is not secured.
+Hence, the sso agent regards the index.html page as the landing page and would be added to the skipURIs. Then, the
+ index page would be regarded as a page that is not secured.
 
-When a SLO sequence is initiated, the sso agent would redirect the user to this exact page which is configured via the `IndexPage` property.
+When a SLO sequence is initiated, the sso agent would redirect the user to this exact page which is configured via
+ the `IndexPage` property.
 
-In the **index.html** page of the SampleApp, we have added the action for the login button to trigger a SAML authentication:
+In the **index.html** page of the SampleApp, we have added the action for the login button to trigger a SAML
+ authentication:
 
 `<form method="post" action="samlsso?SAML2.HTTPBinding=HTTP-POST">`
 
-This would engage the SAML2SSOAgentFilter which is specified in the **web.xml** file in the `identity-agent-sso/resources/SampleApp/src/main/webapp/WEB-INF` directory, and redirect the user to the IdP authentication page.
+This would engage the SAML2SSOAgentFilter which is specified in the **web.xml** file in the `identity-agent-sso
+/resources/SampleApp/src/main/webapp/WEB-INF` directory, and redirect the user to the IdP authentication page.
 
 Upon successful authentication, the user would be redirected to the **home.jsp** page.
 In the **home.jsp** file, we have added the following to trigger a SLO flow:
 
 ``<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>``
 
-Clicking on the logout link would trigger the SLO flow engaging the same filter mentioned above. The user would be redirected to the page configured via the `IndexPage` property previously discussed.
+Clicking on the logout link would trigger the SLO flow engaging the same filter mentioned above. The user would be
+ redirected to the page configured via the `IndexPage` property previously discussed.
 
 
 ## Integrating SAML into your Java application
 
 
-A sample application boilerplate is included in [TODO] which we would use for the following section. The structure of the web app boilerplate would be as follows:
+A sample application boilerplate is included in [TODO] which we would use for the following section. The structure of
+ the web app boilerplate would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
 
@@ -146,13 +162,17 @@ Now we need to update the form action to trigger a SAML authentication request a
 
 `<form method="post" action="samlsso?SAML2.HTTPBinding=HTTP-POST">`
 
-The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to create a SLO request.
+The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost
+:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
+ place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to
+  create a SLO request.
 
 `<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>`
 
 Before the web.xml configurations, we will look at adding the resources files.
 
-In the sampleApp, create a file named sampleApp.properties in the resources directory. The sampleApp.properties file contains properties similar to the following:
+In the sampleApp, create a file named sampleApp.properties in the resources directory. The sampleApp.properties file
+ contains properties similar to the following:
 
 ```
 EnableSAML2SSOLogin=true
@@ -211,15 +231,19 @@ PrivateKeyAlias=wso2carbon
 #AuthnRequest and LogoutRequest messages
 PrivateKeyPassword=wso2carbon
 ```
-These properties are required for the SAML SDK to communicate with the WSO2 Identity Server. Next, copy a keystore file to the resources directory. In our example,
+These properties are required for the SAML SDK to communicate with the WSO2 Identity Server. Next, copy a keystore
+ file to the resources directory. In our example,
 
 properties file: **“sampleApp.properties”**
 
 keystore file: **“wso2carbon.jks”**
 
-You may need to update the properties file entries to reflect the properties of your keystore. For simplicity, we are using the wso2carbon.jks keystore file of the WSO2 Identity Server which resides in “<IS_HOME>/repository/resources/security/” directory.
+You may need to update the properties file entries to reflect the properties of your keystore. For simplicity, we are
+ using the wso2carbon.jks keystore file of the WSO2 Identity Server which resides in “<IS_HOME>/repository/resources
+ /security/” directory.
 
-Finally, copy and paste the following web.xml configurations to the WEB-INF/web.xml file. Make sure that you update param-values of the context-params,
+Finally, copy and paste the following web.xml configurations to the WEB-INF/web.xml file. Make sure that you update
+ param-values of the context-params,
 
 `<param-name>property-file</param-name>`
 
@@ -377,18 +401,22 @@ The SDK is hosted at the WSO2 Internal Repository. Point to the repository as fo
 
 ## Contributing
 
-Please read [Contributing to the Code Base](http://wso2.github.io/) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [Contributing to the Code Base](http://wso2.github.io/) for details on our code of conduct, and the
+ process for submitting pull requests to us.
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/wso2-extensions/identity-agent-sso/tags). 
+For the versions available, see the [tags on this repository](https://github.com/wso2-extensions/identity-agent-sso
+/tags). 
 
 ## Authors
 
 
-See also the list of [contributors](https://github.com/wso2-extensions/identity-agent-sso/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/wso2-extensions/identity-agent-sso/contributors) who
+ participated in this project.
 
 ## License
 
-This project is licensed under the Apache License 2.0 under which WSO2 Carbon is distributed. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 under which WSO2 Carbon is distributed. See the [LICENSE
+](LICENSE) file for details.
 
