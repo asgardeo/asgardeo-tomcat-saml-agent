@@ -1,41 +1,16 @@
 # WSO2 SAML SDK for Java
 
-The WSO2 Security Assertions Markup Language (SAML) Software Development Kit (SDK) for Java enables software
- developers to integrate SAML based SSO authentication with Java Web applications. The SDK is built on top of the
-  OpenSAML library which allows Java developers to develop cross-domain single sign-on and federated access control
-   solutions with minimum hassle.
+The WSO2 SAML SDK for Java enables software developers to integrate SAML based SSO authentication with Java Web
+ applications. The SDK is built on top of the OpenSAML library which allows Java developers to develop cross-domain
+  single sign-on and federated access control solutions with minimum hassle.
 
-## Getting Started
-
-These instructions will guide you on integrating SAML into your Java application with the WSO2 SAML SDK.
-This allows the developers to turn a Java application into a SP (Service Provider) that can be connected to an IdP
- (Identity Provider) which can support the following main features among many others.
-
-- Single Sign-On (SSO) and Single Log-Out (SLO) (SP-Initiated and IdP-Initiated).
-- Assertion and nameID encryption.
-- Assertion signatures.
-- Message signatures: AuthNRequest, LogoutRequest, LogoutResponses.
-- Enable an Assertion Consumer Service endpoint.
-- Enable a Single Logout Service endpoint.
-- Publish the SP metadata.
-
-### Trying out the sample
+## Trying out the sample
 A sample app for demonstrating SAML based SSO authentication, SLO and attribute retrieval is hosted at:
 https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp
 
-You can either download the pre-built SampleApp.war from here[link] or build it from the source:
+You can download the pre-built SampleApp.war from here[link].
 
-#### Building from the source
-
-To build the SampleApp from the source code:
-
-1. Install Java 8
-2. Install Apache Maven 3.x.x (https://maven.apache.org/download.cgi#)
-3. Get a clone or download the source from this repository (https://github.com/wso2-extensions/identity-agent-sso.git)
-4. Run the Maven command ``mvn clean install`` from the ``identity-agent-sso/resources/SampleApp`` directory.
-5. The build SampleApp.war would be available at ``identity-agent-sso/resources/SampleApp/target`` directory.
-
-#### Running the SampleApp
+### Running the SampleApp
 
 In order to check SSO using SAML2, please follow these steps 
  
@@ -54,12 +29,8 @@ In order to check SSO using SAML2, please follow these steps
    Next, expand the Claim Configuration section. In this configuration, add the claims you need to retrive from the
     web app.
 
-
-
-
-3. Build the source code by following build commands in [Building from the source](#building-from-the-source)
-4. Deploy the application, `SampleApp.war` using Apache Tomcat.
-5. Try out the application by accessing the `http://localhost:8080/SampleApp/index.html`.
+3. Deploy the application, `SampleApp.war` using Apache Tomcat.
+4. Try out the application by accessing the `http://localhost:8080/SampleApp/index.html`.
 
    By default, the application runs on url `http://localhost:8080/SampleApp/`
  
@@ -117,6 +88,19 @@ Clicking on the logout link would trigger the SLO flow engaging the same filter 
 
 ## Integrating SAML into your Java application
 
+### Getting Started
+
+These instructions will guide you on integrating SAML into your Java application with the WSO2 SAML SDK.
+This allows the developers to turn a Java application into a SP (Service Provider) that can be connected to an IdP
+ (Identity Provider) which can support the following main features among many others.
+
+- Single Sign-On (SSO) and Single Log-Out (SLO) (SP-Initiated and IdP-Initiated).
+- Assertion and nameID encryption.
+- Assertion signatures.
+- Message signatures: AuthNRequest, LogoutRequest, LogoutResponses.
+- Enable an Assertion Consumer Service endpoint.
+- Enable a Single Logout Service endpoint.
+- Publish the SP metadata.
 
 A sample application boilerplate is included in https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp-boilerplate which we would use for the following section. The structure of
  the web app boilerplate would be as follows:
@@ -354,14 +338,14 @@ Then, we would use the `saml2SSOAttributes` in the **home.jsp** to display the u
 After the above configurations, your would app would be able to try out authentication, logout and attribute
  retrieval flows with SAML.
  
-### Installing the SDK
+## Installing the SDK
 
-#### Github
+### Github
 The SDK is hosted on github. You can download it from:
 - Latest release: https://github.com/wso2-extensions/identity-agent-sso/releases/latest
 - Master repo: https://github.com/wso2-extensions/identity-agent-sso/tree/master/
 
-#### Building from the source
+### Building from the source
 
 If you want to build **identity-agent-sso** from the source code:
 
@@ -370,7 +354,7 @@ If you want to build **identity-agent-sso** from the source code:
 3. Get a clone or download the source from this repository (https://github.com/wso2-extensions/identity-agent-sso.git)
 4. Run the Maven command ``mvn clean install`` from the ``identity-agent-sso`` directory.
 
-#### Maven
+### Maven
 
 Install it as a maven dependency:
 ```
