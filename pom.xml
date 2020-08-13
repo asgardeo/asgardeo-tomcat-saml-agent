@@ -358,6 +358,7 @@
         <module>components/org.wso2.carbon.identity.sso.encryptor</module>
         <module>components/org.wso2.carbon.identity.sso.tomcat.server</module>
         <module>resources/SampleApp</module>
+        <module>resources/SampleApp-boilerplate</module>
     </modules>
 
 </project>
