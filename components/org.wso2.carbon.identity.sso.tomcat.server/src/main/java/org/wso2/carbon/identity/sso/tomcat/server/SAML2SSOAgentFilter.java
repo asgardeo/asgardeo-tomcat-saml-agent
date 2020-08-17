@@ -149,11 +149,11 @@ public class SAML2SSOAgentFilter implements Filter {
                 response.sendRedirect(redirectUrl);
                 return;
             }
-
+            String indexPage = ssoAgentConfig.getIndexPage();
             if (request.getSession(false) != null &&
                     request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
                 request.getSession().invalidate();
-                response.sendRedirect("index.html");
+                response.sendRedirect(indexPage);
                 return;
             }
 
@@ -162,7 +162,7 @@ public class SAML2SSOAgentFilter implements Filter {
                     sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
 
             if (sessionBean == null || sessionBean.getSAML2SSO() == null) {
-                response.sendRedirect("index.html");
+                response.sendRedirect(indexPage);
                 return;
             }
             // pass the request along the filter chain

@@ -22,6 +22,7 @@ package org.wso2.carbon.identity.sso.agent.saml.bean;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.opensaml.saml.common.xml.SAMLConstants;
 import org.wso2.carbon.identity.sso.agent.saml.AESDecryptor;
 import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
@@ -34,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,6 +70,7 @@ public class SSOAgentConfig {
 
     private String saml2SSOURL = null;
     private Set<String> skipURIs = new HashSet<String>();
+    private String indexPage;
 
     private Map<String, String[]> queryParams = new HashMap<String, String[]>();
 
@@ -120,6 +123,16 @@ public class SSOAgentConfig {
     public void setSkipURIs(Set<String> skipURIs) {
 
         this.skipURIs = skipURIs;
+    }
+
+    public String getIndexPage() {
+
+        return indexPage;
+    }
+
+    public void setIndexPage(String indexPage) {
+
+        this.indexPage = indexPage;
     }
 
     public Map<String, String[]> getQueryParams() {
@@ -294,6 +307,16 @@ public class SSOAgentConfig {
             String[] skipURIArray = skipURIsString.split(",");
             for (String skipURI : skipURIArray) {
                 skipURIs.add(skipURI);
+            }
+        }
+        if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE))) {
+            setIndexPage(properties.getProperty(SSOAgentConstants.SSOAgentConfig.INDEX_PAGE));
+            skipURIs.add(indexPage);
+        } else {
+            try {
+                setIndexPage(buildIndexPageURL(properties));
+            } catch (URISyntaxException e) {
+                throw new SSOAgentException("Error while fetching index page URL.", e);
             }
         }
 
@@ -552,6 +575,22 @@ public class SSOAgentConfig {
                 }
             }
         }
+    }
+
+    private String buildIndexPageURL(Properties properties) throws URISyntaxException {
+
+        String httpBinding;
+        if (!StringUtils.isBlank(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING))) {
+            httpBinding = properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING);
+        } else {
+            // Set default http binding to HTTP-POST.
+            httpBinding = "HTTP-POST";
+        }
+
+        return new URIBuilder(properties.getProperty(SSOAgentConstants.SSOAgentConfig.SAML2_SSO_URL))
+                            .addParameter(SSOAgentConstants.SSOAgentConfig.SAML2.HTTP_BINDING, httpBinding)
+                            .build()
+                            .toString();
     }
 
     private void doHostNameVerification() {

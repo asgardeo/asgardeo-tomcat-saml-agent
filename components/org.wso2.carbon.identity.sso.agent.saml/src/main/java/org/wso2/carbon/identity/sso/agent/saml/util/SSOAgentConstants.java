@@ -56,6 +56,7 @@ public class SSOAgentConstants {
         public static final String SKIP_URIS = "SkipURIs";
         public static final String QUERY_PARAMS = "QueryParams";
         public static final String PASSWORD_FILEPATH = "/conf/password_temp.txt";
+        public static final String INDEX_PAGE = "IndexPage";
 
         private SSOAgentConfig() {
 
