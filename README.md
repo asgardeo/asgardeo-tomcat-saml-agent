@@ -102,8 +102,9 @@ This allows the developers to turn a Java application into a SP (Service Provide
 - Enable a Single Logout Service endpoint.
 - Publish the SP metadata.
 
-A sample application boilerplate is included in https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp-boilerplate which we would use for the following section. The structure of
- the web app boilerplate would be as follows:
+A sample application boilerplate is included in https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp-boilerplate which we would use for the following section. 
+
+The structure of the web app boilerplate would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
 
@@ -116,7 +117,7 @@ Install it as a maven dependency:
     <dependency>
         <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
         <artifactId>org.wso2.carbon.identity.sso.tomcat.server</artifactId>
-        <version>5.5.1</version>
+        <version>5.5.5</version>
     </dependency>
 ```
 The SDK is hosted at the WSO2 Internal Repository. Point to the repository as follows:
@@ -164,7 +165,7 @@ EnableSAML2SSOLogin=true
 SAML2SSOURL=samlsso
 
 #URIs to skip SSOAgentFilter; comma separated values
-SkipURIs=/SampleApp/index.html
+SkipURIs=
 
 IndexPage=/SampleApp/index.html
 
@@ -318,25 +319,25 @@ The web app needs to be configured to read the attributes sent from the Identity
 Then, we would use the `saml2SSOAttributes` in the **home.jsp** to display the user attributes via a table:
 
 ```
-<table>
-                <%
-                    if (saml2SSOAttributes != null) {
-                        for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
-                %>
-                <tr>
-                    <td><%=entry.getKey()%>
-                    </td>
-                    <td><%=entry.getValue()%>
-                    </td>
-                </tr>
-                <%
-                        }
-                    }
-                %>
-            </table>
+  <table>
+       <%
+           if (saml2SSOAttributes != null) {
+               for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
+       %>
+       <tr>
+           <td><%=entry.getKey()%>
+           </td>
+           <td><%=entry.getValue()%>
+           </td>
+       </tr>
+       <%
+               }
+           }
+       %>
+   </table>
 ```
-After the above configurations, your would app would be able to try out authentication, logout and attribute
- retrieval flows with SAML.
+After the above configurations, your app would be able to try out the authentication, logout and attribute 
+retrieval flows with SAML.
  
 ## Installing the SDK
 
@@ -361,7 +362,7 @@ Install it as a maven dependency:
     <dependency>
         <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
         <artifactId>org.wso2.carbon.identity.sso.tomcat.server</artifactId>
-        <version>5.5.1</version>
+        <version>5.5.5</version>
     </dependency>
 ```
 The SDK is hosted at the WSO2 Internal Repository. Point to the repository as follows:
