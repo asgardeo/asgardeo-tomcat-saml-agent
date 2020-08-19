@@ -129,11 +129,6 @@
                 <version>${openid4java.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.oltu.oauth2</groupId>
-                <artifactId>org.apache.oltu.oauth2.client</artifactId>
-                <version>${org.apache.oltu.oauth2.client.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.orbit.org.apache.oltu.oauth2</groupId>
                 <artifactId>oltu</artifactId>
                 <version>${oltu.version}</version>
@@ -352,10 +347,7 @@
     </properties>
 
     <modules>
-        <module>components/org.wso2.carbon.identity.sso.agent</module>
-        <module>components/org.wso2.carbon.identity.sso.agent.saml</module>
         <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
-        <module>components/org.wso2.carbon.identity.sso.encryptor</module>
         <module>components/org.wso2.carbon.identity.sso.tomcat.server</module>
         <module>resources/SampleApp</module>
         <module>resources/SampleApp-boilerplate</module>
