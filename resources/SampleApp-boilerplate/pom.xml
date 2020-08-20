@@ -19,8 +19,8 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>identity-agent-sso</artifactId>
-        <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
+        <groupId>io.asgardio.tomcat.saml.agent</groupId>
+        <artifactId>tomcat-saml-agent</artifactId>
         <version>5.5.9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>

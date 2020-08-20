@@ -19,17 +19,17 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>identity-agent-sso</artifactId>
-        <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
+        <groupId>io.asgardio.tomcat.saml.agent</groupId>
+        <artifactId>tomcat-saml-agent</artifactId>
         <version>5.5.9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.wso2.carbon.identity.sso.tomcat.server</artifactId>
+    <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - SAML2 SSO Tomcat Server</name>
-    <url>http://www.wso2.com</url>
+    <name>Asgardio - Tomcat SAML Agent</name>
+    <url>http://asgardio.io</url>
 
     <dependencies>
         <dependency>
@@ -48,10 +48,10 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <private-package>org.wso2.carbon.identity.sso.tomcat.server.internal</private-package>
+                        <private-package>io.asgardio.tomcat.saml.agent.internal</private-package>
                         <Export-Package>
-                            !org.wso2.carbon.identity.sso.tomcat.server.internal,
-                            org.wso2.carbon.identity.sso.tomcat.server.*;
+                            !io.asgardio.tomcat.saml.agent.internal,
+                            io.asgardio.tomcat.saml.agent.*;
                             version="${identity.sso.agent.package.export.version}",
                         </Export-Package>
                         <Import-Package>

@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.sso.tomcat.server;
+package io.asgardio.tomcat.saml.agent;
 
 import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;

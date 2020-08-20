@@ -24,21 +24,21 @@
         <version>1.2</version>
     </parent>
 
-    <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
+    <groupId>io.asgardio.tomcat.saml.agent</groupId>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>identity-agent-sso</artifactId>
+    <artifactId>tomcat-saml-agent</artifactId>
     <version>5.5.9-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - SAML2-OpenID SSO Agent</name>
+    <name>Asgardio - Tomcat SAML Agent</name>
     <description>
 
     </description>
-    <url>http://wso2.org</url>
+    <url>http://asgardio.io</url>
 
     <scm>
-        <url>https://github.com/wso2-extensions/identity-agent-sso.git</url>
-        <developerConnection>scm:git:https://github.com/wso2-extensions/identity-agent-sso.git</developerConnection>
-        <connection>scm:git:https://github.com/wso2-extensions/identity-agent-sso.git</connection>
+        <url>https://github.com/asgardio/asgardio-tomcat-saml-agent.git</url>
+        <developerConnection>scm:git:ttps://github.com/asgardio/asgardio-tomcat-saml-agent.git</developerConnection>
+        <connection>scm:git:ttps://github.com/asgardio/asgardio-tomcat-saml-agent.git</connection>
         <tag>HEAD</tag>
     </scm>
 
@@ -347,8 +347,8 @@
     </properties>
 
     <modules>
-        <module>features/org.wso2.carbon.identity.sso.agent.server.feature</module>
-        <module>components/org.wso2.carbon.identity.sso.tomcat.server</module>
+        <module>features/o.asgardio.tomcat.saml.agent.server.feature</module>
+        <module>components/io.asgardio.tomcat.saml.agent</module>
         <module>resources/SampleApp</module>
         <module>resources/SampleApp-boilerplate</module>
     </modules>

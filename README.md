@@ -277,7 +277,7 @@ to match yours.
 
     <filter>
         <filter-name>SAML2SSOAgentFilter</filter-name>
-        <filter-class>org.wso2.carbon.identity.sso.tomcat.server.SAML2SSOAgentFilter</filter-class>
+        <filter-class>SAML2SSOAgentFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SAML2SSOAgentFilter</filter-name>
@@ -297,7 +297,7 @@ to match yours.
     </filter-mapping>
 
     <listener>
-        <listener-class>org.wso2.carbon.identity.sso.tomcat.server.SSOAgentContextEventListener</listener-class>
+        <listener-class>SSOAgentContextEventListener</listener-class>
     </listener>
     <context-param>
         <param-name>property-file</param-name>
