@@ -19,15 +19,15 @@
 package io.asgardio.tomcat.saml.agent;
 
 import org.opensaml.saml.saml2.core.LogoutResponse;
-import org.wso2.carbon.identity.sso.agent.saml.SAML2SSOManager;
-import org.wso2.carbon.identity.sso.agent.saml.bean.LoggedInSessionBean;
-import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
-import org.wso2.carbon.identity.sso.agent.saml.exception.InvalidSessionException;
-import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentFilterUtils;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentRequestResolver;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentUtils;
+import io.asgardio.java.saml.sdk.SAML2SSOManager;
+import io.asgardio.java.saml.sdk.bean.LoggedInSessionBean;
+import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
+import io.asgardio.java.saml.sdk.exception.InvalidSessionException;
+import io.asgardio.java.saml.sdk.exception.SSOAgentException;
+import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
+import io.asgardio.java.saml.sdk.util.SSOAgentFilterUtils;
+import io.asgardio.java.saml.sdk.util.SSOAgentRequestResolver;
+import io.asgardio.java.saml.sdk.util.SSOAgentUtils;
 
 import java.io.IOException;
 import java.util.logging.Level;

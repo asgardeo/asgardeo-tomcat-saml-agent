@@ -19,11 +19,11 @@
 package io.asgardio.tomcat.saml.agent;
 
 import org.apache.commons.lang.StringUtils;
-import org.wso2.carbon.identity.sso.agent.saml.bean.SSOAgentConfig;
-import org.wso2.carbon.identity.sso.agent.saml.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.security.SSOAgentX509Credential;
-import org.wso2.carbon.identity.sso.agent.saml.security.SSOAgentX509KeyStoreCredential;
-import org.wso2.carbon.identity.sso.agent.saml.util.SSOAgentConstants;
+import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
+import io.asgardio.java.saml.sdk.exception.SSOAgentException;
+import io.asgardio.java.saml.sdk.security.SSOAgentX509Credential;
+import io.asgardio.java.saml.sdk.security.SSOAgentX509KeyStoreCredential;
+import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -174,9 +174,9 @@
                 <version>${saml.common.util.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
-                <artifactId>org.wso2.carbon.identity.sso.agent.saml</artifactId>
-                <version>${project.version}</version>
+                <groupId>io.asgardio.java.saml.sdk</groupId>
+                <artifactId>io.asgardio.java.saml.sdk</artifactId>
+                <version>${io.asgardio.java.saml.sdk.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
@@ -344,6 +344,7 @@
         <commons-collections.wso2.osgi.version.range>[3.2.0,4.0.0)</commons-collections.wso2.osgi.version.range>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
+        <io.asgardio.java.saml.sdk.version>0.1.0-SNAPSHOT</io.asgardio.java.saml.sdk.version>
     </properties>
 
     <modules>
