@@ -21,7 +21,7 @@
     <parent>
         <groupId>io.asgardio.tomcat.saml.agent</groupId>
         <artifactId>tomcat-saml-agent</artifactId>
-        <version>5.5.9-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
