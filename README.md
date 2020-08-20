@@ -277,7 +277,7 @@ to match yours.
 
     <filter>
         <filter-name>SAML2SSOAgentFilter</filter-name>
-        <filter-class>SAML2SSOAgentFilter</filter-class>
+        <filter-class>io.asgardio.tomcat.saml.agent.SAML2SSOAgentFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SAML2SSOAgentFilter</filter-name>
@@ -297,7 +297,7 @@ to match yours.
     </filter-mapping>
 
     <listener>
-        <listener-class>SSOAgentContextEventListener</listener-class>
+        <listener-class>io.asgardio.tomcat.saml.agent.SSOAgentContextEventListener</listener-class>
     </listener>
     <context-param>
         <param-name>property-file</param-name>
