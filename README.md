@@ -1,8 +1,4 @@
-# WSO2 SAML SDK for Java
-
-The WSO2 SAML SDK for Java enables software developers to integrate SAML based SSO authentication with Java Web
- applications. The SDK is built on top of the OpenSAML library which allows Java developers to develop cross-domain
-  single sign-on and federated access control solutions with minimum hassle.
+# Asgardio Tomcat SAML Agent
 
 ## Table of Contents
 - [Trying out the sample](#trying-out-the-sample)
@@ -20,20 +16,16 @@ The WSO2 SAML SDK for Java enables software developers to integrate SAML based S
 - [Contributing](#contributing)
   * [Reporting Issues](#reporting-issues)
 - [Versioning](#versioning)
-- [Authors](#authors)
 - [License](#license)
 ## Trying out the sample
 
 ### Prerequisites
 1. WSO2 Identity Server and it's [prerequisites](https://is.docs.wso2.com/en/next/setup/installing-the-product/).
-2. We assume you are going to use [Maven](https://maven.apache.org/guides/getting-started/) to handle enterprise level 
-Java projects development. Hence, we will be using [Maven](https://maven.apache.org/guides/getting-started/) for 
-demonstration.
 
 A sample app for demonstrating SAML based SSO authentication, SLO and attribute retrieval is hosted at:
-https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp
+https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/resources/SampleApp
 
-You can download the pre-built SampleApp.war from https://github.com/wso2-extensions/identity-agent-sso/releases/latest
+You can download the pre-built SampleApp.war from https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest
 
 ### Running the SampleApp
 
@@ -135,7 +127,7 @@ This allows the developers to turn a Java application into a SP (Service Provide
 - Enable a Single Logout Service endpoint.
 - Publish the SP metadata.
 
-A sample application boilerplate is included in https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp-boilerplate which we would use for the following section. 
+A sample application boilerplate is included in https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/resources/SampleApp-boilerplate which we would use for the following section. 
 
 The structure of the web app boilerplate would be as follows:
 
@@ -373,16 +365,16 @@ retrieval flows with SAML.
 
 ### Github
 The SDK is hosted on github. You can download it from:
-- Latest release: https://github.com/wso2-extensions/identity-agent-sso/releases/latest
-- Master repo: https://github.com/wso2-extensions/identity-agent-sso/tree/master/
+- Latest release: https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest
+- Master repo: https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/
 
 ### Building from the source
 
-If you want to build **identity-agent-sso** from the source code:
+If you want to build **tomcat-saml-agent** from the source code:
 
 1. Install Java 8
 2. Install Apache Maven 3.x.x (https://maven.apache.org/download.cgi#)
-3. Get a clone or download the source from this repository (https://github.com/wso2-extensions/identity-agent-sso.git)
+3. Get a clone or download the source from this repository (https://github.com/asgardio/asgardio-tomcat-saml-agent.git)
 4. Run the Maven command ``mvn clean install`` from the ``identity-agent-sso`` directory.
 
 ### Maven
@@ -427,13 +419,7 @@ in order to reach the proper audience. We strongly advise following the WSO2 Sec
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/wso2-extensions/identity-agent-sso/tags). 
-
-## Authors
-
-
-See also the list of [contributors](https://github.com/wso2-extensions/identity-agent-sso/contributors) who
- participated in this project.
+For the versions available, see the [tags on this repository](https://github.com/asgardio/asgardio-tomcat-saml-agent/tags). 
 
 ## License
 
