@@ -4,10 +4,31 @@ The WSO2 SAML SDK for Java enables software developers to integrate SAML based S
  applications. The SDK is built on top of the OpenSAML library which allows Java developers to develop cross-domain
   single sign-on and federated access control solutions with minimum hassle.
 
+## Table of Contents
+- [Trying out the sample](#trying-out-the-sample)
+  * [Prerequisites](#prerequisites)
+  * [Running the SampleApp](#running-the-sampleapp)
+- [How it works](#how-it-works)
+- [Integrating SAML into your Java application](#integrating-saml-into-your-java-application)
+  * [Getting Started](#getting-started)
+  * [Configuring the web app](#configuring-the-web-app)
+  * [Retrieving User Attributes](#retrieving-user-attributes)
+- [Installing the SDK](#installing-the-sdk)
+  * [Github](#github)
+  * [Building from the source](#building-from-the-source)
+  * [Maven](#maven)
+- [Contributing](#contributing)
+  * [Reporting Issues](#reporting-issues)
+- [Versioning](#versioning)
+- [Authors](#authors)
+- [License](#license)
 ## Trying out the sample
 
 ### Prerequisites
 1. WSO2 Identity Server and it's [prerequisites](https://is.docs.wso2.com/en/next/setup/installing-the-product/).
+2. We assume you are going to use [Maven](https://maven.apache.org/guides/getting-started/) to handle enterprise level 
+Java projects development. Hence, we will be using [Maven](https://maven.apache.org/guides/getting-started/) for 
+demonstration.
 
 A sample app for demonstrating SAML based SSO authentication, SLO and attribute retrieval is hosted at:
 https://github.com/wso2-extensions/identity-agent-sso/tree/master/resources/SampleApp
@@ -122,8 +143,7 @@ The structure of the web app boilerplate would be as follows:
 
 ### Configuring the web app
 
-Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
-
+1. Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
 Install it as a maven dependency:
 ```
 <dependency>
@@ -149,24 +169,22 @@ The SDK is hosted at the WSO2 Internal Repository. Point to the repository as fo
     </repository>
 </repositories>
 ```
-Next, the webapp itself has two pages, index.html and home.jsp, and a web.xml file.
-
+2. Next, the webapp itself has two pages, index.html and home.jsp, and a web.xml file.
 The index.html contains a login button which we would use to forward the user to the secured page.
 
 `<form method="post" action="home.jsp">`
 
-Now we need to update the form action to trigger a SAML authentication request as follows,
+3. Now we need to update the form action to trigger a SAML authentication request as follows,
 
 `<form method="post" action="samlsso?SAML2.HTTPBinding=HTTP-POST">`
 
-The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
+4. The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
  place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to
   create a SLO request.
 
 `<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>`
 
-Before the web.xml configurations, we will look at adding the resources files.
-
+5. Before the web.xml configurations, we will look at adding the resources files.
 In the sampleApp, create a file named sampleApp.properties in the resources directory. The sampleApp.properties file
  contains properties similar to the following:
 
@@ -227,7 +245,7 @@ PrivateKeyAlias=wso2carbon
 #AuthnRequest and LogoutRequest messages
 PrivateKeyPassword=wso2carbon
 ```
-These properties are required for the SAML SDK to communicate with the WSO2 Identity Server. Next, copy a keystore
+6. These properties are required for the SAML SDK to communicate with the WSO2 Identity Server. Next, copy a keystore
  file to the resources directory. In our example,
 
 properties file: **“sampleApp.properties”**
@@ -238,7 +256,7 @@ You may need to update the properties file entries to reflect the properties of 
  using the wso2carbon.jks keystore file of the WSO2 Identity Server which resides in “<IS_HOME>/repository/resources
  /security/” directory.
 
-Finally, copy and paste the following web.xml configurations to the WEB-INF/web.xml file. Make sure that you update
+7. Finally, copy and paste the following web.xml configurations to the WEB-INF/web.xml file. Make sure that you update
  param-values of the context-params,
 
 `<param-name>property-file</param-name>`
@@ -312,7 +330,7 @@ to match yours.
 ```
 ### Retrieving User Attributes
 
-The web app needs to be configured to read the attributes sent from the Identity Server upon successful
+1. The web app needs to be configured to read the attributes sent from the Identity Server upon successful
  authentication. In the SampleApp, we would customize the home.jsp file as follows to retrieve the user attributes.
  
  ```
@@ -328,7 +346,7 @@ The web app needs to be configured to read the attributes sent from the Identity
 .
 .
 ```
-Then, we would use the `saml2SSOAttributes` in the **home.jsp** to display the user attributes via a table:
+2. Then, we would use the `saml2SSOAttributes` in the **home.jsp** to display the user attributes via a table:
 
 ```
 <table>
