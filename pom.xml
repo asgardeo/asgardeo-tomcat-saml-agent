@@ -37,8 +37,8 @@
 
     <scm>
         <url>https://github.com/asgardio/asgardio-tomcat-saml-agent.git</url>
-        <developerConnection>scm:git:ttps://github.com/asgardio/asgardio-tomcat-saml-agent.git</developerConnection>
-        <connection>scm:git:ttps://github.com/asgardio/asgardio-tomcat-saml-agent.git</connection>
+        <developerConnection>scm:git:https://github.com/asgardio/asgardio-tomcat-saml-agent.git</developerConnection>
+        <connection>scm:git:https://github.com/asgardio/asgardio-tomcat-saml-agent.git</connection>
         <tag>HEAD</tag>
     </scm>
 
@@ -347,7 +347,7 @@
     </properties>
 
     <modules>
-        <module>features/o.asgardio.tomcat.saml.agent.server.feature</module>
+        <module>features/io.asgardio.tomcat.saml.agent.server.feature</module>
         <module>components/io.asgardio.tomcat.saml.agent</module>
         <module>resources/SampleApp</module>
         <module>resources/SampleApp-boilerplate</module>
