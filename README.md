@@ -23,7 +23,7 @@
   * [Reporting Issues](#reporting-issues)
 - [License](#license)
 
-Throughout this guide we will refer to Identity Server root folder as IS_HOME and SampleApp root folder as APP_HOME.
+Throughout this guide we will refer to Identity Server installation directory as IS_HOME and SampleApp installation directory as APP_HOME.
 
 ## Trying out the sample
 
@@ -117,6 +117,7 @@ referring the SDK API.
 
 ### Trigger logout
 In the `<APP_HOME>/home.jsp` file, we have added the following to trigger a SLO flow:
+
 ``<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>``
 
 Clicking on the logout link would trigger the SLO flow engaging the same filter mentioned above. The user would be
@@ -143,6 +144,7 @@ The SDK supports the following features.
 A sample application boilerplate is included in 
 https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/resources/SampleApp-boilerplate 
 which we would use for the following section. 
+Here, we are using the boilerplate app as a reference only, we can follow the same approach to build our own app as well.
 The structure of the web app boilerplate would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
