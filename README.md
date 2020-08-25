@@ -63,7 +63,8 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
 #### Configuring The Webapp
 1. Download the `SampleApp.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
 2. Deploy the application, `SampleApp.war` using Apache Tomcat.
-3. Try out the application by accessing the `http://localhost.com:8080/SampleApp/index.html`.
+3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
+4. Try out the application by accessing the `http://localhost.com:8080/SampleApp/index.html`.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
@@ -90,8 +91,8 @@ In the `<APP_HOME>/index.html` page, we have added the action for the login butt
 </form>
 ```
 
-This would trigger an authentication request, and redirect the user to the IdP authentication page.
-Upon successful authentication, the user would be redirected to the `home.jsp` page.
+The button click would trigger an authentication request, and redirect the user to the IdP authentication page.
+Upon successful authentication, the user would be redirected to the `<APP_HOME>/home.jsp` page.
 
 ### Retrieve user attributes
 
