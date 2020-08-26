@@ -348,10 +348,8 @@
     </properties>
 
     <modules>
-        <module>features/io.asgardio.tomcat.saml.agent.server.feature</module>
-        <module>components/io.asgardio.tomcat.saml.agent</module>
-        <module>resources/SampleApp</module>
-        <module>resources/SampleApp-boilerplate</module>
+        <module>io.asgardio.tomcat.saml.agent</module>
+        <module>SampleApp</module>
     </modules>
 
 </project>
