@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
     <name>Asgardio - Tomcat SAML Agent</name>
     <url>http://asgardio.io</url>
 
@@ -40,27 +40,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <private-package>io.asgardio.tomcat.saml.agent.internal</private-package>
-                        <Export-Package>
-                            !io.asgardio.tomcat.saml.agent.internal,
-                            io.asgardio.tomcat.saml.agent.*;
-                            version="${asgario.tomcat.saml.agent.version}",
-                        </Export-Package>
-                        <Import-Package>
-
-                        </Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -119,54 +119,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>1.62</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openid4java</groupId>
-                <artifactId>openid4java</artifactId>
-                <version>${openid4java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.apache.oltu.oauth2</groupId>
-                <artifactId>oltu</artifactId>
-                <version>${oltu.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.orbit.org.opensaml</groupId>
                 <artifactId>opensaml</artifactId>
                 <version>${opensaml2.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.openid4java</groupId>
-                <artifactId>openid4java</artifactId>
-                <version>${openid4java.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.ehcache.wso2</groupId>
-                <artifactId>ehcache</artifactId>
-                <version>${ehcache.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${com.google.code.gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.core</artifactId>
-                <version>${identity.framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.saml.common</groupId>
@@ -179,36 +134,6 @@
                 <version>${io.asgardio.java.saml.sdk.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.agent.sso.java</groupId>
-                <artifactId>org.wso2.carbon.identity.sso.tomcat.server</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-collections.wso2</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpcomponents-httpclient.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpcomponents-apache.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
-                <artifactId>encoder</artifactId>
-                <version>${encoder.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
-                <version>${apache.felix.scr.ds.annotations.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.ops4j.pax.logging</groupId>
                 <artifactId>pax-logging-api</artifactId>
                 <version>${pax.logging.api.version}</version>
@@ -219,19 +144,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <obrRepository>NONE</obrRepository>
-                        <instructions>
-                            <SCM-Revision>${buildNumber}</SCM-Revision>
-                        </instructions>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
@@ -344,7 +256,7 @@
         <commons-collections.wso2.osgi.version.range>[3.2.0,4.0.0)</commons-collections.wso2.osgi.version.range>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
-        <io.asgardio.java.saml.sdk.version>0.1.0</io.asgardio.java.saml.sdk.version>
+        <io.asgardio.java.saml.sdk.version>0.1.1-SNAPSHOT</io.asgardio.java.saml.sdk.version>
     </properties>
 
     <modules>
