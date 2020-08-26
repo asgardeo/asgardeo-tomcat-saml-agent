@@ -26,13 +26,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>SampleApp</artifactId>
+    <artifactId>io.asgardio.tomcat.saml.agent.sample</artifactId>
     <packaging>war</packaging>
 
     <build>
-        <finalName>SampleApp</finalName>
+        <finalName>io.asgardio.tomcat.saml.agent.sample</finalName>
         <sourceDirectory>src/main</sourceDirectory>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -75,7 +74,7 @@
         <dependency>
             <groupId>io.asgardio.tomcat.saml.agent</groupId>
             <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
-            <version>${identity.sso.agent.package.export.version}</version>
+            <version>${asgario.tomcat.saml.agent.version}</version>
         </dependency>
     </dependencies>
 </project>

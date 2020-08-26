@@ -52,7 +52,7 @@
                         <Export-Package>
                             !io.asgardio.tomcat.saml.agent.internal,
                             io.asgardio.tomcat.saml.agent.*;
-                            version="${identity.sso.agent.package.export.version}",
+                            version="${asgario.tomcat.saml.agent.version}",
                         </Export-Package>
                         <Import-Package>
 
