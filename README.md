@@ -5,7 +5,7 @@
   * [Prerequisites](#prerequisites)
   * [Running the Sample](#running-the-sample)
     + [Configuring Identity Server](#configuring-identity-server)
-    + [Configuring The Webapp](#configuring-the-webapp)
+    + [Configuring The Sample](#configuring-the-sample)
 - [How it works](#how-it-works)
   * [Classify secure resources, unsecured resources](#classify-secure-resources--unsecured-resources)
   * [Trigger authentication](#trigger-authentication)
@@ -14,7 +14,7 @@
 - [Integrating SAML into your Java application](#integrating-saml-into-your-java-application)
   * [Getting Started](#getting-started)
     + [Prerequisites](#prerequisites-1)
-  * [Configuring the web app](#configuring-the-web-app)
+  * [Configuring The Sample](#configuring-the-sample)
   * [Enable Login](#enable-login)
   * [Enable Logout](#enable-logout)
   * [Retrieving User Attributes](#retrieving-user-attributes)
@@ -60,11 +60,11 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
    
    vi. Click `Update` to save.
 
-#### Configuring The Webapp
-1. Download the `SampleApp.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
-2. Deploy the application, `SampleApp.war` using Apache Tomcat.
+#### Configuring The Sample
+1. Download the `io.asgardio.tomcat.saml.agent.sample.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
+2. Deploy the application, `io.asgardio.tomcat.saml.agent.sample.war` using Apache Tomcat.
 3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
-4. Try out the application by accessing the `http://localhost.com:8080/SampleApp/index.html`.
+4. Try out the application by accessing the `http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/index.html`.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
@@ -141,18 +141,17 @@ The SDK supports the following features.
 - Enable a Single Logout Service endpoint.
 - Publish the SP metadata.
 
-A sample application boilerplate is included in 
-https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/resources/SampleApp-boilerplate 
+A sample application is included in 
+https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/io.asgardio.tomcat.saml.agent.sample
 which we would use for the following section. 
-Here, we are using the boilerplate app as a reference only, we can follow the same approach to build our own app as well.
-The structure of the web app boilerplate would be as follows:
+Here, we are using the sample as a reference only, we can follow the same approach to build our own app as well.
+The structure of the sample would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
 
-### Configuring the web app
+### Configuring The Sample
 
 1. Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
-Install it as a maven dependency:
       ```
       <dependency>
           <groupId>io.asgardio.tomcat.saml.agent/groupId>
@@ -198,7 +197,7 @@ Install it as a maven dependency:
       SAML2.SPEntityId=SampleApp
 
       #The URL of the SAML 2.0 Assertion Consumer
-      SAML2.AssertionConsumerURL=http://localhost:8080/SampleApp/home.jsp
+      SAML2.AssertionConsumerURL=http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/home.jsp
 
       #A unique identifier for this SAML 2.0 Service Provider application
       SAML2.IdPEntityId=localhost
@@ -274,7 +273,7 @@ Install it as a maven dependency:
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-          <display-name>SampleApp</display-name>
+          <display-name>io.asgardio.tomcat.saml.agent.sample</display-name>
 
           <filter>
               <filter-name>SAML2SSOAgentFilter</filter-name>
@@ -332,7 +331,7 @@ The index.html contains a login button which we would use to forward the user to
       ```
 
 ### Enable Logout
-1. The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost:8080/SampleApp/home.jsp should not be accessible. In the sampleApp we are using, if there is no active session in
+1. The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/home.jsp should not be accessible. In the sample we are using, if there is no active session in
  place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to
   create a SLO request.
 
