@@ -74,7 +74,7 @@
         <dependency>
             <groupId>io.asgardio.tomcat.saml.agent</groupId>
             <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
-            <version>${asgario.tomcat.saml.agent.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
