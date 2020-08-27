@@ -3,27 +3,27 @@
 ## Table of Contents
 - [Trying out the sample](#trying-out-the-sample)
   * [Prerequisites](#prerequisites)
-  * [Running the Sample](#running-the-sample)
+  * [Running the sample](#running-the-sample)
     + [Configuring Identity Server](#configuring-identity-server)
-    + [Configuring The Sample](#configuring-the-sample)
+    + [Configuring the sample](#configuring-the-sample)
 - [How it works](#how-it-works)
   * [Classify secure resources, unsecured resources](#classify-secure-resources--unsecured-resources)
   * [Trigger authentication](#trigger-authentication)
   * [Retrieve user attributes](#retrieve-user-attributes)
   * [Trigger logout](#trigger-logout)
 - [Integrating SAML into your Java application](#integrating-saml-into-your-java-application)
-  * [Getting Started](#getting-started)
+  * [Getting started](#getting-started)
     + [Prerequisites](#prerequisites-1)
-  * [Configuring The Sample](#configuring-the-sample)
-  * [Enable Login](#enable-login)
-  * [Enable Logout](#enable-logout)
-  * [Retrieving User Attributes](#retrieving-user-attributes)
+  * [Configuring the sample](#configuring-the-sample)
+  * [Enable login](#enable-login)
+  * [Enable logout](#enable-logout)
+  * [Retrieving user attributes](#retrieving-user-attributes)
 - [Building from the source](#building-from-the-source)
 - [Contributing](#contributing)
-  * [Reporting Issues](#reporting-issues)
+  * [Reporting issues](#reporting-issues)
 - [License](#license)
 
-Throughout this guide we will refer to Identity Server installation directory as IS_HOME and SampleApp installation directory as APP_HOME.
+Throughout this guide we will refer to the sample-app installation directory as APP_HOME.
 
 ## Trying out the sample
 
@@ -31,7 +31,7 @@ Throughout this guide we will refer to Identity Server installation directory as
 1. WSO2 Identity Server and it's [prerequisites](https://is.docs.wso2.com/en/next/setup/installing-the-product/).
 2. [Apache Tomcat](http://tomcat.apache.org/tomcat-8.5-doc/) 8.x or higher
 
-### Running the Sample
+### Running the sample
 Follow the steps below to tryout SAML based SSO authentication, SLO and attribute retrieval functionalities.
 
 #### Configuring Identity Server
@@ -60,11 +60,11 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
    
    vi. Click `Update` to save.
 
-#### Configuring The Sample
-1. Download the `io.asgardio.tomcat.saml.agent.sample.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
-2. Deploy the application, `io.asgardio.tomcat.saml.agent.sample.war` using Apache Tomcat.
+#### Configuring the sample
+1. Download the `sample-app.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
+2. Deploy the application, `sample-app.war` using Apache Tomcat.
 3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
-4. Try out the application by accessing the `http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/index.html`.
+4. Try out the application by accessing the `http://localhost.com:8080/sample-app/index.html`.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
@@ -124,7 +124,8 @@ Clicking on the logout link would trigger the SLO flow engaging the same filter 
  redirected to the page configured via the `IndexPage` property previously discussed.
  
 ## Integrating SAML into your Java application
-### Getting Started
+### Getting started
+Throughout this section we will refer to the Identity Server installation directory as IS_HOME.
 #### Prerequisites
 1. [Maven](https://maven.apache.org/download.cgi) 3.6.x or higher
 
@@ -149,7 +150,7 @@ The structure of the sample would be as follows:
 
 [![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
 
-### Configuring The Sample
+### Configuring the sample
 
 1. Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
       ```
@@ -191,13 +192,13 @@ The structure of the sample would be as follows:
       #URIs to skip SSOAgentFilter; comma separated values
       SkipURIs=
 
-      IndexPage=/SampleApp/index.html
+      IndexPage=/sample-app/index.html
 
       #A unique identifier for this SAML 2.0 Service Provider application
       SAML2.SPEntityId=SampleApp
 
       #The URL of the SAML 2.0 Assertion Consumer
-      SAML2.AssertionConsumerURL=http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/home.jsp
+      SAML2.AssertionConsumerURL=http://localhost.com:8080/sample-app/home.jsp
 
       #A unique identifier for this SAML 2.0 Service Provider application
       SAML2.IdPEntityId=localhost
@@ -268,7 +269,7 @@ The structure of the sample would be as follows:
         ~ under the License.
         -->
 
-      <web-app id="SampleApp" version="2.5"
+      <web-app id="io.asgardio.tomcat.saml.agent.sample" version="2.5"
               xmlns="http://java.sun.com/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
@@ -310,7 +311,7 @@ The structure of the sample would be as follows:
       </web-app>
 
       ```
-### Enable Login    
+### Enable login    
 1. Next, the webapp itself has two pages, index.html and home.jsp, and a web.xml file.
 The index.html contains a login button which we would use to forward the user to the secured page.
       ```
@@ -330,14 +331,14 @@ The index.html contains a login button which we would use to forward the user to
         </form>
       ```
 
-### Enable Logout
-1. The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost.com:8080/io.asgardio.tomcat.saml.agent.sample/home.jsp should not be accessible. In the sample we are using, if there is no active session in
+### Enable logout
+1. The home.jsp page is a page which we want to secure i.e. in case there are no active sessions, the http://localhost.com:8080/sample-app/home.jsp should not be accessible. In the sample we are using, if there is no active session in
  place, we would redirect the user for authentication. In the home.jsp, there is a logout link which will be used to
   create a SLO request.
 
       `<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>`
 
-### Retrieving User Attributes
+### Retrieving user attributes
 
 1. The web app needs to be configured to read the attributes sent from the Identity Server upon successful
  authentication. In the SampleApp, we would customize the home.jsp file as follows to retrieve the user attributes.
@@ -395,7 +396,7 @@ If you want to build **tomcat-saml-agent** from the source code:
 Please read [Contributing to the Code Base](http://wso2.github.io/) for details on our code of conduct, and the
  process for submitting pull requests to us.
  
-### Reporting Issues
+### Reporting issues
 We encourage you to report issues, improvements, and feature requests creating [git Issues](https://github.com/wso2-extensions/identity-samples-dotnet/issues).
 
 Important: And please be advised that security issues must be reported to security@wso2.com, not as GitHub issues, 
