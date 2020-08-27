@@ -18,12 +18,12 @@
   ~ under the License.
   -->
 
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="SampleApp"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="io.asgardio.tomcat.saml.agent.sample"
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>SampleApp</display-name>
+    <display-name>io.asgardio.tomcat.saml.agent.sample</display-name>
 
     <filter>
         <filter-name>SAML2SSOAgentFilter</filter-name>
