@@ -30,7 +30,7 @@
     <packaging>war</packaging>
 
     <build>
-        <finalName>io.asgardio.tomcat.saml.agent.sample</finalName>
+        <finalName>sample-app</finalName>
         <sourceDirectory>src/main</sourceDirectory>
         <plugins>
             <plugin>
