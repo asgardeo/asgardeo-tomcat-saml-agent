@@ -39,12 +39,13 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
 2. Access WSO2 IS management console from https://localhost:9443/carbon/ and create a service provider.
    ![Management Console](https://user-images.githubusercontent.com/15249242/91068131-6fc2d380-e651-11ea-9d0a-d58c825bbb68.png)
    i. Navigate to the `Service Providers` tab listed under the `Identity` section in the management console and click `Add`.<br/>
-   ii. Provide a name for the Service Provider (ex:- sampleApp) and click `Register`. Now you will be redirected to the `Edit Service Provider` page.<br/>
+   ii. Provide a name for the Service Provider (ex:- sample-app) and click `Register`. Now you will be redirected to the
+    `Edit Service Provider` page.<br/>
    iii. Expand the  `Inbound Authentication Configuration` section and click `Configure` under the `SAML2 Web SSO Configuration` section.<br/>
    iv. Provide the following values for the respective fields and click `Update` while keeping other default settings as it is.
    
-       Issuer - SampleApp  
-       Assertion Consumer URLs - http://localhost.com:8080/SampleApp/home.jsp 
+       Issuer - sample-app  
+       Assertion Consumer URLs - http://localhost.com:8080/sample-app/home.jsp 
        Enable Attribute Profile - True
        Include Attributes in the Response Always - True
 
@@ -70,16 +71,16 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
 
 ## How it works
 ### Classify secure resources, unsecured resources
-In the SampleApp sample, we have two pages. A landing page (`index.html`) which we have not secured, and another 
+In the sample-app, we have two pages. A landing page (`index.html`) which we have not secured, and another 
 page (`home.jsp`) which we have secured.
 
-`IndexPage` property of the sampleApp.properties file in the `<APP_HOME>/WEB-INF/classes` directory is used to define 
+`IndexPage` property of the sample-app.properties file in the `<APP_HOME>/WEB-INF/classes` directory is used to define 
 the landing page of the webapp which is also considered as an unsecured page.
-Also the same page is used as the page that user get redirected once the logout is done.
+Also the same page is used as the page that the user get redirected once the logout is done.
 Here we have set `<APP_HOME>/index.html` as the value of `IndexPage` property.
-    IndexPage=/SampleApp/index.html
+    IndexPage=/sample-app/index.html
 
-By default, all other pages considered as secured pages. Hence `home.jsp` will be secured without any other configurations.
+By default, all the other pages are considered as secured pages. Hence `home.jsp` will be secured without any other configurations.
 
 ### Trigger authentication
 In the `<APP_HOME>/index.html` page, we have added the action for the login button to trigger a SAML authentication:
@@ -179,8 +180,8 @@ The structure of the sample would be as follows:
       ```
 
 2. Before the web.xml configurations, we will look at adding the resources files.
-   In the sampleApp, create a file named sampleApp.properties in the `<APP_HOME>/resources` directory. The 
-   sampleApp.properties file contains properties similar to the following:
+   In the sample-app, create a file named sample-app.properties in the `<APP_HOME>/resources` directory. The 
+   sample-app.properties file contains properties similar to the following:
 
       ```
       #Enable SAML Single Sign On Login
@@ -195,7 +196,7 @@ The structure of the sample would be as follows:
       IndexPage=/sample-app/index.html
 
       #A unique identifier for this SAML 2.0 Service Provider application
-      SAML2.SPEntityId=SampleApp
+      SAML2.SPEntityId=sample-app
 
       #The URL of the SAML 2.0 Assertion Consumer
       SAML2.AssertionConsumerURL=http://localhost.com:8080/sample-app/home.jsp
@@ -302,7 +303,7 @@ The structure of the sample would be as follows:
           </listener>
           <context-param>
               <param-name>property-file</param-name>
-              <param-value>sampleApp.properties</param-value>
+              <param-value>sample-app.properties</param-value>
           </context-param>
           <context-param>
               <param-name>certificate-file</param-name>
@@ -341,10 +342,18 @@ The index.html contains a login button which we would use to forward the user to
 ### Retrieving user attributes
 
 1. The web app needs to be configured to read the attributes sent from the Identity Server upon successful
- authentication. In the SampleApp, we would customize the home.jsp file as follows to retrieve the user attributes.
+ authentication. In the sample-app, we would customize the home.jsp file as follows to retrieve the user attributes.
  
-      ```
-       <%
+ First, we would need the following imports to be added to the home.jsp file.
+ 
+       <%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
+       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean" %>
+       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean.SAML2SSO" %>
+       <%@ page import="java.util.Map" %>
+       
+Next, by adding the following snippets, we would be able to retrieve the user claims as provided by the Identity Provider.
+ 
+      <%
         // Retrieve the session bean.
         LoggedInSessionBean sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
     
@@ -357,7 +366,6 @@ The index.html contains a login button which we would use to forward the user to
         // Authenticated user's attributes
         Map<String, String> saml2SSOAttributes = samlResponse.getSubjectAttributes();
        %>
-      ```
       
 2. Then, we would use the `saml2SSOAttributes` in the **<APP_HOME>/home.jsp** to display the user attributes via a 
 table:
