@@ -51,7 +51,7 @@
     </listener>
     <context-param>
         <param-name>property-file</param-name>
-        <param-value>sampleApp.properties</param-value>
+        <param-value>sample-app.properties</param-value>
     </context-param>
     <context-param>
         <param-name>certificate-file</param-name>

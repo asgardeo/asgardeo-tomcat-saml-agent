@@ -17,8 +17,8 @@
   --%>
 
 
-<%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
 <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean" %>
+<%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
 <%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -90,8 +90,7 @@
             </table>
         </div>
         <div class="element-padding">
-            <a
-                    href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>
+            <a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>
         </div>
     </div>
 </main>
