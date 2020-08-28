@@ -1,47 +1,38 @@
 # Asgardio Tomcat SAML Agent
 
-## Table of Contents
-- [Trying out the sample](#trying-out-the-sample)
-  * [Prerequisites](#prerequisites)
-  * [Running the sample](#running-the-sample)
-    + [Configuring Identity Server](#configuring-identity-server)
-    + [Configuring the sample](#configuring-the-sample)
+Asgardio Tomcat SAML Agent enables you to add SAML based login, logout to your Apache Tomcat web apps in simple manner.
+
+- [Getting Started](#getting-started)
 - [How it works](#how-it-works)
-  * [Classify secure resources, unsecured resources](#classify-secure-resources--unsecured-resources)
-  * [Trigger authentication](#trigger-authentication)
-  * [Retrieve user attributes](#retrieve-user-attributes)
-  * [Trigger logout](#trigger-logout)
-- [Integrating SAML into your Java application](#integrating-saml-into-your-java-application)
-  * [Getting started](#getting-started)
-    + [Prerequisites](#prerequisites-1)
-  * [Configuring the sample](#configuring-the-sample)
-  * [Enable login](#enable-login)
-  * [Enable logout](#enable-logout)
-  * [Retrieving user attributes](#retrieving-user-attributes)
+- [Integrating SAML into your Java Source Project](#integrating-saml-into-your-java-application)
 - [Integrating SAML into your Existing Webapp](./docs/integrating_with_existing_webapp.md/#Integrating_SAML_into_your_existing_Webapp)
-    * [Getting started](./docs/integrating_with_existing_webapp.md/#getting-started)
-      + [Prerequisites](./docs/integrating_with_existing_webapp.md/#prerequisites-1)
-    * [Configuring the sample](./docs/integrating_with_existing_webapp.md/#configuring-the-sample)
-    * [Enable login](./docs/integrating_with_existing_webapp.md/#enable-login)
-    * [Enable logout](./docs/integrating_with_existing_webapp.md/#enable-logout)
-    * [Retrieving user attributes](./docs/integrating_with_existing_webapp.md/#retrieving-user-attributes)
 - [Building from the source](#building-from-the-source)
 - [Contributing](#contributing)
   * [Reporting issues](#reporting-issues)
 - [License](#license)
 
-Throughout this guide we will refer to the sample-app installation directory as APP_HOME.
 
-## Trying out the sample
+## Getting started
+
+You can experience the capabilities of Asgardio Tomcat SAML Agent by following this small guide which contains main sections listed below.
+
+  * [Prerequisites](#prerequisites)
+  * [Configuring Identity Server](#configuring-identity-server)
+  * [Configuring the sample](#configuring-the-sample)
+  * [Running the sample](#running-the-sample)
 
 ### Prerequisites
 1. WSO2 Identity Server and it's [prerequisites](https://is.docs.wso2.com/en/next/setup/installing-the-product/).
 2. [Apache Tomcat](http://tomcat.apache.org/tomcat-8.5-doc/) 8.x or higher
 
-### Running the sample
-Follow the steps below to tryout SAML based SSO authentication, SLO and attribute retrieval functionalities.
 
-#### Configuring Identity Server
+### Configuring the sample
+1. Download the `sample-app.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
+2. Deploy the application, `sample-app.war` using Apache Tomcat.
+3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
+4. Try out the application by accessing the `http://localhost.com:8080/sample-app/index.html`.
+
+### Configuring Identity Server
 1. Start the WSO2 IS. 
 2. Access WSO2 IS management console from https://localhost:9443/carbon/ and create a service provider.
    ![Management Console](https://user-images.githubusercontent.com/15249242/91068131-6fc2d380-e651-11ea-9d0a-d58c825bbb68.png)
@@ -68,15 +59,28 @@ Follow the steps below to tryout SAML based SSO authentication, SLO and attribut
    
    vi. Click `Update` to save.
 
-#### Configuring the sample
-1. Download the `sample-app.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
-2. Deploy the application, `sample-app.war` using Apache Tomcat.
-3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
-4. Try out the application by accessing the `http://localhost.com:8080/sample-app/index.html`.
+
+### Running the sample
+1. Goto the application landing page by accessing the `http://localhost.com:8080/sample-app/index.html`.
+2. Click on the `Login` button.
+Note that SAML authentication request got generated and redirected to the Identity Server.
+3. Proceed with Identity Server login.
+Once Identity Server generated a SAML response, sample application validated the authentication response and allowed access to the secured `home.jsp`.
+Note that username and user attributes are listed in the `home.jsp`.
+4. Click on Logout link.
+Note that SAML logout request got generated and redirected to the Identity Server, logout reponse generated from the Identity Server, application validated the logout response and redirected user to the landing page 'index.html'.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
 ## How it works
+
+This section explains detailed walkthrough on how key aspects handled in the Asgardio Tomcat SAML Agent.
+
+  * [Classify secure resources, unsecured resources](#classify-secure-resources-unsecured-resources)
+  * [Trigger authentication](#trigger-authentication)
+  * [Retrieve user attributes](#retrieve-user-attributes)
+  * [Trigger logout](#trigger-logout)
+
 ### Classify secure resources, unsecured resources
 In the sample-app, we have two pages. A landing page (`index.html`) which we have not secured, and another 
 page (`home.jsp`) which we have secured.
@@ -132,9 +136,16 @@ Clicking on the logout link would trigger the SLO flow engaging the same filter 
  redirected to the page configured via the `IndexPage` property previously discussed.
  
 ## Integrating SAML into your Java application
-### Getting started
+
+  * [Prerequisites](#prerequisites-1)
+  * [Configuring the sample](#configuring-the-sample)
+  * [Enable login](#enable-login)
+  * [Enable logout](#enable-logout)
+  * [Retrieving user attributes](#retrieving-user-attributes)
+  
 Throughout this section we will refer to the Identity Server installation directory as IS_HOME.
-#### Prerequisites
+
+### Prerequisites
 1. [Maven](https://maven.apache.org/download.cgi) 3.6.x or higher
 
 These instructions will guide you on integrating SAML into your Java application with the Asgardio SAML SDK for Java.
