@@ -1,26 +1,67 @@
+## Integrating SAML into your Java Source Project
 
-## Integrating SAML into your Existing Webapp 
+  * [Prerequisites](#prerequisites-1)
+  * [Configuring the sample](#configuring-the-sample)
+  * [Enable login](#enable-login)
+  * [Enable logout](#enable-logout)
+  * [Retrieving user attributes](#retrieving-user-attributes)
+  
+Throughout this section we will refer to the Identity Server installation directory as IS_HOME.
 
-### Getting started
-Throughout this section we will refer to the existing web application as sample-app.
-#### Prerequisites
-1. [Apache Tomcat](http://tomcat.apache.org/tomcat-8.5-doc/) 8.x or higher
+### Prerequisites
+1. [Maven](https://maven.apache.org/download.cgi) 3.6.x or higher
 
-These instructions will guide you on integrating SAML into your web application with the Asgardio SAML SDK for Java.
+These instructions will guide you on integrating SAML into your Java application with the Asgardio SAML SDK for Java.
 This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardio SAML SDK for Java.
 
-### Configuring the web app
+The SDK supports the following features.
 
-The structure of the sample-app we are configuring would be as follows:
+- Single Sign-On (SSO) and Single Log-Out (SLO) (SP-Initiated and IdP-Initiated).
+- Assertion and nameID encryption.
+- Assertion signatures.
+- Message signatures: AuthNRequest, LogoutRequest, LogoutResponses.
+- Enable an Assertion Consumer Service endpoint.
+- Enable a Single Logout Service endpoint.
+- Publish the SP metadata.
 
-<img width="326" alt="structure" src="https://user-images.githubusercontent.com/25428696/91556626-aa2db880-e950-11ea-9203-72d2a68d4148.png">
+A sample application is included in 
+https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/io.asgardio.tomcat.saml.agent.sample
+which we would use for the following section. 
+Here, we are using the sample as a reference only, we can follow the same approach to build our own app as well.
+The structure of the sample would be as follows:
 
-1. Download the `lib.zip` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
-1. Extract the downloaded `lib.zip` file to the `<APP_HOME>/WEB-INF` directory. (If you already have a `lib` folder in
- your web app, merge the content of the downloaded `lib.zip` file into the existing `lib` folder.)
+[![INSERT YOUR GRAPHIC HERE](https://miro.medium.com/max/1400/1*M9-eI8gcUugJD_6u7PXN1Q.png)]()
+
+### Configuring the sample
+
+1. Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
+      ```
+      <dependency>
+          <groupId>io.asgardio.tomcat.saml.agent/groupId>
+          <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
+          <version>0.1.0</version>
+      </dependency>
+      ```
+   The SDK is hosted at the WSO2 Internal Repository. Point to the repository as follows:
+
+
+      ```
+      <repositories>
+          <repository>
+              <id>wso2.releases</id>
+              <name>WSO2 internal Repository</name>
+              <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+              <releases>
+                  <enabled>true</enabled>
+                  <updatePolicy>daily</updatePolicy>
+                  <checksumPolicy>ignore</checksumPolicy>
+              </releases>
+          </repository>
+      </repositories>
+      ```
 
 2. Before the web.xml configurations, we will look at adding the resources files.
-   In the sample-app, create a file named sample-app.properties in the `<APP_HOME>/WEB-INF/classes` directory. The 
+   In the sample-app, create a file named sample-app.properties in the `<APP_HOME>/resources` directory. The 
    sample-app.properties file contains properties similar to the following:
 
       ```
@@ -81,13 +122,13 @@ The structure of the sample-app we are configuring would be as follows:
       #AuthnRequest and LogoutRequest messages
       PrivateKeyPassword=wso2carbon
       ```
-3. Next, generate keystore file and copy it to the `APP_HOME/WEB-INF/classes` directory.
+3. Next, generate keystore file and copy it to the `APP_HOME/resources`resources directory.
    For simplicity, we are using the wso2carbon.jks keystore file of the WSO2 Identity Server which resides in 
     `<IS_HOME>/repository/resources/security/` directory.
    You may need to update the following properties of `<APP_HOME/WEB-INF/web.xml` file
    if you are using different keystore than `wso2carbon.jks`. 
 
-4. Finally, copy and paste the following configurations to the `<APP_HOME>/WEB-INF/web.xml` file. 
+4. Finally, copy and paste the following configurations to the `<APP_HOME/WEB-INF/web.xml` file. 
 
       ```
       <?xml version="1.0" encoding="UTF-8"?>
@@ -230,11 +271,4 @@ table:
       ```
    After the above configurations, your app would be able to try out the authentication, logout and attribute 
    retrieval flows with SAML.
-
-## Building from the source
-If you want to build **tomcat-saml-agent** from the source code:
-
-1. Install Java 8
-2. Install Apache Maven 3.x.x (https://maven.apache.org/download.cgi#)
-3. Get a clone or download the source from this repository (https://github.com/asgardio/asgardio-tomcat-saml-agent.git)
-4. Run the Maven command ``mvn clean install`` from the ``asgardio-tomcat-saml-agent`` directory.
+   
