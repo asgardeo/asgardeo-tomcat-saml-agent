@@ -8,16 +8,6 @@ Throughout this section we will refer to the existing web application as sample-
 These instructions will guide you on integrating SAML into your web application with the Asgardio SAML SDK for Java.
 This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardio SAML SDK for Java.
 
-The SDK supports the following features.
-
-- Single Sign-On (SSO) and Single Log-Out (SLO) (SP-Initiated and IdP-Initiated).
-- Assertion and nameID encryption.
-- Assertion signatures.
-- Message signatures: AuthNRequest, LogoutRequest, LogoutResponses.
-- Enable an Assertion Consumer Service endpoint.
-- Enable a Single Logout Service endpoint.
-- Publish the SP metadata.
-
 ### Configuring the web app
 
 The structure of the sample-app we are configuring would be as follows:
