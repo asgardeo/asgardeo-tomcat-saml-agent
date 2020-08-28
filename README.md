@@ -1,10 +1,17 @@
 # Asgardio Tomcat SAML Agent
 
+[![Build Status](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fwso2.org%2Fjenkins%2Fjob%2Fasgardio%2Fjob%2Fasgardio-tomcat-saml-agent%2F&style=flat)](https://wso2.org/jenkins/job/asgardio/job/asgardio-tomcat-saml-agent/) [![Stackoverflow](https://img.shields.io/badge/Ask%20for%20help%20on-Stackoverflow-orange)](https://stackoverflow.com/questions/tagged/wso2is)
+[![Join the chat at https://join.slack.com/t/wso2is/shared_invite/enQtNzk0MTI1OTg5NjM1LTllODZiMTYzMmY0YzljYjdhZGExZWVkZDUxOWVjZDJkZGIzNTE1NDllYWFhM2MyOGFjMDlkYzJjODJhOWQ4YjE](https://img.shields.io/badge/Join%20us%20on-Slack-%23e01563.svg)](https://join.slack.com/t/wso2is/shared_invite/enQtNzk0MTI1OTg5NjM1LTllODZiMTYzMmY0YzljYjdhZGExZWVkZDUxOWVjZDJkZGIzNTE1NDllYWFhM2MyOGFjMDlkYzJjODJhOWQ4YjE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/wso2/product-is/blob/master/LICENSE)
+[![Twitter](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
+---
+
+
 Asgardio Tomcat SAML Agent enables you to add SAML based login, logout to your Apache Tomcat web apps in simple manner.
 
 - [Getting Started](#getting-started)
 - [How it works](#how-it-works)
-- [Integrating SAML into your Java Source Project](#integrating-saml-into-your-java-application)
+- [Integrating SAML into your Java Source Project](#integrating-saml-into-your-java-source-project)
 - [Integrating SAML into your Existing Webapp](./docs/integrating_with_existing_webapp.md/#Integrating_SAML_into_your_existing_Webapp)
 - [Building from the source](#building-from-the-source)
 - [Contributing](#contributing)
@@ -17,8 +24,8 @@ Asgardio Tomcat SAML Agent enables you to add SAML based login, logout to your A
 You can experience the capabilities of Asgardio Tomcat SAML Agent by following this small guide which contains main sections listed below.
 
   * [Prerequisites](#prerequisites)
-  * [Configuring Identity Server](#configuring-identity-server)
   * [Configuring the sample](#configuring-the-sample)
+  * [Configuring Identity Server](#configuring-identity-server)
   * [Running the sample](#running-the-sample)
 
 ### Prerequisites
@@ -135,7 +142,7 @@ In the `<APP_HOME>/home.jsp` file, we have added the following to trigger a SLO 
 Clicking on the logout link would trigger the SLO flow engaging the same filter mentioned above. The user would be
  redirected to the page configured via the `IndexPage` property previously discussed.
  
-## Integrating SAML into your Java application
+## Integrating SAML into your Java Source Project
 
   * [Prerequisites](#prerequisites-1)
   * [Configuring the sample](#configuring-the-sample)
