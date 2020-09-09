@@ -28,53 +28,16 @@ You can experience the capabilities of Asgardio Tomcat SAML Agent by following t
   * [Running the sample](#running-the-sample)
 
 ### Prerequisites
-1. WSO2 Identity Server and it's [prerequisites](https://is.docs.wso2.com/en/next/setup/installing-the-product/).
-2. [Apache Tomcat](http://tomcat.apache.org/tomcat-8.5-doc/) 8.x or higher
-
-
-### Configuring the sample
-1. Download the `sample-app.war` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
-2. Deploy the application, `sample-app.war` using Apache Tomcat.
-3. Add the entry `127.0.0.1   localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
-4. Try out the application by accessing the `http://localhost.com:8080/sample-app/index.html`.
-
-### Configuring Identity Server
-1. Start the WSO2 IS. 
-2. Access WSO2 IS management console from https://localhost:9443/carbon/ and create a service provider.
-   ![Management Console](https://user-images.githubusercontent.com/15249242/91068131-6fc2d380-e651-11ea-9d0a-d58c825bbb68.png)
-   i. Navigate to the `Service Providers` tab listed under the `Identity` section in the management console and click `Add`.<br/>
-   ii. Provide a name for the Service Provider (ex:- sample-app) and click `Register`. Now you will be redirected to the
-    `Edit Service Provider` page.<br/>
-   iii. Expand the  `Inbound Authentication Configuration` section and click `Configure` under the `SAML2 Web SSO Configuration` section.<br/>
-   iv. Provide the following values for the respective fields and click `Update` while keeping other default settings as it is.
-   
-       Issuer - sample-app  
-       Assertion Consumer URLs - http://localhost.com:8080/sample-app/home.jsp 
-       Enable Attribute Profile - True
-       Include Attributes in the Response Always - True
-
-   v. Next, in the `Edit Service Provider` page, expand the 
-   [Claim Configuration](https://is.docs.wso2.com/en/latest/learn/configuring-claims-for-a-service-provider/#configuring-claims-for-a-service-provider) 
-   section. In this configuration, Set the following config and add the claims you 
-   need to retrieve (ex: http://wso2.org/claims/lastname) from the web app.
-   
-       Select Claim mapping Dialect - Use Local Claim Dialect
-       
-   See the example claim config below.
-   ![Claim Config](https://user-images.githubusercontent.com/15249242/90488235-38d45580-e159-11ea-8beb-52d6b5c35034.png)
-   
-   vi. Click `Update` to save.
+1. [Docker](https://docs.docker.com/get-docker/)
 
 
 ### Running the sample
-1. Goto the application landing page by accessing the `http://localhost.com:8080/sample-app/index.html`.
-2. Click on the `Login` button.
-Note that SAML authentication request got generated and redirected to the Identity Server.
-3. Proceed with Identity Server login.
-Once Identity Server generated a SAML response, sample application validated the authentication response and allowed access to the secured `home.jsp`.
-Note that username and user attributes are listed in the `home.jsp`.
-4. Click on Logout link.
-Note that SAML logout request got generated and redirected to the Identity Server, logout reponse generated from the Identity Server, application validated the logout response and redirected user to the landing page 'index.html'.
+1. Clone this repository.
+2. Add the entry 127.0.0.1 localhost.com to the /etc/hosts file of your machine to configure the hostname.
+3. Open a terminal window in the cloned repository directory in Step 1.
+4. Execute command `chmod u+x run-docker-sample.sh` to assign execution permission to the `run-docker-sample.sh` script.
+5. Execute command `sh run-docker-sample.sh` to run the sample in Docker.
+6. Try out the application by accessing the http://localhost.com:8080/sample-app/index.html.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
