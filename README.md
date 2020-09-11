@@ -30,14 +30,21 @@ You can experience the capabilities of Asgardio Tomcat SAML Agent by following t
 ### Prerequisites
 1. [Docker](https://docs.docker.com/get-docker/)
 
+### Configuring the sample
+1. Open a terminal window inside a preferred directory on your machine.
+2. Execute command `docker container run --rm --name tomcat-saml-agent-sample -itdp 8080:8080 asgardio/tomcat-saml-agent-sample` to start the sample Docker container.
+3. Add the entry `127.0.0.1 localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
+
+### Configuring Identity Server
+Here we are using WSO2 Identity Server as the SAML Identity Provider. The sample can be configured with any other preferred Identity Provider as well.
+1. Open a terminal window inside a preferred directory on your machine.
+2. Execute command `docker container run --rm -itdp 9443:9443 --link tomcat-saml-agent-sample wso2/wso2is` to start the WSO2 IS Docker container.
+3. Execute command `curl -o create_service_provider.sh https://raw.githubusercontent.com/asgardio/asgardio-tomcat-saml-agent/master/create_service_provider.sh` to download the shell script to create a Service Provider in WSO2 IS.
+4. Execute command `chmod +x create_service_provider.sh` to assign executable permission to the `create_service_provider.sh` script.
+5. Execute command `sh create_service_provider.sh` to create a SAML Service Provider in WSO2 IS.
 
 ### Running the sample
-1. Clone this repository.
-2. Add the entry 127.0.0.1 localhost.com to the /etc/hosts file of your machine to configure the hostname.
-3. Open a terminal window in the cloned repository directory in Step 1.
-4. Execute command `chmod u+x run-docker-sample.sh` to assign execution permission to the `run-docker-sample.sh` script.
-5. Execute command `sh run-docker-sample.sh` to run the sample in Docker.
-6. Try out the application by accessing the http://localhost.com:8080/sample-app/index.html.
+Try out the application by accessing the URL http://localhost.com:8080/sample-app/index.html in your web browser.
 
 ![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
 
