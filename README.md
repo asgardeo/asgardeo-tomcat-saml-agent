@@ -32,16 +32,34 @@ You can experience the capabilities of Asgardio Tomcat SAML Agent by following t
 
 ### Configuring the sample
 1. Open a terminal window inside a preferred directory on your machine.
-2. Execute command `docker container run --rm --name tomcat-saml-agent-sample -itdp 8080:8080 asgardio/tomcat-saml-agent-sample` to start the sample Docker container.
-3. Add the entry `127.0.0.1 localhost.com` to the `/etc/hosts` file of your machine to configure the hostname.
+2. Execute the following command to start the sample Docker container.
+   ```
+   $ docker container run --rm --name tomcat-saml-agent-sample -itdp 8080:8080 asgardio/tomcat-saml-agent-sample
+   ```
+3. Add the following entry to the `/etc/hosts` file of your machine to configure the hostname.
+   ```
+   127.0.0.1 localhost.com
+   ```
 
 ### Configuring Identity Server
 Here we are using WSO2 Identity Server as the SAML Identity Provider. The sample can be configured with any other preferred Identity Provider as well.
 1. Open a terminal window inside a preferred directory on your machine.
-2. Execute command `docker container run --rm -itdp 9443:9443 --link tomcat-saml-agent-sample wso2/wso2is` to start the WSO2 IS Docker container.
-3. Execute command `curl -o create_service_provider.sh https://raw.githubusercontent.com/asgardio/asgardio-tomcat-saml-agent/master/create_service_provider.sh` to download the shell script to create a Service Provider in WSO2 IS.
-4. Execute command `chmod +x create_service_provider.sh` to assign executable permission to the `create_service_provider.sh` script.
-5. Execute command `sh create_service_provider.sh` to create a SAML Service Provider in WSO2 IS.
+2. Execute the following command to start the WSO2 IS Docker container.
+   ```
+   $ docker container run --rm -itdp 9443:9443 --link tomcat-saml-agent-sample wso2/wso2is
+   ```
+3. Execute the following command to download the shell script to create a Service Provider in WSO2 IS.
+   ```
+   $ curl -o create_service_provider.sh https://raw.githubusercontent.com/asgardio/asgardio-tomcat-saml-agent/master/create_service_provider.sh
+   ```
+4. Execute the following command to assign executable permission to the `create_service_provider.sh` script.
+   ```
+   $ chmod +x create_service_provider.sh
+   ```
+5. Execute the following command to create a SAML Service Provider in WSO2 IS.
+   ```
+   $ sh create_service_provider.sh
+   ```
 
 ### Running the sample
 Try out the application by accessing the URL http://localhost.com:8080/sample-app/index.html in your web browser.
