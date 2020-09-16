@@ -27,7 +27,7 @@
     <groupId>io.asgardio.tomcat.saml.agent</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tomcat-saml-agent</artifactId>
-    <version>0.1.12-SNAPSHOT</version>
+    <version>0.1.12</version>
     <packaging>pom</packaging>
     <name>Asgardio - Tomcat SAML Agent</name>
     <description>
@@ -39,7 +39,7 @@
         <url>https://github.com/asgardio/asgardio-tomcat-saml-agent.git</url>
         <developerConnection>scm:git:https://github.com/asgardio/asgardio-tomcat-saml-agent.git</developerConnection>
         <connection>scm:git:https://github.com/asgardio/asgardio-tomcat-saml-agent.git</connection>
-        <tag>HEAD</tag>
+        <tag>v0.1.12</tag>
     </scm>
 
     <repositories>
