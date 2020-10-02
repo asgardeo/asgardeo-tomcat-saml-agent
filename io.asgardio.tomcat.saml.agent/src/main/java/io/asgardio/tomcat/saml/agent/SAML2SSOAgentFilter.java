@@ -75,12 +75,7 @@ public class SAML2SSOAgentFilter implements Filter {
 
             SSOAgentRequestResolver resolver =
                     new SSOAgentRequestResolver(request, response, ssoAgentConfig);
-
-            if (resolver.isURLToSkip()) {
-                chain.doFilter(servletRequest, servletResponse);
-                return;
-            }
-
+            String indexPage = ssoAgentConfig.getIndexPage();
             SAML2SSOManager samlSSOManager;
 
             if (resolver.isSLORequest()) {
@@ -89,74 +84,77 @@ public class SAML2SSOAgentFilter implements Filter {
                 LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
                 String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
                 SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
-                return;
-            } else if (resolver.isSAML2SSOResponse()) {
-
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                try {
-                    samlSSOManager.processResponse(request, response);
-                } catch (SSOAgentException e) {
-                    handleException(request, e);
-                }
-
-            } else if (resolver.isSAML2ArtifactResponse()) {
-
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                try {
-                    samlSSOManager.processArtifactResponse(request);
-                } catch (SSOAgentException e) {
-                    handleException(request, e);
-                }
-            } else if (resolver.isSLOURL()) {
-
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                if (resolver.isHttpPostBinding()) {
-
-                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
-
-                } else {
-                    //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
-                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                    response.sendRedirect(redirectUrl);
-                }
-                return;
-
-            } else if (resolver.isSAML2SSOURL()) {
-
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                if (resolver.isHttpPostBinding()) {
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
-                    return;
-                }
-                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
-                return;
-
-            } else if (resolver.isPassiveAuthnRequest()) {
-
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                ssoAgentConfig.getSAML2().setPassiveAuthn(true);
-                String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
-                ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                response.sendRedirect(redirectUrl);
-                return;
-            }
-            String indexPage = ssoAgentConfig.getIndexPage();
-            if (request.getSession(false) != null &&
-                    request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
-                request.getSession().invalidate();
                 response.sendRedirect(indexPage);
                 return;
-            }
+            } else if (resolver.isURLToSkip()) {
+                chain.doFilter(servletRequest, servletResponse);
+                return;
 
+            } else if (request.getSession(false) != null) {
+
+                if (resolver.isSAML2SSOResponse()) {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    try {
+                        samlSSOManager.processResponse(request, response);
+                    } catch (SSOAgentException e) {
+                        handleException(request, e);
+                    }
+
+                } else if (resolver.isSAML2ArtifactResponse()) {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    try {
+                        samlSSOManager.processArtifactResponse(request);
+                    } catch (SSOAgentException e) {
+                        handleException(request, e);
+                    }
+                } else if (resolver.isSLOURL()) {
+
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    if (resolver.isHttpPostBinding()) {
+
+                        boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+
+                    } else {
+                        //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
+                        boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                        response.sendRedirect(redirectUrl);
+                    }
+                    return;
+
+                } else if (resolver.isSAML2SSOURL()) {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    if (resolver.isHttpPostBinding()) {
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                        return;
+                    }
+                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+                    return;
+
+                } else if (resolver.isPassiveAuthnRequest()) {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(true);
+                    String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                    response.sendRedirect(redirectUrl);
+                    return;
+                }
+
+                if (request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
+                    request.getSession().invalidate();
+                    response.sendRedirect(indexPage);
+                    return;
+                }
+
+            }
             HttpSession session = request.getSession();
             LoggedInSessionBean
                     sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
