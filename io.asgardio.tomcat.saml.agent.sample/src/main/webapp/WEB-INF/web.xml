@@ -57,9 +57,4 @@
         <param-name>certificate-file</param-name>
         <param-value>wso2carbon.jks</param-value>
     </context-param>
-
-    <error-page>
-        <exception-type>io.asgardio.java.saml.sdk.exception.SSOAgentException</exception-type>
-        <location>/error.jsp</location>
-    </error-page>
 </web-app>

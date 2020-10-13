@@ -17,7 +17,8 @@
   --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page isErrorPage="true" %>
+<%@ page import="io.asgardio.java.saml.sdk.exception.SSOAgentException" %>
+<%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,6 +49,9 @@
         }
     </style>
 </head>
+<%
+    SSOAgentException exception = (SSOAgentException) request.getAttribute(SSOAgentConstants.SSO_AGENT_EXCEPTION);
+%>
 <body>
 <main class="center-segment">
     <div class="element-padding">

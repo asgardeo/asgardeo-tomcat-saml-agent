@@ -18,7 +18,6 @@
 
 package io.asgardio.tomcat.saml.agent;
 
-import org.opensaml.saml.saml2.core.LogoutResponse;
 import io.asgardio.java.saml.sdk.SAML2SSOManager;
 import io.asgardio.java.saml.sdk.bean.LoggedInSessionBean;
 import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
@@ -28,6 +27,7 @@ import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
 import io.asgardio.java.saml.sdk.util.SSOAgentFilterUtils;
 import io.asgardio.java.saml.sdk.util.SSOAgentRequestResolver;
 import io.asgardio.java.saml.sdk.util.SSOAgentUtils;
+import org.opensaml.saml.saml2.core.LogoutResponse;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -96,7 +97,8 @@ public class SAML2SSOAgentFilter implements Filter {
                 try {
                     samlSSOManager.processResponse(request, response);
                 } catch (SSOAgentException e) {
-                    handleException(request, e);
+                    handleException(request, response, ssoAgentConfig, e);
+                    return;
                 }
 
             } else if (resolver.isSAML2ArtifactResponse()) {
@@ -105,7 +107,8 @@ public class SAML2SSOAgentFilter implements Filter {
                 try {
                     samlSSOManager.processArtifactResponse(request);
                 } catch (SSOAgentException e) {
-                    handleException(request, e);
+                    handleException(request, response, ssoAgentConfig, e);
+                    return;
                 }
             } else if (resolver.isSLOURL()) {
 
@@ -184,13 +187,17 @@ public class SAML2SSOAgentFilter implements Filter {
         return;
     }
 
-    protected void handleException(HttpServletRequest request, SSOAgentException e)
-            throws SSOAgentException {
+    protected void handleException(HttpServletRequest request, HttpServletResponse response,
+                                   SSOAgentConfig ssoAgentConfig, SSOAgentException e)
+            throws IOException, ServletException {
 
+        String errorPage = ssoAgentConfig.getErrorPage();
         if (request.getSession(false) != null) {
             request.getSession(false).removeAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
         }
-        throw e;
+        LOGGER.log(Level.SEVERE, e.getMessage());
+        request.setAttribute(SSOAgentConstants.SSO_AGENT_EXCEPTION, e);
+        RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(errorPage);
+        requestDispatcher.forward(request, response);
     }
-
 }
