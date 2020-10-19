@@ -16,12 +16,25 @@
 #
 # ------------------------------------------------------------------------
 
-FROM tomcat:8.5-jre8
+# Builder Stage
+FROM tomcat:8-jdk8-openjdk-slim AS builder
+
+COPY io.asgardio.tomcat.saml.agent.sample/target/sample-app.war webapps
+
+RUN mkdir webapps/sample-app 
+
+WORKDIR /usr/local/tomcat/webapps/sample-app
+
+RUN jar -xvf ../sample-app.war
 
 WORKDIR /usr/local/tomcat
 
-ADD io.asgardio.tomcat.saml.agent.sample/target/sample-app.war webapps
+COPY sample-app.properties webapps/sample-app/WEB-INF/classes
 
-EXPOSE 8080
+# Final Stage
+FROM tomcat:8.5-jre8-alpine
 
-CMD ["bin/catalina.sh", "run"]
+LABEL name="Asgardio Tomcat SAML Agent Sample" \
+      maintainer="WSO2"
+
+COPY --from=builder /usr/local/tomcat/webapps/sample-app webapps/sample-app
