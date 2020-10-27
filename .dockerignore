@@ -1,0 +1,19 @@
+# Directory
+.git
+.idea
+.classpath
+.settings
+.project
+target
+
+# Files
+**/*.class
+**/*.java
+**/*.xml
+**/*.jsp
+**/*.html
+**/*.jar
+**/*.iml
+**/*.iws
+**/*.ipr
+**/*.DS_Store

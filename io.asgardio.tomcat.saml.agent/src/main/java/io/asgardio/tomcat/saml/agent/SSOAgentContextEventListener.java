@@ -18,19 +18,21 @@
 
 package io.asgardio.tomcat.saml.agent;
 
-import org.apache.commons.lang.StringUtils;
 import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
 import io.asgardio.java.saml.sdk.exception.SSOAgentException;
 import io.asgardio.java.saml.sdk.security.SSOAgentX509Credential;
 import io.asgardio.java.saml.sdk.security.SSOAgentX509KeyStoreCredential;
 import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -59,6 +61,25 @@ public class SSOAgentContextEventListener implements ServletContextListener {
                 throw new SSOAgentException(SSOAgentConstants.PROPERTY_FILE_PARAMETER_NAME
                         + " context-param is not specified in the web.xml");
             }
+
+            Map<String, String> processedPropertyMap = properties.entrySet().stream()
+                    .map(entry -> new AbstractMap.SimpleEntry<>(String.valueOf(entry.getKey()),
+                            String.valueOf(entry.getValue())))
+                    .filter(entry -> entry.getValue().matches("\\$\\{(.*?)}"))
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                            StringUtils.substringsBetween(entry.getValue(), "${", "}")[0]))
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                            System.getenv(entry.getValue())))
+                    .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
+                    .peek(entry -> {
+                        if (logger.isLoggable(Level.FINE)) {
+                            logger.fine("Inferred value: " + entry.getValue() + " for property: " + entry.getKey()
+                                    + " from environment.");
+                        }
+                    })
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            properties.putAll(processedPropertyMap);
 
             // Load the client security certificate, if not specified throw SSOAgentException.
             String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
