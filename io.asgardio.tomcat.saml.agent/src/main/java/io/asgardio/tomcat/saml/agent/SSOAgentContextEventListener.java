@@ -95,6 +95,7 @@ public class SSOAgentContextEventListener implements ServletContextListener {
 
             SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
                     properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
+                    properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS),
                     properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT),
                     properties.getProperty(SSOAgentConstants.PRIVATE_KEY_ALIAS),
                     properties.getProperty(SSOAgentConstants.PRIVATE_KEY_PASSWORD).toCharArray());
