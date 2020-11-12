@@ -39,7 +39,7 @@ The structure of the sample would be as follows:
       <dependency>
           <groupId>io.asgardio.tomcat.saml.agent/groupId>
           <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
-          <version>0.1.18</version>
+          <version>0.1.19</version>
       </dependency>
       ```
    The SDK is hosted at the WSO2 Internal Repository. Point to the repository as follows:
