@@ -11,8 +11,8 @@ Throughout this section we will refer to the Identity Server installation direct
 ### Prerequisites
 1. [Maven](https://maven.apache.org/download.cgi) 3.6.x or higher
 
-These instructions will guide you on integrating SAML into your Java application with the Asgardio SAML SDK for Java.
-This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardio SAML SDK for Java.
+These instructions will guide you on integrating SAML into your Java application with the Asgardeo SAML SDK for Java.
+This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardeo SAML SDK for Java.
 
 The SDK supports the following features.
 
@@ -25,7 +25,7 @@ The SDK supports the following features.
 - Publish the SP metadata.
 
 A sample application is included in 
-https://github.com/asgardio/asgardio-tomcat-saml-agent/tree/master/io.asgardio.tomcat.saml.agent.sample
+https://github.com/asgardeo/asgardeo-tomcat-saml-agent/tree/master/io.asgardeo.tomcat.saml.agent.sample
 which we would use for the following section. 
 Here, we are using the sample as a reference only, we can follow the same approach to build our own app as well.
 The structure of the sample would be as follows:
@@ -37,9 +37,9 @@ The structure of the sample would be as follows:
 1. Starting with the pom.xml, the following dependencies should be added for the webApp to be using the SAML SDK.
       ```
       <dependency>
-          <groupId>io.asgardio.tomcat.saml.agent/groupId>
-          <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
-          <version>0.1.19</version>
+          <groupId>io.asgardeo.tomcat.saml.agent/groupId>
+          <artifactId>io.asgardeo.tomcat.saml.agent</artifactId>
+          <version>0.1.20</version>
       </dependency>
       ```
    The SDK is hosted at the WSO2 Internal Repository. Point to the repository as follows:
@@ -151,16 +151,16 @@ The structure of the sample would be as follows:
         ~ under the License.
         -->
 
-      <web-app id="io.asgardio.tomcat.saml.agent.sample" version="2.5"
+      <web-app id="io.asgardeo.tomcat.saml.agent.sample" version="2.5"
               xmlns="http://java.sun.com/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-          <display-name>io.asgardio.tomcat.saml.agent.sample</display-name>
+          <display-name>io.asgardeo.tomcat.saml.agent.sample</display-name>
 
           <filter>
               <filter-name>SAML2SSOAgentFilter</filter-name>
-              <filter-class>io.asgardio.tomcat.saml.agent.SAML2SSOAgentFilter</filter-class>
+              <filter-class>io.asgardeo.tomcat.saml.agent.SAML2SSOAgentFilter</filter-class>
           </filter>
           <filter-mapping>
               <filter-name>SAML2SSOAgentFilter</filter-name>
@@ -180,7 +180,7 @@ The structure of the sample would be as follows:
           </filter-mapping>
 
           <listener>
-              <listener-class>io.asgardio.tomcat.saml.agent.SSOAgentContextEventListener</listener-class>
+              <listener-class>io.asgardeo.tomcat.saml.agent.SSOAgentContextEventListener</listener-class>
           </listener>
           <context-param>
               <param-name>property-file</param-name>
@@ -227,9 +227,9 @@ The index.html contains a login button which we would use to forward the user to
  
  First, we would need the following imports to be added to the home.jsp file.
  
-       <%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
-       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean" %>
-       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean.SAML2SSO" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.util.SSOAgentConstants" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean.SAML2SSO" %>
        <%@ page import="java.util.Map" %>
        
 Next, by adding the following snippets, we would be able to retrieve the user claims as provided by the Identity Provider.

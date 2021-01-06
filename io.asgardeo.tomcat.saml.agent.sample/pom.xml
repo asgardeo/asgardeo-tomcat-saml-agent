@@ -19,14 +19,14 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.asgardio.tomcat.saml.agent</groupId>
+        <groupId>io.asgardeo.tomcat.saml.agent</groupId>
         <artifactId>tomcat-saml-agent</artifactId>
         <version>0.1.20-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>io.asgardio.tomcat.saml.agent.sample</artifactId>
+    <artifactId>io.asgardeo.tomcat.saml.agent.sample</artifactId>
     <packaging>war</packaging>
 
     <build>
@@ -72,8 +72,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.asgardio.tomcat.saml.agent</groupId>
-            <artifactId>io.asgardio.tomcat.saml.agent</artifactId>
+            <groupId>io.asgardeo.tomcat.saml.agent</groupId>
+            <artifactId>io.asgardeo.tomcat.saml.agent</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

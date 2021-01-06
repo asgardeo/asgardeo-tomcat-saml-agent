@@ -17,8 +17,8 @@
   --%>
 
 
-<%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean" %>
-<%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
+<%@ page import="io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean" %>
+<%@ page import="io.asgardeo.java.saml.sdk.util.SSOAgentConstants" %>
 <%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>

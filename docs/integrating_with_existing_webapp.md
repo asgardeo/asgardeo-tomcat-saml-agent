@@ -6,8 +6,8 @@ Throughout this section we will refer to the existing web application as sample-
 #### Prerequisites
 1. [Apache Tomcat](http://tomcat.apache.org/tomcat-8.5-doc/) 8.x or higher
 
-These instructions will guide you on integrating SAML into your web application with the Asgardio SAML SDK for Java.
-This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardio SAML SDK for Java.
+These instructions will guide you on integrating SAML into your web application with the Asgardeo SAML SDK for Java.
+This allows an application (i.e. Service Provider) to connect with an IDP using the Asgardeo SAML SDK for Java.
 
 ### Configuring the web app
 
@@ -15,7 +15,7 @@ The structure of the sample-app we are configuring would be as follows:
 
 <img width="326" alt="structure" src="https://user-images.githubusercontent.com/25428696/91556626-aa2db880-e950-11ea-9203-72d2a68d4148.png">
 
-1. Download the `lib.zip` from the [latest release](https://github.com/asgardio/asgardio-tomcat-saml-agent/releases/latest).
+1. Download the `lib.zip` from the [latest release](https://github.com/asgardeo/asgardeo-tomcat-saml-agent/releases/latest).
 1. Extract the downloaded `lib.zip` file to the `<APP_HOME>/WEB-INF` directory. (If you already have a `lib` folder in
  your web app, merge the content of the downloaded `lib.zip` file into the existing `lib` folder.)
 
@@ -110,16 +110,16 @@ The structure of the sample-app we are configuring would be as follows:
         ~ under the License.
         -->
 
-      <web-app id="io.asgardio.tomcat.saml.agent.sample" version="2.5"
+      <web-app id="io.asgardeo.tomcat.saml.agent.sample" version="2.5"
               xmlns="http://java.sun.com/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-          <display-name>io.asgardio.tomcat.saml.agent.sample</display-name>
+          <display-name>io.asgardeo.tomcat.saml.agent.sample</display-name>
 
           <filter>
               <filter-name>SAML2SSOAgentFilter</filter-name>
-              <filter-class>io.asgardio.tomcat.saml.agent.SAML2SSOAgentFilter</filter-class>
+              <filter-class>io.asgardeo.tomcat.saml.agent.SAML2SSOAgentFilter</filter-class>
           </filter>
           <filter-mapping>
               <filter-name>SAML2SSOAgentFilter</filter-name>
@@ -139,7 +139,7 @@ The structure of the sample-app we are configuring would be as follows:
           </filter-mapping>
 
           <listener>
-              <listener-class>io.asgardio.tomcat.saml.agent.SSOAgentContextEventListener</listener-class>
+              <listener-class>io.asgardeo.tomcat.saml.agent.SSOAgentContextEventListener</listener-class>
           </listener>
           <context-param>
               <param-name>property-file</param-name>
@@ -186,9 +186,9 @@ The index.html contains a login button which we would use to forward the user to
  
  First, we would need the following imports to be added to the home.jsp file.
  
-       <%@ page import="io.asgardio.java.saml.sdk.util.SSOAgentConstants" %>
-       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean" %>
-       <%@ page import="io.asgardio.java.saml.sdk.bean.LoggedInSessionBean.SAML2SSO" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.util.SSOAgentConstants" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean" %>
+       <%@ page import="io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean.SAML2SSO" %>
        <%@ page import="java.util.Map" %>
        
 Next, by adding the following snippets, we would be able to retrieve the user claims as provided by the Identity Provider.
@@ -236,5 +236,5 @@ If you want to build **tomcat-saml-agent** from the source code:
 
 1. Install Java 8
 2. Install Apache Maven 3.x.x (https://maven.apache.org/download.cgi#)
-3. Get a clone or download the source from this repository (https://github.com/asgardio/asgardio-tomcat-saml-agent.git)
-4. Run the Maven command ``mvn clean install`` from the ``asgardio-tomcat-saml-agent`` directory.
+3. Get a clone or download the source from this repository (https://github.com/asgardeo/asgardeo-tomcat-saml-agent.git)
+4. Run the Maven command ``mvn clean install`` from the ``asgardeo-tomcat-saml-agent`` directory.

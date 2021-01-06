@@ -16,13 +16,13 @@
  * under the License.
  */
 
-package io.asgardio.tomcat.saml.agent;
+package io.asgardeo.tomcat.saml.agent;
 
-import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
-import io.asgardio.java.saml.sdk.exception.SSOAgentException;
-import io.asgardio.java.saml.sdk.security.SSOAgentX509Credential;
-import io.asgardio.java.saml.sdk.security.SSOAgentX509KeyStoreCredential;
-import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
+import io.asgardeo.java.saml.sdk.bean.SSOAgentConfig;
+import io.asgardeo.java.saml.sdk.exception.SSOAgentException;
+import io.asgardeo.java.saml.sdk.security.SSOAgentX509Credential;
+import io.asgardeo.java.saml.sdk.security.SSOAgentX509KeyStoreCredential;
+import io.asgardeo.java.saml.sdk.util.SSOAgentConstants;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;

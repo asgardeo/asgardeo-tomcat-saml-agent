@@ -19,7 +19,7 @@
 # Builder Stage
 FROM tomcat:8-jdk8-openjdk-slim AS builder
 
-COPY io.asgardio.tomcat.saml.agent.sample/target/sample-app.war webapps
+COPY io.asgardeo.tomcat.saml.agent.sample/target/sample-app.war webapps
 
 RUN mkdir webapps/sample-app 
 
@@ -34,7 +34,7 @@ COPY sample-app.properties webapps/sample-app/WEB-INF/classes
 # Final Stage
 FROM tomcat:8.5-jre8-alpine
 
-LABEL name="Asgardio Tomcat SAML Agent Sample" \
+LABEL name="Asgardeo Tomcat SAML Agent Sample" \
       maintainer="WSO2"
 
 COPY --from=builder /usr/local/tomcat/webapps/sample-app webapps/sample-app
