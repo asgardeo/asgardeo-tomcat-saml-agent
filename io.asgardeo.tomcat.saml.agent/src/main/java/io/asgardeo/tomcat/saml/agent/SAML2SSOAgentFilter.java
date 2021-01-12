@@ -16,17 +16,17 @@
  * under the License.
  */
 
-package io.asgardio.tomcat.saml.agent;
+package io.asgardeo.tomcat.saml.agent;
 
-import io.asgardio.java.saml.sdk.SAML2SSOManager;
-import io.asgardio.java.saml.sdk.bean.LoggedInSessionBean;
-import io.asgardio.java.saml.sdk.bean.SSOAgentConfig;
-import io.asgardio.java.saml.sdk.exception.InvalidSessionException;
-import io.asgardio.java.saml.sdk.exception.SSOAgentException;
-import io.asgardio.java.saml.sdk.util.SSOAgentConstants;
-import io.asgardio.java.saml.sdk.util.SSOAgentFilterUtils;
-import io.asgardio.java.saml.sdk.util.SSOAgentRequestResolver;
-import io.asgardio.java.saml.sdk.util.SSOAgentUtils;
+import io.asgardeo.java.saml.sdk.SAML2SSOManager;
+import io.asgardeo.java.saml.sdk.bean.LoggedInSessionBean;
+import io.asgardeo.java.saml.sdk.bean.SSOAgentConfig;
+import io.asgardeo.java.saml.sdk.exception.InvalidSessionException;
+import io.asgardeo.java.saml.sdk.exception.SSOAgentException;
+import io.asgardeo.java.saml.sdk.util.SSOAgentConstants;
+import io.asgardeo.java.saml.sdk.util.SSOAgentFilterUtils;
+import io.asgardeo.java.saml.sdk.util.SSOAgentRequestResolver;
+import io.asgardeo.java.saml.sdk.util.SSOAgentUtils;
 import org.opensaml.saml.saml2.core.LogoutResponse;
 
 import java.io.IOException;
