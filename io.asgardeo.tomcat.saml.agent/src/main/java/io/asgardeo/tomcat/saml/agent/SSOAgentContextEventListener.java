@@ -62,24 +62,7 @@ public class SSOAgentContextEventListener implements ServletContextListener {
                         + " context-param is not specified in the web.xml");
             }
 
-            Map<String, String> processedPropertyMap = properties.entrySet().stream()
-                    .map(entry -> new AbstractMap.SimpleEntry<>(String.valueOf(entry.getKey()),
-                            String.valueOf(entry.getValue())))
-                    .filter(entry -> entry.getValue().matches("\\$\\{(.*?)}"))
-                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
-                            StringUtils.substringsBetween(entry.getValue(), "${", "}")[0]))
-                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
-                            System.getenv(entry.getValue())))
-                    .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
-                    .peek(entry -> {
-                        if (logger.isLoggable(Level.FINE)) {
-                            logger.fine("Inferred value: " + entry.getValue() + " for property: " + entry.getKey()
-                                    + " from environment.");
-                        }
-                    })
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-            properties.putAll(processedPropertyMap);
+            properties.putAll(resolvePropertiesFromEnvironmentVariables(properties));
 
             // Load the client security certificate, if not specified throw SSOAgentException.
             String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
@@ -108,6 +91,34 @@ public class SSOAgentContextEventListener implements ServletContextListener {
         } catch (IOException | SSOAgentException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    private Map<String, String> resolvePropertiesFromEnvironmentVariables(Properties properties) throws SSOAgentException {
+
+        Map<String, String> processedPropertyMap = properties.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(String.valueOf(entry.getKey()),
+                        String.valueOf(entry.getValue())))
+                .filter(entry -> entry.getValue().matches("\\$\\{(.*?)}"))
+                .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                        StringUtils.substringsBetween(entry.getValue(), "${", "}")[0]))
+                .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                        System.getenv(entry.getValue())))
+                .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                        StringUtils.isNotBlank(entry.getValue()) ? entry.getValue() : ""))
+                .peek(entry -> {
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.fine("Inferred value: " + entry.getValue() + " for property: " + entry.getKey()
+                                + " from environment.");
+                    }
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (StringUtils.isBlank(processedPropertyMap.get(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS)) &&
+                StringUtils.isBlank(processedPropertyMap.get(SSOAgentConstants.IDP_PUBLIC_CERT))) {
+            throw new SSOAgentException("Environment variable value was not set for neither `IDP_PUBLIC_CERT` nor " +
+                    "`IDP_PUBLIC_CERT_ALIAS`");
+        }
+        return processedPropertyMap;
     }
 
     @Override
