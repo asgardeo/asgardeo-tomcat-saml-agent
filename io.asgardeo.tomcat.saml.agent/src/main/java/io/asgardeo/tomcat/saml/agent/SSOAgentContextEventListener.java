@@ -113,7 +113,8 @@ public class SSOAgentContextEventListener implements ServletContextListener {
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (StringUtils.isBlank(processedPropertyMap.get(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS)) &&
+        if (!processedPropertyMap.isEmpty() &&
+                StringUtils.isBlank(processedPropertyMap.get(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS)) &&
                 StringUtils.isBlank(processedPropertyMap.get(SSOAgentConstants.IDP_PUBLIC_CERT))) {
             throw new SSOAgentException("Environment variable value was not set for neither `IDP_PUBLIC_CERT` nor " +
                     "`IDP_PUBLIC_CERT_ALIAS`");
