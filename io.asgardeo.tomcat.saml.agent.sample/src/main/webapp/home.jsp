@@ -23,32 +23,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Home</title>
-    <style>
-        html, body {
-            height: 100%;
-        }
-        
-        body {
-            flex-direction: column;
-            display: flex;
-        }
-        
-        main {
-            flex-shrink: 0;
-        }
-        
-        main.center-segment {
-            margin: auto;
-            display: flex;
-            align-items: center;
-        }
-        
-        .element-padding {
-            margin: auto;
-            padding: 15px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="theme.css">
 </head>
 <%
     LoggedInSessionBean sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
@@ -56,43 +34,45 @@
     Map<String, String> saml2SSOAttributes = sessionBean.getSAML2SSO().getSubjectAttributes();
 %>
 <body>
-<main class="center-segment">
-    <div style="text-align: center">
-        <div class="element-padding">
-            <h1>Home Page!</h1>
+    <div class="ui two column centered grid">
+        <div class="column center aligned">
+            <img src="images/logo-dark.svg" class="logo-image">
         </div>
-        <div class="element-padding">
-            <%
-                if (subjectId != null) {
-            %>
-            <p> You are logged in as <%=subjectId%>
-            </p>
-            <%
-                }
-            %>
-        </div>
-        <div class="element-padding">
-            <table>
+        <div class="container">
+            <div class="header-title">
+                <h1>
+                    Java Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
+                </h1>
+            </div>
+            <div class="content">
                 <%
-                    if (saml2SSOAttributes != null) {
-                        for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
+                    if (subjectId != null) {
                 %>
-                <tr>
-                    <td><%=entry.getKey()%>
-                    </td>
-                    <td><%=entry.getValue()%>
-                    </td>
-                </tr>
+                <h3>
+                    You are logged in as <%=subjectId%>
+                </h3>
                 <%
-                        }
                     }
                 %>
-            </table>
+                <!-- <h3>Below are the basic details retrieve from the server on a successful login.</h3> -->
+                <div>
+                    <%
+                        if (saml2SSOAttributes != null) {
+                            for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
+                    %>
+                    <dl class="details">
+                        <dt><%=entry.getKey()%></dt>
+                        <dt><%=entry.getValue()%></dt>
+                    </dl>
+                    <%
+                            }
+                        }
+                    %>
+                </div>
+                <button class="btn primary" onClick="location.href=logout?SAML2.HTTPBinding=HTTP-POST">Logout</button>
+            </div>
         </div>
-        <div class="element-padding">
-            <a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout</a>
-        </div>
+        <img src="images/footer.png" class="footer-image">
     </div>
-</main>
 </body>
 </html>
