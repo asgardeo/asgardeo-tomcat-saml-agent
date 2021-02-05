@@ -37,7 +37,7 @@
         <div class="container">
             <div class="header-title">
                 <h1>
-                    Java Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
+                    Java-Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
                 </h1>
             </div>
             <div class="content">

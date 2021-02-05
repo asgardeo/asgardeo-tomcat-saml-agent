@@ -41,7 +41,7 @@
         <div class="container">
             <div class="header-title">
                 <h1>
-                    Java Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
+                    Java-Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
                 </h1>
             </div>
             <div class="content">
@@ -54,7 +54,6 @@
                 <%
                     }
                 %>
-                <!-- <h3>Below are the basic details retrieve from the server on a successful login.</h3> -->
                 <div>
                     <%
                         if (saml2SSOAttributes != null) {
@@ -69,7 +68,11 @@
                         }
                     %>
                 </div>
-                <button class="btn primary" onClick="location.href=logout?SAML2.HTTPBinding=HTTP-POST">Logout</button>
+                <form action="logout?SAML2.HTTPBinding=HTTP-POST" method="GET">
+                    <div class="element-padding">
+                        <button class="btn primary" type="submit">Logout</button>
+                    </div>
+                </form>
             </div>
         </div>
         <img src="images/footer.png" class="footer-image">
