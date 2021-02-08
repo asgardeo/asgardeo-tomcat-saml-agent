@@ -21,44 +21,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Sample App</title>
-    <style>
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            flex-direction: column;
-            display: flex;
-        }
-
-        main {
-            flex-shrink: 0;
-        }
-
-        main.center-segment {
-            margin: auto;
-            display: flex;
-            align-items: center;
-        }
-
-        .element-padding {
-            margin: auto;
-            padding: 15px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="theme.css">
 </head>
 <body>
-<main class="center-segment">
-    <div style="text-align: center;">
-        <h1>
-            Log In Page!
-        </h1>
-        <form action="samlsso?SAML2.HTTPBinding=HTTP-POST" method="post">
-            <div class="element-padding">
-                <input style="height: 30px; width: 60px" type="submit" value="log in">
+    <div class="ui two column centered grid">
+        <div class="column center aligned">
+            <img src="images/logo-dark.svg" class="logo-image">
+        </div>
+        <div class="container">
+            <div class="header-title">
+                <h1>
+                    Java-Based SAML Authentication Sample<br>
+                    (OIDC - Authorization Code Grant)
+                </h1>
             </div>
-        </form>
+            <div class="content">
+                <div class="home-image">
+                    <img src="images/java.svg" class="react-logo-image logo">
+                    <span class="logo-plus">+</span>
+                    <img src="images/saml.svg" class="react-logo-image logo">
+                </div>
+                <h3>
+                    Sample demo to showcase how to authenticate a simple Java application using <br>
+                    <b>Asgardeo</b> with the <a href="https://github.com/asgardeo/asgardeo-tomcat-saml-agent" target="_blank">Asgardeo SAML Agent</a>
+                </h3>
+                <form action="samlsso?SAML2.HTTPBinding=HTTP-POST" method="post">
+                    <div class="element-padding">
+                        <button class="btn primary" type="submit">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <img src="images/footer.png" class="footer-image">
     </div>
-</main>
 </body>
 </html>
