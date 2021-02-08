@@ -41,7 +41,7 @@
         <div class="container">
             <div class="header-title">
                 <h1>
-                    Java-Based SAML Authentication Sample <br> (OIDC - Authorization Code Grant)
+                    Java-Based SAML Authentication Sample
                 </h1>
             </div>
             <div class="content">
@@ -49,24 +49,38 @@
                     if (subjectId != null) {
                 %>
                 <h3>
-                    You are logged in as <%=subjectId%>
+                    You are logged in as <strong><%=subjectId%></strong>
                 </h3>
                 <%
                     }
                 %>
-                <div>
-                    <%
-                        if (saml2SSOAttributes != null) {
-                            for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
-                    %>
-                    <dl class="details">
-                        <dt><%=entry.getKey()%></dt>
-                        <dt><%=entry.getValue()%></dt>
-                    </dl>
-                    <%
-                            }
+                <ta>
+                <%
+                    if (saml2SSOAttributes != null && !saml2SSOAttributes.isEmpty()) {
+                %>
+                    <table>
+                        <tr>
+                            <th>User attribute name</th>
+                            <th>Value</th>
+                        </tr>
+                <%
+                        for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
+                %>
+                        <tr>
+                            <td><%=entry.getKey()%></td>
+                            <td><%=entry.getValue()%></td>
+                        </tr>
+                <%
                         }
-                    %>
+                %>
+                    </table>
+                <%
+                    } else {
+                %>
+                    <span>There are no user attributes selected to the application at the moment.</span>
+                <%
+                    }
+                %>
                 </div>
                 <form action="logout?SAML2.HTTPBinding=HTTP-POST" method="GET">
                     <div class="element-padding">
