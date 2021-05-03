@@ -72,12 +72,15 @@ SAML2SSOURL=samlsso
 ```
 SAML2.SLOURL=logout
 ```
+## Keystore related Configurations
+**Note:**
+The following conditional configurations are required if you want to enable **Response Signing**, **Request Signing**
+, **Assertion Signing**, and **Assertion Encryption**.
 
 ### Identity Provider Public Certificate
 **Property Name:** `IdPPublicCert`
  
-**Description:** In case TLS is enabled for the application, this parameter is mandatory. In such cases
-, this parameter specifies the pem content of the IDP public certificate.
+**Description:** This parameter specifies the pem content of the IDP public certificate.
 
 **Sample:** 
 
@@ -88,8 +91,7 @@ IdPPublicCert=<CERTIFICATE_PEM_CONTENT>
 ### KeyStore Password
 **Property Name:** `KeyStorePassword`
  
-**Description:** In case TLS is enabled for the application, this parameter is mandatory. In such cases
-, this parameter specifies the password of the Key Store for the SAML application.
+**Description:** This parameter specifies the password of the Key Store for the SAML application.
 
 **Sample:** 
 
@@ -100,8 +102,7 @@ KeyStorePassword=wso2carbon
 ### Identity Provider Public Certificate Alias
 **Property Name:** `IdPPublicCertAlias`
  
-**Description:** In case TLS is enabled for the application, this parameter is mandatory. In such cases
-, this parameter specifies the alias of the IdP's public certificate.
+**Description:** This parameter specifies the alias of the IdP's public certificate.
 
 **Sample:** 
 
@@ -112,8 +113,7 @@ IdPPublicCertAlias=wso2carbon
 ### Service Provider Private Key Alias
 **Property Name:** `PrivateKeyAlias`
  
-**Description:** In case TLS is enabled for the application, this parameter is mandatory. In such cases
-, this parameter specifies the alias of the service provider's private key.
+**Description:** This parameter specifies the alias of the service provider's private key.
 
 **Sample:** 
 
@@ -124,8 +124,8 @@ PrivateKeyAlias=wso2carbon
 ### Private Key Password
 **Property Name:** `PrivateKeyPassword`
  
-**Description:** In case TLS is enabled for the application, this parameter is mandatory. In such cases
-, this parameter specifies the private key password to retrieve the private key that is used to sign Authentication
+**Description:** This parameter specifies the private key password to retrieve the private key that is used to sign
+ Authentication
  Request and Logout Request messages.
 
 **Sample:** 
@@ -209,19 +209,6 @@ SAML2.EnableRequestSigning=true
 
 ```
 SAML2.IsPassiveAuthn=true
-```
-
-### Transport Layer Security
-**Property Name:** `SkipTLS`
- 
-**Description:** This parameter specifies if TLS is enabled/disabled for the application. TLS helps protect web
- applications against data tampering and eavesdropping. Hence, we strongly recommend against disabling TLS for your
-  application in production scenarios.
-
-**Sample:** 
-
-```
-SkipTLS=false
 ```
 
 ### Skip URIs
