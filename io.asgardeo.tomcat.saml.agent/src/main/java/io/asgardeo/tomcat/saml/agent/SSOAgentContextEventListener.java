@@ -71,14 +71,12 @@ public class SSOAgentContextEventListener implements ServletContextListener {
                 String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
                         .CERTIFICATE_FILE_PARAMETER_NAME);
                 InputStream keyStoreInputStream;
-                if (StringUtils.isNotBlank(certificateFileName)) {
-                    keyStoreInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/"
-                            + certificateFileName);
-                } else {
+                if (StringUtils.isBlank(certificateFileName)) {
                     throw new SSOAgentException(SSOAgentConstants.CERTIFICATE_FILE_PARAMETER_NAME
                             + " context-param is not specified in the web.xml");
                 }
-
+                keyStoreInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/"
+                        + certificateFileName);
                 SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
                         properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
                         properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS),
