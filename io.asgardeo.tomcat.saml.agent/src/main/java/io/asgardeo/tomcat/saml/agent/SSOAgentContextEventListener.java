@@ -63,29 +63,29 @@ public class SSOAgentContextEventListener implements ServletContextListener {
             }
 
             properties.putAll(resolvePropertiesFromEnvironmentVariables(properties));
-
-            // Load the client security certificate, if not specified throw SSOAgentException.
-            String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
-                    .CERTIFICATE_FILE_PARAMETER_NAME);
-            InputStream keyStoreInputStream;
-            if (StringUtils.isNotBlank(certificateFileName)) {
-                keyStoreInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/"
-                        + certificateFileName);
-            } else {
-                throw new SSOAgentException(SSOAgentConstants.CERTIFICATE_FILE_PARAMETER_NAME
-                        + " context-param is not specified in the web.xml");
-            }
-
-            SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
-                    properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
-                    properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS),
-                    properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT),
-                    properties.getProperty(SSOAgentConstants.PRIVATE_KEY_ALIAS),
-                    properties.getProperty(SSOAgentConstants.PRIVATE_KEY_PASSWORD).toCharArray());
-
             SSOAgentConfig config = new SSOAgentConfig();
             config.initConfig(properties);
-            config.getSAML2().setSSOAgentX509Credential(credential);
+
+            if (!config.getSkipTLS()) {
+                // Load the client security certificate, if not specified throw SSOAgentException.
+                String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
+                        .CERTIFICATE_FILE_PARAMETER_NAME);
+                InputStream keyStoreInputStream;
+                if (StringUtils.isBlank(certificateFileName)) {
+                    throw new SSOAgentException(SSOAgentConstants.CERTIFICATE_FILE_PARAMETER_NAME
+                            + " context-param is not specified in the web.xml");
+                }
+                keyStoreInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/"
+                        + certificateFileName);
+                SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
+                        properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
+                        properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS),
+                        properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT),
+                        properties.getProperty(SSOAgentConstants.PRIVATE_KEY_ALIAS),
+                        properties.getProperty(SSOAgentConstants.PRIVATE_KEY_PASSWORD).toCharArray());
+                config.getSAML2().setSSOAgentX509Credential(credential);
+            }
+
             servletContext.setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME, config);
 
         } catch (IOException | SSOAgentException e) {
