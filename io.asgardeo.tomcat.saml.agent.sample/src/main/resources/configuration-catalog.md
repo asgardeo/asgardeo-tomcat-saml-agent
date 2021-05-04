@@ -26,7 +26,7 @@ This document describes all the configuration parameters that are used in Asgard
 SAML2.SPEntityId=my-app
 ```
  
- ### Identity Provider Entity ID
+### Identity Provider Entity ID
 **Property Name:** `SAML2.IdPEntityId`
  
 **Description:** A unique identifier for the SAML 2.0 Identity Provider.
