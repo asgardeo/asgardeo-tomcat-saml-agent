@@ -126,7 +126,7 @@ PrivateKeyAlias=wso2carbon
  
 **Description:** This parameter specifies the private key password to retrieve the private key that is used to sign
  Authentication
- Request and Logout Request messages.
+ request and logout request messages.
 
 **Sample:** 
 
