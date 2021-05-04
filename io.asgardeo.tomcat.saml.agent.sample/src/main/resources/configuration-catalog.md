@@ -125,7 +125,7 @@ PrivateKeyAlias=wso2carbon
 **Property Name:** `PrivateKeyPassword`
  
 **Description:** This parameter specifies the private key password to retrieve the private key that is used to sign
- Authentication
+the authentication
  request and logout request messages.
 
 **Sample:** 
