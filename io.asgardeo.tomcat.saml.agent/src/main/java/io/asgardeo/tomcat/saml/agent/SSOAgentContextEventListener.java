@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -43,11 +44,13 @@ import javax.servlet.ServletContextListener;
 public class SSOAgentContextEventListener implements ServletContextListener {
 
     private static Logger logger = Logger.getLogger(SSOAgentContextEventListener.class.getName());
+    Properties properties;
+    boolean skipKeystoreConfigs = false;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
-        Properties properties = new Properties();
+        properties = new Properties();
         try {
 
             ServletContext servletContext = servletContextEvent.getServletContext();
@@ -66,23 +69,28 @@ public class SSOAgentContextEventListener implements ServletContextListener {
             SSOAgentConfig config = new SSOAgentConfig();
             config.initConfig(properties);
 
-            if (!config.getSkipTLS()) {
-                // Load the client security certificate, if not specified throw SSOAgentException.
-                String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
-                        .CERTIFICATE_FILE_PARAMETER_NAME);
-                InputStream keyStoreInputStream;
-                if (StringUtils.isBlank(certificateFileName)) {
-                    throw new SSOAgentException(SSOAgentConstants.CERTIFICATE_FILE_PARAMETER_NAME
-                            + " context-param is not specified in the web.xml");
-                }
+            // Load the client security certificate, if not specified throw SSOAgentException.
+            String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
+                    .CERTIFICATE_FILE_PARAMETER_NAME);
+            InputStream keyStoreInputStream;
+            if (StringUtils.isNotBlank(certificateFileName)) {
                 keyStoreInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/"
                         + certificateFileName);
+            } else {
+                throw new SSOAgentException(SSOAgentConstants.CERTIFICATE_FILE_PARAMETER_NAME
+                        + " context-param is not specified in the web.xml");
+            }
+
+            String keyStorePassword = getKeystoreConfig(SSOAgentConstants.KEY_STORE_PASSWORD);
+            String IdPPublicCertAlias = getKeystoreConfig(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS);
+            String IdPPublicCert = getKeystoreConfig(SSOAgentConstants.IDP_PUBLIC_CERT);
+            String PrivateKeyAlias = getKeystoreConfig(SSOAgentConstants.PRIVATE_KEY_ALIAS);
+            String privateKeyPassword = getKeystoreConfig(SSOAgentConstants.PRIVATE_KEY_PASSWORD);
+
+            if (!skipKeystoreConfigs) {
                 SSOAgentX509Credential credential = new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
-                        properties.getProperty(SSOAgentConstants.KEY_STORE_PASSWORD).toCharArray(),
-                        properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT_ALIAS),
-                        properties.getProperty(SSOAgentConstants.IDP_PUBLIC_CERT),
-                        properties.getProperty(SSOAgentConstants.PRIVATE_KEY_ALIAS),
-                        properties.getProperty(SSOAgentConstants.PRIVATE_KEY_PASSWORD).toCharArray());
+                        keyStorePassword.toCharArray(), IdPPublicCertAlias, IdPPublicCert, PrivateKeyAlias,
+                        privateKeyPassword.toCharArray());
                 config.getSAML2().setSSOAgentX509Credential(credential);
             }
 
@@ -91,6 +99,15 @@ public class SSOAgentContextEventListener implements ServletContextListener {
         } catch (IOException | SSOAgentException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    private String getKeystoreConfig(String property) {
+
+        if (StringUtils.isNotBlank(properties.getProperty(property))) {
+            return properties.getProperty(property);
+        }
+        skipKeystoreConfigs = true;
+        return null;
     }
 
     private Map<String, String> resolvePropertiesFromEnvironmentVariables(Properties properties) throws SSOAgentException {
