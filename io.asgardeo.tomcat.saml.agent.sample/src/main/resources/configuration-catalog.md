@@ -91,7 +91,7 @@ IdPPublicCert=<CERTIFICATE_PEM_CONTENT>
 ### KeyStore Password
 **Property Name:** `KeyStorePassword`
  
-**Description:** This parameter specifies the password of the Key Store for the SAML application.
+**Description:** This parameter specifies the password of the keystore for the SAML application.
 
 **Sample:** 
 
