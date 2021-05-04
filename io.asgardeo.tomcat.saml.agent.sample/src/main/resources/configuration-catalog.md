@@ -138,7 +138,7 @@ PrivateKeyPassword=wso2carbon
 ### Single Sign-On
 **Property Name:** `EnableSAML2SSOLogin`
  
-**Description:** This parameter specifies if Single Sign on is enabled/disabled for the application.
+**Description:** This parameter specifies whether Single Sign on is enabled/disabled for the application.
 
 **Sample:** 
 
