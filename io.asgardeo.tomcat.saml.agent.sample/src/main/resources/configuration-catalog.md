@@ -239,7 +239,7 @@ indexPage=/my-app/index.html
 
 **Property Name:** `errorPage`
  
-**Description:** This parameter may denote the URI for the error page of the webapp.
+**Description:** This parameter denotes the URI for the error page of the webapp.
 
 **Sample:** 
 
