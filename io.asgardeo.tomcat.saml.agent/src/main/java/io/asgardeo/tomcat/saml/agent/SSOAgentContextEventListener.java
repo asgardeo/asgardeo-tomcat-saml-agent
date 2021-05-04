@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -102,7 +103,7 @@ public class SSOAgentContextEventListener implements ServletContextListener {
 
     private String getKeystoreConfig(String property) {
 
-        if(StringUtils.isNotBlank(properties.getProperty(property))) {
+        if (StringUtils.isNotBlank(properties.getProperty(property))) {
             return properties.getProperty(property);
         }
         skipKeystoreConfigs = true;
