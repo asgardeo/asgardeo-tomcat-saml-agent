@@ -29,7 +29,7 @@ SAML2.SPEntityId=my-app
 ### Identity Provider Entity ID
 **Property Name:** `SAML2.IdPEntityId`
  
-**Description:** A unique identifier for the SAML 2.0 Identity Provider.
+**Description:** A unique identifier for the SAML 2.0 identity provider
 
 **Sample:** 
 
