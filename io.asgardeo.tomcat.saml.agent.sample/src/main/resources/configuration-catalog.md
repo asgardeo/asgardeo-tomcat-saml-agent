@@ -65,7 +65,7 @@ SAML2SSOURL=samlsso
 **Property Name:** `SAML2.SLOURL`
  
 **Description:** In case Single Logout (SLO) is enabled for the application, this parameter is mandatory. In such cases
-, the Single Logout URL specifies the URL that is used for SLO.
+, the **Single Logout URL** specifies the URL that is used for SLO.
 
 **Sample:** 
 
