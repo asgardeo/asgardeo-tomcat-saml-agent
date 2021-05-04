@@ -41,7 +41,7 @@ SAML2.IdPEntityId=accounts.asgardeo.io
  
 **Property Name:** `SAML2.IdPURL`
  
-**Description:** The URL of the SAML 2.0 Identity Provider.
+**Description:** The URL of the SAML 2.0 identity provider
 
 **Sample:** 
 
