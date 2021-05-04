@@ -228,7 +228,7 @@ skipURIs=/my-app/page1.jsp,/my-app/page2.jsp
 
 **Property Name:** `indexPage`
  
-**Description:** This parameter may denote the URI for the landing page of the webapp.
+**Description:** This parameter denotes the URI for the landing page of the webapp.
 
 **Sample:** 
 
