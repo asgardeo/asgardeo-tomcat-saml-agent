@@ -52,7 +52,7 @@ SAML2.IdPURL=https://accounts.asgardeo.io/t/a/samlsso
 ### SAML2 SSO Authentication Request Endpoint
 **Property Name:** `SAML2SSOURL`
  
-**Description:** This specifies the URL to do send the SAML2 SSO Authentication Request.
+**Description:** This specifies the URL to send the SAML2 SSO Authentication Request.
 
 **Sample:** 
 
