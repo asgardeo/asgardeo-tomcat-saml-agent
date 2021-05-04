@@ -215,7 +215,7 @@ SAML2.IsPassiveAuthn=true
 
 **Property Name:** `skipURIs`
  
-**Description:** This parameter may include URIs that need not be secured. Multiple URIs can be set using comma separated
+**Description:** This parameter includes URIs that need not be secured. Multiple URIs can be set using comma-separated
   values.
 
 **Sample:** 
