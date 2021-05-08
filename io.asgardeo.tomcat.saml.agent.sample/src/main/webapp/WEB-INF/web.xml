@@ -57,4 +57,8 @@
         <param-name>certificate-file</param-name>
         <param-value>wso2carbon.jks</param-value>
     </context-param>
+    <context-param>
+        <param-name>post-binding-request-page</param-name>
+        <param-value>post_binding_request.html</param-value>
+    </context-param>
 </web-app>

@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -68,6 +69,27 @@ public class SSOAgentContextEventListener implements ServletContextListener {
             properties.putAll(resolvePropertiesFromEnvironmentVariables(properties));
             SSOAgentConfig config = new SSOAgentConfig();
             config.initConfig(properties);
+
+            // Load the client post binding request page.
+            String postBindingRequestPageFileName =
+                    servletContext.getInitParameter(SSOAgentConstants.POST_BINDING_REQUEST_PAGE_PARAMETER_NAME);
+
+            InputStream fileInputStream;
+            if (StringUtils.isNotBlank(postBindingRequestPageFileName)) {
+                fileInputStream = servletContext.getResourceAsStream("/WEB-INF/classes/" +
+                        postBindingRequestPageFileName);
+                if (fileInputStream != null && StringUtils.isNotBlank(fileInputStream.toString())) {
+                    String payload = new Scanner(fileInputStream, "UTF-8").useDelimiter("\\A").next();
+                    config.getSAML2().setPostBindingRequestHTMLPayload(payload);
+                } else {
+                    logger.log(Level.WARNING, "The file " + postBindingRequestPageFileName + " is unreachable or the " +
+                            "file content might be empty.");
+                }
+            } else {
+                logger.log(Level.WARNING, SSOAgentConstants.POST_BINDING_REQUEST_PAGE_PARAMETER_NAME
+                        + " context-param is not specified in the web.xml");
+            }
+
 
             // Load the client security certificate, if not specified throw SSOAgentException.
             String certificateFileName = servletContext.getInitParameter(SSOAgentConstants
