@@ -101,7 +101,7 @@ public class SAML2SSOAgentFilter implements Filter {
                 try {
                     samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                     samlSSOManager.processResponse(request, response);
-                    if (!"true".equals(request.getAttribute(SSOAgentConstants.SHOULD_GO_TO_WELCOME_PAGE))) {
+                    if (!SSOAgentFilterUtils.shouldGoToWelcomePage(request)) {
                         response.sendRedirect(ssoAgentConfig.getSAML2().getACSURL());
                     }
                 } catch (SSOAgentException e) {
@@ -129,7 +129,6 @@ public class SAML2SSOAgentFilter implements Filter {
                 try {
                     samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                     if (resolver.isHttpPostBinding()) {
-
                         boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                         ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                         String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
@@ -137,7 +136,7 @@ public class SAML2SSOAgentFilter implements Filter {
                         SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
 
                     } else {
-                        //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
+                        // If "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect.
                         boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
                         ssoAgentConfig.getSAML2().setPassiveAuthn(false);
                         String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
@@ -215,7 +214,7 @@ public class SAML2SSOAgentFilter implements Filter {
                 response.sendRedirect(indexPage);
                 return;
             }
-            // pass the request along the filter chain
+            // Pass the request along the filter chain.
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
