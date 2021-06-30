@@ -86,25 +86,39 @@ public class SAML2SSOAgentFilter implements Filter {
 
             if (resolver.isSLORequest()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
-                String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
-                SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
+                try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    LogoutResponse logoutResponse = samlSSOManager.doSLO(request);
+                    String encodedRequestMessage = samlSSOManager.buildPostResponse(logoutResponse);
+                    SSOAgentUtils.sendPostResponse(request, response, encodedRequestMessage);
+                } catch (SSOAgentException e) {
+                    handleException(request, response, ssoAgentConfig, e);
+                    return;
+                }
                 return;
             } else if (resolver.isSAML2SSOResponse()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                     samlSSOManager.processResponse(request, response);
+                    if (!SSOAgentFilterUtils.shouldGoToWelcomePage(request)) {
+                        response.sendRedirect(ssoAgentConfig.getSAML2().getACSURL());
+                    }
                 } catch (SSOAgentException e) {
+                    if (e instanceof InvalidSessionException) {
+                        // Redirect to the index page when session is expired or user already logged out.
+                        LOGGER.log(Level.FINE, "Invalid Session!", e);
+                        response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                        return;
+                    }
                     handleException(request, response, ssoAgentConfig, e);
                     return;
                 }
 
             } else if (resolver.isSAML2ArtifactResponse()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                 try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
                     samlSSOManager.processArtifactResponse(request);
                 } catch (SSOAgentException e) {
                     handleException(request, response, ssoAgentConfig, e);
@@ -112,50 +126,81 @@ public class SAML2SSOAgentFilter implements Filter {
                 }
             } else if (resolver.isSLOURL()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                if (resolver.isHttpPostBinding()) {
+                try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    if (resolver.isHttpPostBinding()) {
+                        boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
 
-                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, true);
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
-
-                } else {
-                    //if "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect
-                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(false);
-                    String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
-                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                    response.sendRedirect(redirectUrl);
+                    } else {
+                        // If "SSOAgentConstants.HTTP_BINDING_PARAM" is not defined, default to redirect.
+                        boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(false);
+                        String redirectUrl = samlSSOManager.buildRedirectRequest(request, true);
+                        ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                        response.sendRedirect(redirectUrl);
+                    }
+                } catch (SSOAgentException e) {
+                    if (e instanceof InvalidSessionException) {
+                        // Redirect to the index page when session is expired or user already logged out.
+                        LOGGER.log(Level.FINE, "Invalid Session!", e);
+                        response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                        return;
+                    }
+                    handleException(request, response, ssoAgentConfig, e);
+                    return;
                 }
                 return;
 
             } else if (resolver.isSAML2SSOURL()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                if (resolver.isHttpPostBinding()) {
-                    String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
-                    SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    if (resolver.isHttpPostBinding()) {
+                        String htmlPayload = samlSSOManager.buildPostRequest(request, response, false);
+                        SSOAgentUtils.sendPostResponse(request, response, htmlPayload);
+                        return;
+                    }
+                    response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
+                } catch (SSOAgentException e) {
+                    if (e instanceof InvalidSessionException) {
+                        // Redirect to the index page when session is expired or user already logged out.
+                        LOGGER.log(Level.FINE, "Invalid Session!", e);
+                        response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                        return;
+                    }
+                    handleException(request, response, ssoAgentConfig, e);
                     return;
                 }
-                response.sendRedirect(samlSSOManager.buildRedirectRequest(request, false));
                 return;
 
             } else if (resolver.isPassiveAuthnRequest()) {
 
-                samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
-                boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
-                ssoAgentConfig.getSAML2().setPassiveAuthn(true);
-                String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
-                ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
-                response.sendRedirect(redirectUrl);
+                try {
+                    samlSSOManager = new SAML2SSOManager(ssoAgentConfig);
+                    boolean isPassiveAuth = ssoAgentConfig.getSAML2().isPassiveAuthn();
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(true);
+                    String redirectUrl = samlSSOManager.buildRedirectRequest(request, false);
+                    ssoAgentConfig.getSAML2().setPassiveAuthn(isPassiveAuth);
+                    response.sendRedirect(redirectUrl);
+                } catch (SSOAgentException e) {
+                    if (e instanceof InvalidSessionException) {
+                        // Redirect to the index page when session is expired or user already logged out.
+                        LOGGER.log(Level.FINE, "Invalid Session!", e);
+                        response.sendRedirect(filterConfig.getServletContext().getContextPath());
+                        return;
+                    }
+                    handleException(request, response, ssoAgentConfig, e);
+                    return;
+                }
                 return;
             }
             String indexPage = ssoAgentConfig.getIndexPage();
             if (request.getSession(false) != null &&
                     request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null) {
-                request.getSession().invalidate();
                 response.sendRedirect(indexPage);
                 return;
             }
@@ -165,10 +210,11 @@ public class SAML2SSOAgentFilter implements Filter {
                     sessionBean = (LoggedInSessionBean) session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
 
             if (sessionBean == null || sessionBean.getSAML2SSO() == null) {
+                request.getSession().invalidate();
                 response.sendRedirect(indexPage);
                 return;
             }
-            // pass the request along the filter chain
+            // Pass the request along the filter chain.
             chain.doFilter(request, response);
 
         } catch (InvalidSessionException e) {
