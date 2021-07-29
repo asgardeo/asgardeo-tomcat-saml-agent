@@ -127,7 +127,7 @@
 
     <properties>
         <maven.buildnumber.plugin.version>1.4</maven.buildnumber.plugin.version>
-        <io.asgardeo.java.saml.sdk.version>0.1.14</io.asgardeo.java.saml.sdk.version>
+        <io.asgardeo.java.saml.sdk.version>0.1.15</io.asgardeo.java.saml.sdk.version>
     </properties>
 
     <modules>
