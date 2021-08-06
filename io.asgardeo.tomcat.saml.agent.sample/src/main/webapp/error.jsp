@@ -48,7 +48,8 @@
                 <h3>
                     <%=exception.getMessage()%>
                 </h3>
-                <div class="message">
+            </div>
+            <div class="message">
                     <div class="banner">
                         <span><i class="fa fa-exclamation-circle icon"></i></span>
                         <div><b>It's possible that you tried an unsupported feature with the sample application.
@@ -64,8 +65,12 @@
                         <li>Assertion signing</li>
                     </ul> 
                 </div>
+                <form action="index.html" method="post">
+                    <div class="element-padding">
+                        <button class="btn primary" type="submit">Back</button>
+                    </div>
+                </form>
             </div>
-        </div>
         <img src="images/footer.png" class="footer-image">
     </div>
 </body>
