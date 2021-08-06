@@ -25,6 +25,7 @@
     <title>An error has occurred</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <%
     SSOAgentException exception = (SSOAgentException) request.getAttribute(SSOAgentConstants.SSO_AGENT_EXCEPTION);
@@ -47,6 +48,22 @@
                 <h3>
                     <%=exception.getMessage()%>
                 </h3>
+                <div class="message">
+                    <div class="banner">
+                        <span><i class="fa fa-exclamation-circle icon"></i></span>
+                        <div><b>It's possible that you tried an unsupported feature with the sample application.
+                        Currently the below features are supported by this version of the sample 
+                        application</b></div>
+                    </div>
+                    <ul >
+                        <li>SAML single sign on</li>
+                        <li>SAML single logout</li>
+                        <li>Attribute profie</li>
+                        <li>Request signing</li>
+                        <li>Response signing</li>
+                        <li>Assertion signing</li>
+                    </ul> 
+                </div>
             </div>
         </div>
         <img src="images/footer.png" class="footer-image">

@@ -41,6 +41,10 @@ a {
     color: #f47421;
 }
 
+li {
+    margin: 5px 0;
+}
+
 a:hover {
     text-decoration: none;;
 }
@@ -156,6 +160,22 @@ code {
     color: #ffffff;
     padding: 20px;
     border-radius: 10px 10px 0 0;
+}
+
+.message {
+    background-color:#FFF6E7; 
+    padding:20px; 
+    text-align:left; 
+    margin: 10px 50px 10px 50px;
+}
+
+.icon {
+    color:#FFA500; 
+    padding-right:4px;
+}
+
+.banner {
+    display:flex;
 }
 
 .content {
