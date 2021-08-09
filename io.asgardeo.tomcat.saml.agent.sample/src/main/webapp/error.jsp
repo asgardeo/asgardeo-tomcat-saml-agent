@@ -53,7 +53,7 @@
                     <div class="banner">
                         <span><i class="fa fa-exclamation-circle icon"></i></span>
                         <div><b>It's possible that you tried an unsupported feature with the sample application.
-                        Currently the below features are supported by this version of the sample 
+                        Currently, the below features are supported by this version of the sample 
                         application</b></div>
                     </div>
                     <ul >

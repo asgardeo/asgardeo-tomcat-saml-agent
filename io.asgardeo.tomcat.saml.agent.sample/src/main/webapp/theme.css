@@ -163,19 +163,19 @@ code {
 }
 
 .message {
-    background-color:#FFF6E7; 
-    padding:20px; 
-    text-align:left; 
+    background-color: #FFF6E7; 
+    padding: 20px; 
+    text-align: left; 
     margin: 10px 50px 10px 50px;
 }
 
 .icon {
-    color:#FFA500; 
-    padding-right:4px;
+    color: #FFA500; 
+    padding-right: 4px;
 }
 
 .banner {
-    display:flex;
+    display: flex;
 }
 
 .content {
