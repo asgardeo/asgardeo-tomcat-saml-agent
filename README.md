@@ -24,47 +24,40 @@ You can experience the capabilities of Asgardeo Tomcat SAML Agent by following t
 
   * [Prerequisites](#prerequisites)
   * [Configuring the sample](#configuring-the-sample)
-  * [Configuring Identity Server](#configuring-identity-server)
+  * [Create an Application in Asgardeo](#create-an-application-in-asgardeo)
   * [Running the sample](#running-the-sample)
 
 ### Prerequisites
-1. [Docker](https://docs.docker.com/get-docker/)
+- [Docker](https://docs.docker.com/get-docker/)
 
 ### Configuring the sample
 1. Open a terminal window inside a preferred directory on your machine.
-2. Execute the following command to start the sample Docker container.
-   ```
-   $ docker container run --rm --name tomcat-saml-agent-sample -itdp 8080:8080 asgardeo/tomcat-saml-agent-sample
-   ```
+
+2. Deploy the **sample** app.
+   - a. Execute the following command to start the sample Docker container.
+   
+    ```
+    docker container run --rm --name tomcat-saml-agent-sample -itdp 8080:8080 asgardeo/tomcat-saml-agent-sample
+    ```
+   - b. You can also manually deploy the **sample** app in a Tomcat server without using the docker image. Simply download `sample-app.war` from [here](https://github.com/asgardeo/asgardeo-tomcat-saml-agent/releases/latest) and deploy.
+
 3. Add the following entry to the `/etc/hosts` file of your machine to configure the hostname.
    ```
    127.0.0.1 localhost.com
    ```
 
-### Configuring Identity Server
-Here we are using WSO2 Identity Server as the SAML Identity Provider. The sample can be configured with any other preferred Identity Provider as well.
-1. Open a terminal window inside a preferred directory on your machine.
-2. Execute the following command to start the WSO2 IS Docker container.
-   ```
-   $ docker container run --rm -itdp 9443:9443 --link tomcat-saml-agent-sample wso2/wso2is
-   ```
-3. Execute the following command to download the shell script to create a Service Provider in WSO2 IS.
-   ```
-   $ curl -o create_service_provider.sh https://raw.githubusercontent.com/asgardeo/asgardeo-tomcat-saml-agent/master/create_service_provider.sh
-   ```
-4. Execute the following command to assign executable permission to the `create_service_provider.sh` script.
-   ```
-   $ chmod +x create_service_provider.sh
-   ```
-5. Execute the following command to create a SAML Service Provider in WSO2 IS.
-   ```
-   $ sh create_service_provider.sh
-   ```
+### Create an Application in Asgardeo
+Here we are using Asgardeo as the SAML Identity Provider.
+1. Navigate to [**Asgardeo Console**](https://console.asgardeo.io/login) and click on **Applications** under **Develop** tab.
+
+2. Click on **New Application** and then **Standard Based Application**.
+
+3. Select SAML from the selection and enter any name as the name of the app and add the Assertion Consumer Service URL and Issuer.
+
+4. Click on Register. You will be navigated to management page of the created application.
 
 ### Running the sample
-Try out the application by accessing the URL http://localhost.com:8080/sample-app/index.html in your web browser.
-
-![Recordit GIF](http://g.recordit.co/IvrtWnDnZ8.gif)    
+Try out the application by accessing the URL http://localhost.com:8080/sample-app/index.html in your web browser. 
 
 ## How it works
 
