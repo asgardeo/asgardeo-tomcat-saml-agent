@@ -57,7 +57,7 @@
                 <ta>
                 <%
                     if ((saml2SSOAttributes == null && saml2SSOAttributes.isEmpty()) ||
-                    (saml2SSOAttributes.size() ==1 && saml2SSOAttributes.containsKey("isk"))) {
+                    (saml2SSOAttributes.size() == 1 && saml2SSOAttributes.containsKey("isk"))) {
                 %>
                     <span>There are no user attributes selected to the application at the moment.</span>
                 <%
