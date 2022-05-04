@@ -56,7 +56,12 @@
                 %>
                 <ta>
                 <%
-                    if (saml2SSOAttributes != null && !saml2SSOAttributes.isEmpty()) {
+                    if ((saml2SSOAttributes == null && saml2SSOAttributes.isEmpty()) ||
+                    (saml2SSOAttributes.size() ==1 && saml2SSOAttributes.containsKey("isk"))) {
+                %>
+                    <span>There are no user attributes selected to the application at the moment.</span>
+                <%
+                    } else {
                 %>
                     <table>
                         <tr>
@@ -65,6 +70,9 @@
                         </tr>
                 <%
                         for (Map.Entry<String, String> entry : saml2SSOAttributes.entrySet()) {
+                            if (entry.getKey().equals("isk")) {
+                                continue;
+                            }
                 %>
                         <tr>
                             <td><%=entry.getKey()%></td>
@@ -74,10 +82,6 @@
                         }
                 %>
                     </table>
-                <%
-                    } else {
-                %>
-                    <span>There are no user attributes selected to the application at the moment.</span>
                 <%
                     }
                 %>
