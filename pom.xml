@@ -27,7 +27,7 @@
     <groupId>io.asgardeo.tomcat.saml.agent</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tomcat-saml-agent</artifactId>
-    <version>0.1.43</version>
+    <version>0.1.44-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Asgardeo - Tomcat SAML Agent Parent Module</name>
     <description>
@@ -39,7 +39,7 @@
         <url>https://github.com/asgardeo/asgardeo-tomcat-saml-agent.git</url>
         <developerConnection>scm:git:https://github.com/asgardeo/asgardeo-tomcat-saml-agent.git</developerConnection>
         <connection>scm:git:https://github.com/asgardeo/asgardeo-tomcat-saml-agent.git</connection>
-        <tag>v0.1.43</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
