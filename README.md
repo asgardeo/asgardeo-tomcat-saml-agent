@@ -50,7 +50,7 @@ You can experience the capabilities of Asgardeo Tomcat SAML Agent by following t
 Here we are using Asgardeo as the SAML Identity Provider.
 1. Navigate to [**Asgardeo Console**](https://console.asgardeo.io/login) and click on **Applications** under **Develop** tab.
 
-2. Click on **New Application** and then **Standard Based Application**.
+2. Click on **New Application** and then **Traditional Web Application**.
 
 3. Select SAML from the selection and enter any name as the name of the app and add the Assertion Consumer Service URL and Issuer.
 
